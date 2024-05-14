@@ -11,22 +11,8 @@ class ViewProfilesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<String> listItem =["ashes","ashes","ashes","ashes","ashes"];
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        centerTitle: true,
-        title: Text("Whim Span",
-          style: GoogleFonts.baloo2(
-            textStyle: TextStyle(
-              fontSize: 20,
-              color: Colors.white,
-              fontWeight: FontWeight.w600
-            )
-          ),
-        ),
-      ),
-      body: Container(
-        color: Color.fromRGBO(0, 0, 0, .9),
+    return  Container(
+        color: Color.fromRGBO(0, 0, 0, .99),
         child: SizedBox(
           height: MediaQuery.of(context).size.height - 0,
           child: ListView.builder(
@@ -35,7 +21,6 @@ class ViewProfilesScreen extends StatelessWidget {
             return ProfileCardWidget();
             },),
         ),
-      ),
-    );
+      );
   }
 }

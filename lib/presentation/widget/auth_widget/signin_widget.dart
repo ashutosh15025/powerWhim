@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 
+import '../../../constant/service_api_constant.dart';
 import '../../bloc/authbloc/auth_bloc.dart';
 import '../gradient_button_green_yelllow.dart';
 
@@ -20,7 +22,7 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     var bloc =  BlocProvider.of<AuthBloc>(context);
     return Container(
-      margin: EdgeInsets.all(8),
+      margin: EdgeInsets.all(16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         color: Color.fromRGBO(17, 17, 17, 1),
@@ -72,9 +74,11 @@ class _SignInScreenState extends State<SignInScreen> {
                 children: [Text("Alerady have Account?",
                   style: TextStyle(color: Colors.grey,
                       fontSize: 16),),
-                  Text("Login?",
-                    style: TextStyle(color: Colors.green.shade800,
-                        fontSize: 16),)]
+                  Text("Login",
+                    style: GoogleFonts.baloo2(
+                      textStyle:TextStyle(color: green,
+                        fontSize: 16,
+                      fontWeight: FontWeight.w400),))]
 
 
             ),

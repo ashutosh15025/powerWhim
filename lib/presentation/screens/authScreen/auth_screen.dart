@@ -28,8 +28,18 @@ class _LoginScreenState extends State<AuthScreen> {
             child: Column(
               children: [
                 Container(
-                  height: 400,
-                    child: Image.network("https://plus.unsplash.com/premium_photo-1671017848638-a154949b71e1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8dXJsfGVufDB8fDB8fHw")),
+                  height: 150,
+                    margin: EdgeInsets.fromLTRB(0, 100, 0, 100),
+                    child:CircleAvatar(
+                      backgroundImage: AssetImage('assets/icon/logo.png'), // Replace with your asset path
+                      radius: 75,
+                      backgroundColor: Colors.black,
+                    ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                    color: Colors.black,
+                  ),
+                ),
                 SignInScreen(onPressNextButton: onPressCrossOTP,),
               ],
             ),

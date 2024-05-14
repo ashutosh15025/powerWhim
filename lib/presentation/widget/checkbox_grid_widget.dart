@@ -20,7 +20,7 @@ class _CheckboxGridState extends State<CheckboxGrid> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            width: MediaQuery.of(context).size.width-120,
+            width: MediaQuery.of(context).size.width-140,
             child: GridView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
@@ -68,7 +68,7 @@ class _CheckboxGridState extends State<CheckboxGrid> {
             ),
           ),
           Container(
-            padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
+            padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
             child: Column(
               children: [
                 Checkbox(value: checkedBox, activeColor: Colors.green,

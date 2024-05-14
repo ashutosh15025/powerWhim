@@ -25,23 +25,9 @@ class _ChatScreenState extends State<ChatScreen> {
       onPopInvoked: (bool didPop) async {
         Navigator.of(context).pop(); // Action to perform on back pressed
       },
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text("Ashutosh",
-            style: GoogleFonts.baloo2(
-              textStyle: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w700
-              )
-            ),
-          ),
-          backgroundColor: Colors.black,
-
-        ),
-        body: Container(
+      child: Container(
           height: MediaQuery.of(context).size.height,
-          color: Color.fromRGBO(0, 0, 0, .9),
+          color: Color.fromRGBO(0, 0, 0, .95),
           child: ListView.builder(
               itemCount: 20,
               itemBuilder: (context,index){
@@ -52,7 +38,6 @@ class _ChatScreenState extends State<ChatScreen> {
                     child: ChatDmWidget());
               }),
         ),
-      ),
     );
   }
 }

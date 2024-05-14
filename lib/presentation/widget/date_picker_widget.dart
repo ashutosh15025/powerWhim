@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../constant/service_api_constant.dart';
+
 class DatePicker extends StatefulWidget {
   const DatePicker({super.key});
 
@@ -70,14 +72,17 @@ class _DatePickerState extends State<DatePicker> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.dark(
-              primary: Colors.yellow, // header background color
-              onPrimary: Colors.black, // header text color
-              onSurface: Colors.white, // body text color
+              primary: green, // header background color
+              onPrimary: Colors.white, // header text color
+              onSurface: Colors.black, // body text color
             ),
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.green, // button text color
-              ),
+            datePickerTheme: const DatePickerThemeData(
+              headerBackgroundColor: green,
+              headerForegroundColor: Colors.white,
+              backgroundColor: Color(0xFFE6F3FD),
+            ),
+            dividerTheme: const DividerThemeData(
+              color: Colors.transparent,
             ),
           ),
           child: child!,

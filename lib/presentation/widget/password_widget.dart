@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class PasswordWidget extends StatefulWidget {
   const PasswordWidget({super.key,  this.placeholder="Password"});
@@ -43,11 +44,14 @@ class _PasswordWidgetState extends State<PasswordWidget> {
               borderRadius: BorderRadius.circular(10)
           ),
           focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.green,width: 2),
+              borderSide: BorderSide(color: Colors.white,width: 2),
               borderRadius: BorderRadius.circular(10)
           ),
           hintText: widget.placeholder,
-          hintStyle: TextStyle(color: Colors.white),
+          hintStyle: GoogleFonts.baloo2(
+               textStyle: TextStyle(color: Colors.grey,
+               fontWeight: FontWeight.w400)
+          ),
         ),
       ),
     );

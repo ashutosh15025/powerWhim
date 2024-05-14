@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../constant/service_api_constant.dart';
+import '../screens/OthersProfileScreen.dart';
 import '../screens/my_profile_widget.dart';
 
 class ProfileCardWidget extends StatefulWidget {
@@ -17,42 +18,44 @@ class _ProfileCardWidgetState extends State<ProfileCardWidget> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: (){
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=> const MyProfileWidget()));
+        Navigator.of(context).push(MaterialPageRoute(builder: (_)=> const OtherProfileScreen()));
         print("ashes");
       },
       child: Container(
         padding: EdgeInsets.all(8),
         child: Column(
           children: [
-            Row(
-              children: [
-                Text("Jenny Lucifer",
-                style: GoogleFonts.baloo2(
-                 textStyle:TextStyle(
-                  color: green,
-                  fontSize: 20,
-                    fontWeight: FontWeight.w700
-                ),)),
-                Spacer(),
-                Text("age",
-                  style:  GoogleFonts.baloo2(
-                    textStyle:TextStyle(
-                      color: green,
-                      fontSize: 20,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
+              child: Row(
+                children: [
+                  Text("Jenny Lucifer",
+                  style: GoogleFonts.baloo2(
+                   textStyle:TextStyle(
+                    color: green,
+                    fontSize: 20,
                       fontWeight: FontWeight.w700
-                  ),))
-              ],
+                  ),)),
+                  Spacer(),
+                  Text("30 years",
+                    style:  GoogleFonts.baloo2(
+                      textStyle:TextStyle(
+                        color: green,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400
+                    ),))
+                ],
+              ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("My name is: ",
+                Text("Sports: ",
                   style:  GoogleFonts.baloo2(
                     textStyle:TextStyle(
-                      color: Colors.yellow.shade600,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w800
+                      color: Colors.yellow.shade400,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500
                   ),)),
                 Expanded(
                   child: Text(" this is my age ,i am of 30 ",
@@ -60,31 +63,30 @@ class _ProfileCardWidgetState extends State<ProfileCardWidget> {
                       style:  GoogleFonts.baloo2(
                     textStyle:TextStyle(
                       color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400
                   ),)),
                 )
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Sports: ",
+                Text("Hobbies: ",
                     style:  GoogleFonts.baloo2(
                       textStyle:TextStyle(
-                          color: Colors.yellow.shade600,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w800
+                          color: Colors.yellow.shade400,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500
                       ),)),
                 Expanded(
-                  child: Text(" of 30 age",
+                  child: Text(" Kniting and travel ",
                       maxLines: 4,
                       style:  GoogleFonts.baloo2(
                         textStyle:TextStyle(
                             color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400
                         ),)),
                 )
               ],
@@ -98,17 +100,22 @@ class _ProfileCardWidgetState extends State<ProfileCardWidget> {
                   child: Text("View",
                   style:  GoogleFonts.baloo2(
                     textStyle:TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                       color: Colors.white,
                       fontWeight: FontWeight.w500
                     )),),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
                       gradient: LinearGradient(
-                          end: Alignment.centerRight,
-                          begin:  Alignment.centerLeft,
-                          colors: [Colors.cyan,green,Colors.yellow],
-                        stops: [0.1,0.4,1]
+                          begin: Alignment.centerLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Color.fromRGBO(0, 255, 228, 1).withOpacity(.95),
+                            Color.fromRGBO(36,134,53,1),
+                            Color.fromRGBO(56,164,73,1),
+                            Colors.yellow.shade600
+                          ],
+                          stops: [0,0.5,0.7,1]
                       )
                   ),
                 ),

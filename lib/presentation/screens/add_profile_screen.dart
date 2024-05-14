@@ -7,6 +7,7 @@ import 'package:molten_navigationbar_flutter/molten_navigationbar_flutter.dart';
 import 'package:powerwhim/presentation/screens/view_profile_screen.dart';
 
 import '../../constant/service_api_constant.dart';
+import '../home.dart';
 import '../widget/checkbox_grid_widget.dart';
 import '../widget/custom/custom_slider_thumb.dart';
 import '../widget/custom_drop_down.dart';
@@ -29,35 +30,11 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
   bool noRelaventSport= false;
   String dropdownvalue = "1";
   late IndicatorRangeSliderThumbShape<int> indicatorRangeSliderThumbShape =
-  IndicatorRangeSliderThumbShape(18, 60);
+  IndicatorRangeSliderThumbShape(start.toInt(), end.toInt());
   List<String> myList = ["Option 1", "Option 2", "Option 3"];
 
   String selectedValue = "Option 1"; // Initial selection
-  int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 1: Business',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 2: School',
-      style: optionStyle,
-    ),
-  ];
 
-  void _onItemTapped(int index) {
-    if(index == 1){
-
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     List<DropdownMenuItem<String>> dropdownItems = myList.map((String value) => DropdownMenuItem<String>(
       value: value,
@@ -78,6 +55,7 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
         backgroundColor: Colors.black,
       ),
       body:Container(
+        padding: EdgeInsets.all(16),
 
         height: MediaQuery.of(context).size.height - 0,
         child: SingleChildScrollView(
@@ -276,7 +254,7 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
              Center(
                child: InkWell(
                  onTap: (){
-                   Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ViewProfilesScreen()));
+                   Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const Home()));
                    print("ashes");
                  },
                  child: Center(child: Container(
@@ -295,42 +273,6 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
           color: Colors.black,
         ),
       ),
-        bottomNavigationBar: Container(
-          color: Color.fromRGBO(0, 0, 0, 0),
-          child: MoltenBottomNavigationBar(
-            selectedIndex: _selectedIndex,
-            onTabChange: (clickedIndex) {
-              setState(() {
-                _selectedIndex = clickedIndex;
-                _onItemTapped(_selectedIndex);
-              });
-            },
-            barColor: Colors.black12,
-              domeCircleColor:Colors.blueGrey,
-              tabs: [
-              MoltenTab(
-                icon: Icon(Icons.home,
-                color:  _selectedIndex==0?Colors.white:Colors.blueGrey,),
-              ),
-                MoltenTab(
-                  icon: Icon(Icons.groups,
-                    color:  _selectedIndex==1?Colors.white:Colors.blueGrey,),
-                ),
-                MoltenTab(
-                  icon: Icon(Icons.chat,
-                    color:  _selectedIndex==2?Colors.white:Colors.blueGrey,),
-                ),
-                MoltenTab(
-                  icon: Icon(Icons.person,
-                    color:  _selectedIndex==3?Colors.white:Colors.blueGrey,),
-                ),
-                MoltenTab(
-                  icon: Icon(Icons.headphones_rounded,
-                    color:  _selectedIndex==4?Colors.white:Colors.blueGrey,),
-                ),
-            ],
-          ),
-        ),
     );
 
   }

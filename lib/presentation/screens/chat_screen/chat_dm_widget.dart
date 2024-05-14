@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../../constant/service_api_constant.dart';
+
 class ChatDmWidget extends StatefulWidget {
   const ChatDmWidget({super.key});
 
@@ -24,7 +26,7 @@ class _ChatDmWidgetState extends State<ChatDmWidget> {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
-                  color: Colors.green.shade600
+                  color: green
                 ),),
                 Container(
                   height: 25,
@@ -65,8 +67,9 @@ class _ChatDmWidgetState extends State<ChatDmWidget> {
           ),
 
       Divider(
-        color: Colors.yellow.shade700,
-        height: 0.9,
+        color: Colors.yellow.shade600,
+        height: 0.2,
+        thickness: 0.5,
       )
         ],
       ),

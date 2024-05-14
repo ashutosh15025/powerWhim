@@ -39,10 +39,16 @@ class _CreatePasswordWidgetState extends State<CreatePasswordWidget> {
                 fontWeight: FontWeight.w500,
                 fontSize: 18
             ),),
-            PasswordWidget(),
-            PasswordWidget(placeholder: "Confirm Password"),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: PasswordWidget(),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: PasswordWidget(placeholder: "Confirm Password"),
+            ),
             Container(
-                padding: EdgeInsets.all(24),
+                padding: EdgeInsets.all(34),
                 child: InkWell(
                   onTap: (){
                     print("verify clicked");

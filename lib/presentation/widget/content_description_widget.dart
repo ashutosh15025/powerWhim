@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ContentDescription extends StatefulWidget {
-  const ContentDescription({super.key});
+  const ContentDescription({super.key, required this.title, required this.description});
+  final String title;
+  final String description;
 
   @override
   State<ContentDescription> createState() => _ContentDescriptionState();
@@ -17,18 +19,18 @@ class _ContentDescriptionState extends State<ContentDescription> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Hobbies:",
+          Text("${widget.title}",
           style: GoogleFonts.roboto(
             textStyle:TextStyle(
             fontWeight: FontWeight.w800,
-            fontSize: 18,
-            color: Colors.yellow.shade600,
+            fontSize: 16,
+            color: Colors.yellow.shade500,
           ),),),
-          Text("This is my hobbies which i love to do this is my hobbies which i love to do this is my hobbies which i love to do this is my hobbies which i love to do",
+          Text("${widget.description}",
             style: GoogleFonts.roboto(
               textStyle:TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 15,
+              fontWeight: FontWeight.w400,
+              fontSize: 14,
               color: Colors.white,
             ),)),
         ],

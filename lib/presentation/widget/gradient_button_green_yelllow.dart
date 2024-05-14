@@ -17,13 +17,12 @@ class GradientButtonGreenYellow extends StatelessWidget {
             begin: Alignment.centerLeft,
             end: Alignment.bottomRight,
             colors: [
-              Colors.cyan,
-              Colors.green.shade800,
-              Colors.green.shade600,
-              Colors.yellow.shade500,
-
+              Colors.cyan.shade400,
+              Color.fromRGBO(36,134,53,1),
+              Color.fromRGBO(66,184,83,1),
+              Colors.yellow.shade600
             ],
-            stops: [0.0,0.5,0.85,1.0],
+            stops: [0,0.5,0.80,1]
           )
       ),
       child: Text(buttonText,
@@ -32,7 +31,7 @@ class GradientButtonGreenYellow extends StatelessWidget {
           textStyle:TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w400,
-            fontSize: 14
+            fontSize: 16
         ),)),
 
     );

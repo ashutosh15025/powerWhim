@@ -48,7 +48,7 @@ class IndicatorRangeSliderThumbShape<T> extends RangeSliderThumbShape {
     // Draw tooltip background
     final tooltipPaint = Paint()..color = green; // Background color for tooltip
 
-    final double textWidth = 48.0;
+    final double textWidth = 40.0;
     final double textHeight = 28.0;
     final double tooltipWidth = textWidth;
     final double tooltipHeight = textHeight + 6.0; // Height of the tooltip background
@@ -84,6 +84,6 @@ class IndicatorRangeSliderThumbShape<T> extends RangeSliderThumbShape {
     labelTextPainter.paint(
         canvas,
         center.translate(
-            labelTextPainter.width / 2-15, center.dy - radius * 2 - tooltipHeight - tooltipTipHeight-5));
+            (labelTextPainter.width / 2) -(labelTextPainter.width), center.dy - radius * 2 - tooltipHeight - tooltipTipHeight-5));
   }
 }
