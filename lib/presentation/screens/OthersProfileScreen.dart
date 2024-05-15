@@ -17,16 +17,19 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: Center(
-            child: Text("Power Whim",
-              style: GoogleFonts.baloo2(
-                  textStyle: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700
-                  )
-              ),))),
+          iconTheme: IconThemeData(
+            color: Colors.white, //change your color here
+          ),
+          centerTitle: true,
+          backgroundColor: Colors.black,
+        title: Text("Power Whim",
+          style: GoogleFonts.baloo2(
+              textStyle: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700
+              )
+          ),)),
       body: Container(
         height: MediaQuery.of(context).size.height,
         padding: EdgeInsets.fromLTRB(16, 0, 16, 0),

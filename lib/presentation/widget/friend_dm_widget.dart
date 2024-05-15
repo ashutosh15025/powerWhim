@@ -30,8 +30,9 @@ class FriendDmWidget extends StatelessWidget {
                       "Jenny Lucifer",
                       style: GoogleFonts.baloo2(
                         textStyle: TextStyle(
-                          fontSize: 14,
-                          color: Colors.yellow.shade400
+                          fontSize: 18,
+                          color: Colors.yellow.shade600,
+                          fontWeight: FontWeight.w500
                         )
                       ),
                     ),
@@ -39,8 +40,10 @@ class FriendDmWidget extends StatelessWidget {
                       "Jenny Lucifer",
                       style: GoogleFonts.baloo2(
                           textStyle: TextStyle(
-                              fontSize: 10,
-                              color: Colors.yellow.shade400
+                              fontSize: 12,
+                              color: Colors.yellow.shade600,
+                              fontWeight: FontWeight.w400
+
                           )
                       ),
                     )
@@ -54,7 +57,7 @@ class FriendDmWidget extends StatelessWidget {
           ),
         ),
         Divider(
-          color: Colors.yellow.shade400,
+          color: Colors.yellow.shade600,
           thickness: .5,
         )
       ],

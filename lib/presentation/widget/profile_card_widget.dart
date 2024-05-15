@@ -53,9 +53,9 @@ class _ProfileCardWidgetState extends State<ProfileCardWidget> {
                 Text("Sports: ",
                   style:  GoogleFonts.baloo2(
                     textStyle:TextStyle(
-                      color: Colors.yellow.shade400,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500
+                      color: Colors.yellow.shade500,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600
                   ),)),
                 Expanded(
                   child: Text(" this is my age ,i am of 30 ",
@@ -63,8 +63,8 @@ class _ProfileCardWidgetState extends State<ProfileCardWidget> {
                       style:  GoogleFonts.baloo2(
                     textStyle:TextStyle(
                       color: Colors.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500
                   ),)),
                 )
               ],
@@ -75,9 +75,9 @@ class _ProfileCardWidgetState extends State<ProfileCardWidget> {
                 Text("Hobbies: ",
                     style:  GoogleFonts.baloo2(
                       textStyle:TextStyle(
-                          color: Colors.yellow.shade400,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500
+                          color: Colors.yellow.shade500,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600
                       ),)),
                 Expanded(
                   child: Text(" Kniting and travel ",
@@ -85,8 +85,8 @@ class _ProfileCardWidgetState extends State<ProfileCardWidget> {
                       style:  GoogleFonts.baloo2(
                         textStyle:TextStyle(
                             color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500
                         ),)),
                 )
               ],
@@ -111,7 +111,7 @@ class _ProfileCardWidgetState extends State<ProfileCardWidget> {
                           end: Alignment.bottomRight,
                           colors: [
                             Color.fromRGBO(0, 255, 228, 1).withOpacity(.95),
-                            Color.fromRGBO(36,134,53,1),
+                            Color.fromRGBO(46,144,63,1),
                             Color.fromRGBO(56,164,73,1),
                             Colors.yellow.shade600
                           ],

@@ -33,7 +33,7 @@ class _ChatScreenState extends State<ChatScreen> {
               itemBuilder: (context,index){
                 return InkWell(
                     onTap: (){
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=> const PersonalChatScreen()));
+                      Navigator.of(context).push(MaterialPageRoute(builder: (_)=> const PersonalChatScreen()));
                     },
                     child: ChatDmWidget());
               }),

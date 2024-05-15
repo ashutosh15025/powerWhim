@@ -16,7 +16,26 @@ class PersonalChatScreen extends StatefulWidget {
 class _PersonalChatScreenState extends State<PersonalChatScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.white, //change your color here
+        ),
+        centerTitle: true,
+        title:Center(
+        child: Text("Ashes",
+        style: GoogleFonts.baloo2(
+          textStyle: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 20,
+            color: Colors.white
+          )
+        ),),
+      ),
+        backgroundColor: Colors.black,
+
+      ),
+      body: Container(
         height: MediaQuery.of(context).size.height,
         color: Color.fromRGBO(0, 0,0, .9),
         child: SizedBox(
@@ -29,6 +48,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
             ),
           ),
         ),
-      );
+      ),
+    );
   }
 }

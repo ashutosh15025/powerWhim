@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:molten_navigationbar_flutter/molten_navigationbar_flutter.dart';
 import 'package:powerwhim/presentation/screens/chat_screen/chat_screen.dart';
+import 'package:powerwhim/presentation/screens/friend_screen.dart';
 import 'package:powerwhim/presentation/screens/help_screen.dart';
 import 'package:powerwhim/presentation/screens/my_profile_widget.dart';
 import 'package:powerwhim/presentation/screens/view_profile_screen.dart';
@@ -16,8 +17,8 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
-  var tabsHeader = [ViewProfilesScreen(),ChatScreen(),MyProfileWidget(),HelpScreen()];
-  var tabsArray = [ViewProfilesScreen(),ChatScreen(),MyProfileWidget(),HelpScreen()];
+  var tabsHeader = [ViewProfilesScreen(),FriendsScreen(),ChatScreen(),MyProfileWidget(),HelpScreen()];
+  var tabsArray = [ViewProfilesScreen(),FriendsScreen(),ChatScreen(),MyProfileWidget(),HelpScreen()];
   int _selectedIndex =0;
 
   @override
@@ -39,7 +40,7 @@ class _HomeState extends State<Home> {
         ),
 
       ),
-      body: tabsArray[_selectedIndex%4],
+      body: tabsArray[_selectedIndex],
       bottomNavigationBar: Container(
         color: Colors.transparent,
         child: MoltenBottomNavigationBar(
