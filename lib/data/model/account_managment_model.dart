@@ -1,0 +1,49 @@
+// To parse this JSON data, do
+//
+//     final accountManagementModel = accountManagementModelFromJson(jsonString);
+
+import 'dart:convert';
+
+AccountManagementModel accountManagementModelFromJson(String str) => AccountManagementModel.fromJson(json.decode(str));
+
+String accountManagementModelToJson(AccountManagementModel data) => json.encode(data.toJson());
+
+class AccountManagementModel {
+  Data? data;
+
+  AccountManagementModel({
+    this.data,
+  });
+
+  factory AccountManagementModel.fromJson(Map<String, dynamic> json) => AccountManagementModel(
+    data: json["data"] == null ? null : Data.fromJson(json["data"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "data": data?.toJson(),
+  };
+}
+
+class Data {
+  String? mssg;
+  String? status;
+  String? uuid;
+
+  Data({
+    this.mssg,
+    this.status,
+    this.uuid,
+  });
+
+  factory Data.fromJson(Map<String, dynamic> json) => Data(
+    mssg: json["mssg"],
+    status: json["status"],
+    uuid: json["uuid"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "mssg": mssg,
+    "status": status,
+    "uuid": uuid,
+  };
+}

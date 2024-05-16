@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_pin_code_fields/flutter_pin_code_fields.dart';
 
+import '../../bloc/authbloc/auth_bloc.dart';
 import '../gradient_button_green_yelllow.dart';
 
 class VerifyOptWidget extends StatefulWidget {
@@ -16,6 +18,8 @@ class VerifyOptWidget extends StatefulWidget {
 class _VerifyOptWidgetState extends State<VerifyOptWidget> {
   @override
   Widget build(BuildContext context) {
+    var bloc =  BlocProvider.of<AuthBloc>(context);
+    String ? otp;
     return Center(
       child: Container(
         margin: EdgeInsets.all(24),
@@ -66,7 +70,8 @@ class _VerifyOptWidgetState extends State<VerifyOptWidget> {
                 padding: EdgeInsets.all(24),
                 child: InkWell(
                    onTap: (){
-                      widget.onPressVerifyButton();
+                      if(otp!=null)
+                        bloc.add(VerifyOTPsEvent(otp));
                    },
                     child: GradientButtonGreenYellow(buttonText: "Verify",)))
           ],

@@ -21,6 +21,7 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     var bloc =  BlocProvider.of<AuthBloc>(context);
+    String ? userEmail;
     return Container(
       margin: EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -39,6 +40,9 @@ class _SignInScreenState extends State<SignInScreen> {
             ),
             TextField(
               style: TextStyle(color: Colors.white),
+              onChanged: (value){
+                userEmail = value;
+              },
               decoration: InputDecoration(
                 fillColor: Colors.white,
                 enabledBorder: OutlineInputBorder(
@@ -57,9 +61,8 @@ class _SignInScreenState extends State<SignInScreen> {
               padding: const EdgeInsets.fromLTRB(0, 24, 0, 24),
               child: InkWell(
                  onTap: (){
-                   bloc.add(RegisterSucessEvent());
-                   widget.onPressNextButton();
-
+                   if(userEmail!=null)
+                   bloc.add(RegisterSucessEvent(userEmail!));
                  },
                   child: GradientButtonGreenYellow(buttonText: "Next")),
             ),
@@ -79,8 +82,6 @@ class _SignInScreenState extends State<SignInScreen> {
                       textStyle:TextStyle(color: green,
                         fontSize: 16,
                       fontWeight: FontWeight.w400),))]
-
-
             ),
 
           ],

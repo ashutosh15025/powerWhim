@@ -1,7 +1,7 @@
 import 'package:retrofit/dio.dart';
 
-import '../../data/model/otp_verification_response.dart';
-import '../../data/model/register_response_model.dart';
+
+import '../../data/model/account_managment_model.dart';
 import '../../data/repository/auth_user_repo.dart';
 import '../service/auth_user_service.dart';
 
@@ -9,7 +9,7 @@ class AuthUserRepoImp implements AuthUserRepo{
   final AuthUserService authUserService;
   AuthUserRepoImp(this.authUserService);
 
-  Future<HttpResponse<RegisterUserResponse>> registerUser(String email){
+  Future<HttpResponse<AccountManagementModel>> registerUser(String email){
     var requestBody = {
       "email_id" : email,
     };
@@ -17,28 +17,27 @@ class AuthUserRepoImp implements AuthUserRepo{
   }
 
   @override
-  Future<HttpResponse<OtpVerificationResponse>> verifyOTP(String email, String OTP) {
+  Future<HttpResponse<AccountManagementModel>> verifyOTP(String userId, String OTP) {
     var requestBody = {
-      "email_id" : email,
+      "user_id" : userId,
       "verify_otp" : OTP,
     };
     return authUserService.oTPVerifcation(requestBody);
   }
 
   @override
-  Future<HttpResponse<OtpVerificationResponse>> createPassword(String email, String password) {
-    // TODO: implement createPassword
-    throw UnimplementedError();
+  Future<HttpResponse<AccountManagementModel>> createPassword(String userId, String password) {
+    return authUserService.createPassword(userId, password);
   }
 
   @override
-  Future<HttpResponse<OtpVerificationResponse>> forgotPassword(String email) {
+  Future<HttpResponse<AccountManagementModel>> forgotPassword(String email) {
     // TODO: implement forgotPassword
     throw UnimplementedError();
   }
 
   @override
-  Future<HttpResponse<OtpVerificationResponse>> loginUser(String email, String password) {
+  Future<HttpResponse<AccountManagementModel>> loginUser(String email, String password) {
     // TODO: implement loginUser
     throw UnimplementedError();
   }

@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:powerwhim/presentation/bloc/authbloc/auth_bloc.dart';
 
 import '../../widget/auth_widget/create_password_widget.dart';
 import '../../widget/auth_widget/signin_widget.dart';
@@ -21,45 +23,53 @@ class _LoginScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return BlocProvider(create: (context)=>AuthBloc(),
+      child: BlocConsumer<AuthBloc, AuthState>(
+  listener: (context, state) {
+
+  },
+  builder: (context, state) {
     return Scaffold(
-       backgroundColor: Colors.black,
-        body:Stack(
-          children: [SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  height: 150,
-                    margin: EdgeInsets.fromLTRB(0, 100, 0, 100),
-                    child:CircleAvatar(
-                      backgroundImage: AssetImage('assets/icon/logo.png'), // Replace with your asset path
-                      radius: 75,
-                      backgroundColor: Colors.black,
+          backgroundColor: Colors.black,
+          body:Stack(
+              children: [SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(
+                      height: 150,
+                      margin: EdgeInsets.fromLTRB(0, 100, 0, 100),
+                      child:CircleAvatar(
+                        backgroundImage: AssetImage('assets/icon/logo.png'), // Replace with your asset path
+                        radius: 75,
+                        backgroundColor: Colors.black,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: Colors.black,
+                      ),
                     ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    color: Colors.black,
+                    SignInScreen(onPressNextButton: onPressCrossOTP,),
+                  ],
+                ),
+              ),
+                Visibility(
+                  visible: showConfirmPasswordPanel,
+                  child: Container(
+                    color: Colors.black.withOpacity(0.5),
+                    child: CreatePasswordWidget(onPressCrossButton:onPressCrossPassword,onPressVerifyButton: onPressVerifyPassword,),
                   ),
                 ),
-                SignInScreen(onPressNextButton: onPressCrossOTP,),
-              ],
-            ),
-          ),
-          Visibility(
-            visible: showConfirmPasswordPanel,
-            child: Container(
-              color: Colors.black.withOpacity(0.5),
-              child: CreatePasswordWidget(onPressCrossButton:onPressCrossPassword,onPressVerifyButton: onPressVerifyPassword,),
-            ),
-          ),
-            Visibility(
-              visible: showOTPPanel,
-              child: Container(
-                color: Colors.black.withOpacity(0.5),
-                child: VerifyOptWidget(onPressCrossButton:onPressCrossOTP,onPressVerifyButton: onPressVerifyOTP,),
-              ),
-            )
-          ]
-        ));
+                Visibility(
+                  visible: showOTPPanel,
+                  child: Container(
+                    color: Colors.black.withOpacity(0.5),
+                    child: VerifyOptWidget(onPressCrossButton:onPressCrossOTP,onPressVerifyButton: onPressVerifyOTP,),
+                  ),
+                )
+              ]
+          ));
+  },
+));
   }
 
   void onPressCrossOTP(){

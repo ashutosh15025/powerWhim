@@ -13,7 +13,7 @@ class _AuthUserService implements AuthUserService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://192.168.1.8:3000/';
+    baseUrl ??= 'http://192.168.1.3:3000/';
   }
 
   final Dio _dio;
@@ -21,7 +21,7 @@ class _AuthUserService implements AuthUserService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<RegisterUserResponse>> registerUser(
+  Future<HttpResponse<AccountManagementModel>> registerUser(
       Map<String, dynamic> body) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -29,7 +29,7 @@ class _AuthUserService implements AuthUserService {
     final _data = <String, dynamic>{};
     _data.addAll(body);
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<RegisterUserResponse>>(Options(
+        _setStreamType<HttpResponse<AccountManagementModel>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -45,13 +45,13 @@ class _AuthUserService implements AuthUserService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = RegisterUserResponse.fromJson(_result.data!);
+    final value = AccountManagementModel.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
 
   @override
-  Future<HttpResponse<OtpVerificationResponse>> oTPVerifcation(
+  Future<HttpResponse<AccountManagementModel>> oTPVerifcation(
       Map<String, dynamic> body) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -59,7 +59,7 @@ class _AuthUserService implements AuthUserService {
     final _data = <String, dynamic>{};
     _data.addAll(body);
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<OtpVerificationResponse>>(Options(
+        _setStreamType<HttpResponse<AccountManagementModel>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -75,7 +75,75 @@ class _AuthUserService implements AuthUserService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = OtpVerificationResponse.fromJson(_result.data!);
+    final value = AccountManagementModel.fromJson(_result.data!);
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<AccountManagementModel>> createPassword(
+    String userId,
+    String password,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'user_id': userId,
+      r'password': password,
+    };
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<AccountManagementModel>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'api/user/create-password',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = AccountManagementModel.fromJson(_result.data!);
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<AccountManagementModel>> login(
+    String email,
+    String password,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'email': email,
+      r'password': password,
+    };
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<AccountManagementModel>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'api/user/login',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = AccountManagementModel.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
