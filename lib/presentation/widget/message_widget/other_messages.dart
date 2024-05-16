@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class OtherMessages extends StatefulWidget {
   const OtherMessages({super.key});
@@ -26,7 +27,9 @@ class _OtherMessagesState extends State<OtherMessages> {
           children: [
             Text(
               "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat",
-              style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 16),
+              style: GoogleFonts.baloo2(
+                textStyle: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 16),
+              )
             ),
             Text(
               "12:00 am",

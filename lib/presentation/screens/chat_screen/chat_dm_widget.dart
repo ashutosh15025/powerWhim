@@ -22,9 +22,9 @@ class _ChatDmWidgetState extends State<ChatDmWidget> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Name",
+                Text("Chris Thomsan",
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 16,
                   fontWeight: FontWeight.w500,
                   color: green
                 ),),
