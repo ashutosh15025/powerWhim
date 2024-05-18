@@ -4,20 +4,13 @@ part of 'auth_bloc.dart';
 sealed class AuthEvent {}
 
 //register
-class RegisterSucessEvent extends AuthEvent{
-  String mssg;
-  RegisterSucessEvent(this.mssg);
-}
-
 class RegisterEvent extends AuthEvent{
   String email;
   RegisterEvent(this.email);
 }
+class RegisterFailedEvent extends AuthEvent{}
+class RegisterSucessEvent extends AuthEvent{}
 
-class RegisterFailedEvent extends AuthEvent{
-  String mssg;
-  RegisterFailedEvent(this.mssg);
-}
 
 
 
@@ -26,13 +19,8 @@ class VerifyOTPsEvent extends AuthEvent{
   String otp;
   VerifyOTPsEvent(this.otp);
 }
-
-class VerifyOTPSuccessEvent extends AuthEvent{
-}
-
-class VerifyOTPFailedEvent extends AuthEvent{
-
-}
+class VerifyOTPSuccessEvent extends AuthEvent{}
+class VerifyOTPFailedEvent extends AuthEvent{}
 
 
 
@@ -42,32 +30,31 @@ class CreatePasswordEvent extends AuthEvent{
   String password;
   CreatePasswordEvent(this.password);
 }
-
-class CreatePasswordSuccessEvent extends AuthEvent{
-
-}
-
-class CreatePasswordFailedEvent extends AuthEvent{
-
-}
+class CreatePasswordSuccessEvent extends AuthEvent{}
+class CreatePasswordFailedEvent extends AuthEvent{}
 
 
 
 
 //login
-
-
 class LoginEvent extends AuthEvent{
   String email;
   String password;
   LoginEvent(this.email,this.password);
 }
+class LoginSuccessEvent extends AuthEvent{}
+class LoginFailedEvent extends AuthEvent{}
 
-class LoginSuccessEvent extends AuthEvent{
-}
 
-class LoginFailedEvent extends AuthEvent{
+
+
+
+class AddProfileEvent extends AuthEvent{
+  AddProfileModel addProfileModel;
+  AddProfileEvent(this.addProfileModel);
 }
+class AddProfileSuccessEvent extends AuthEvent{}
+class AddProfileFailedEvent extends AuthEvent{}
 
 
 

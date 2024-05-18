@@ -1,3 +1,4 @@
+import 'package:powerwhim/data/model/add_profile_model.dart';
 import 'package:retrofit/dio.dart';
 
 import '../../domain/repository/auth_user_repo_imp.dart';
@@ -24,6 +25,8 @@ class AccountManagmentUsecase{
   Future<HttpResponse<AccountManagementModel>> createPassword({required String userId,required String password}) {
     return  _authUserRepoImp.createPassword(userId,password);
   }
-
+  Future<HttpResponse<AccountManagementModel>> addProfile({required AddProfileModel addProfileModel}) {
+    return  _authUserRepoImp.addProfile(addProfileModel);
+  }
 
 }

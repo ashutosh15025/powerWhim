@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../bloc/authbloc/auth_bloc.dart';
 import '../gradient_button_green_yelllow.dart';
 import '../password_widget.dart';
 
@@ -14,8 +16,13 @@ class CreatePasswordWidget extends StatefulWidget {
 }
 
 class _CreatePasswordWidgetState extends State<CreatePasswordWidget> {
+  String ? password;
+  String ? confPassword;
+  String ? error;
+
   @override
   Widget build(BuildContext context) {
+    var bloc =  BlocProvider.of<AuthBloc>(context);
     return  Center(
       child: Container(
         margin: EdgeInsets.all(24),
@@ -41,18 +48,27 @@ class _CreatePasswordWidgetState extends State<CreatePasswordWidget> {
             ),),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: PasswordWidget(),
+              child: PasswordWidget(setpassword: setPassword,error:error),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: PasswordWidget(placeholder: "Confirm Password"),
+              child: PasswordWidget(placeholder: "Confirm Password",setpassword: confirmPassword,error: error,),
             ),
             Container(
                 padding: EdgeInsets.all(34),
                 child: InkWell(
                   onTap: (){
-                    print("verify clicked");
-                    widget.onPressVerifyButton();
+                    print("verify clicked $password /+ $confPassword");
+                    if(confPassword == password && password!=null)
+                    bloc.add(CreatePasswordEvent(password!));
+                    else{
+                      setState(() {
+                        if( password==null)
+                          error = "Password is empty";
+                          else
+                          error = "Password not match";
+                      });
+                    }
                   },
                     child: GradientButtonGreenYellow(buttonText: "Verify",)
                 ))
@@ -64,5 +80,22 @@ class _CreatePasswordWidgetState extends State<CreatePasswordWidget> {
         ),
       ),
     );
+  }
+  void setPassword(String value){
+    password = value;
+    if(error!=null){
+      setState(() {
+        error = null;
+      });
+  }
+
+  }
+  void confirmPassword(String value){
+    confPassword = value;
+    if(error!=null){
+      setState(() {
+        error = null;
+      });
+    }
   }
 }

@@ -2,17 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class CustomInputFiels extends StatefulWidget {
-  const CustomInputFiels({super.key, required this.title, required this.placeholder, required this.description});
+class CustomInputField extends StatefulWidget {
+  const CustomInputField({super.key, required this.title, required this.placeholder, required this.description, required this.updateName});
   final String title;
   final String placeholder;
   final String description;
+  final Function(String) updateName;
 
   @override
-  State<CustomInputFiels> createState() => _CustomInputFielsState();
+  State<CustomInputField> createState() => _CustomInputFielsState();
 }
 
-class _CustomInputFielsState extends State<CustomInputFiels> {
+class _CustomInputFielsState extends State<CustomInputField> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -21,6 +22,9 @@ class _CustomInputFielsState extends State<CustomInputFiels> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextField(
+            onChanged: (value){
+              widget.updateName(value);
+            },
             cursorColor: Colors.yellow.shade600,
             style: TextStyle(color: Colors.white),
             decoration: InputDecoration(

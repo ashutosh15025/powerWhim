@@ -27,23 +27,23 @@ class AccountManagementModel {
 class Data {
   String? mssg;
   String? status;
-  String? uuid;
+  String? userId;
 
   Data({
     this.mssg,
     this.status,
-    this.uuid,
+    this.userId,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
     mssg: json["mssg"],
     status: json["status"],
-    uuid: json["uuid"],
+    userId: json["user_id"],
   );
 
   Map<String, dynamic> toJson() => {
     "mssg": mssg,
     "status": status,
-    "uuid": uuid,
+    "user_id": userId,
   };
 }

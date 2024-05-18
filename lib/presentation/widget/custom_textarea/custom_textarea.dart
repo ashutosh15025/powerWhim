@@ -1,0 +1,62 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+class CustomTextarea extends StatefulWidget {
+  const CustomTextarea({super.key});
+
+  @override
+  State<CustomTextarea> createState() => _CustomTextareaState();
+}
+
+class _CustomTextareaState extends State<CustomTextarea> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text("Your Goal/Ambition",
+              style: GoogleFonts.baloo2(
+                textStyle:TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 16,
+                    color: Colors.white
+                ),)),
+        ),
+        Container(
+          margin: EdgeInsets.all(8),
+          width: double.infinity, // <-- TextField width
+          height: 120, // <-- TextField height
+          padding: EdgeInsets.all(4),
+          child: TextField(
+            cursorColor: Colors.yellow.shade600,
+            maxLines: null,
+            expands: true,
+            style: GoogleFonts.baloo2(
+              textStyle:TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 12,
+                  color: Colors.white
+              ),),
+            keyboardType: TextInputType.multiline,
+            decoration: InputDecoration.collapsed(filled: true, hintText: 'Enter a message',
+              fillColor: Color.fromRGBO(0, 0, 0, 0),
+              hintStyle:GoogleFonts.baloo2(
+                textStyle:TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 12,
+                    color: Colors.white
+                ),),
+            ),
+          ),
+
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(width: 1,color: Colors.yellow.shade600),
+          ),
+        ),
+      ],
+    );
+  }
+}

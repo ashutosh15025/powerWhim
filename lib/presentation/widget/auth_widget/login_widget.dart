@@ -5,13 +5,16 @@ import '../gradient_button_green_yelllow.dart';
 import '../password_widget.dart';
 
 class LoginWidget extends StatefulWidget {
-  const LoginWidget({super.key});
+  const LoginWidget({super.key, required this.setLoginPass});
+  final Function(String) setLoginPass;
 
   @override
   State<LoginWidget> createState() => _LoginWidgetState();
 }
 
 class _LoginWidgetState extends State<LoginWidget> {
+  String ? password;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -53,7 +56,10 @@ class _LoginWidgetState extends State<LoginWidget> {
               ),
             ),
           ),
-          PasswordWidget(),
+          PasswordWidget(setpassword: (String val) {
+            password = val;
+             widget.setLoginPass(password!);
+          },),
           Container(
             alignment: Alignment.centerRight,
             child: Text("Forget password?", style: TextStyle(color: Colors.white,

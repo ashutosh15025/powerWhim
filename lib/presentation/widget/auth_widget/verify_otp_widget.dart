@@ -62,8 +62,7 @@ class _VerifyOptWidgetState extends State<VerifyOptWidget> {
                 fontWeight: FontWeight.bold,
               ),
               onComplete: (output) {
-                // Your logic with pin code
-                print(output);
+                otp = output;
               },
             ),
             Container(
@@ -71,7 +70,7 @@ class _VerifyOptWidgetState extends State<VerifyOptWidget> {
                 child: InkWell(
                    onTap: (){
                       if(otp!=null)
-                        bloc.add(VerifyOTPsEvent(otp));
+                        bloc.add(VerifyOTPsEvent(otp!));
                    },
                     child: GradientButtonGreenYellow(buttonText: "Verify",)))
           ],

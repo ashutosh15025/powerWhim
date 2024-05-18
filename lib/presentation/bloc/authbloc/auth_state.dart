@@ -13,7 +13,8 @@ final class AuthInitial extends AuthState {}
 
 final class AuthRegistorSuccessState extends AuthState {
   String mssg ;
-  AuthRegistorSuccessState(this.mssg);
+  String ? user_id;
+  AuthRegistorSuccessState(this.mssg,this.user_id);
 }
 final class AuthRegistorFailedState extends AuthState {
   String mssg ;
@@ -53,6 +54,17 @@ final class CreatePasswordSuccessState extends AuthState {
 final class CreatePasswordFailedState extends AuthState {
   String mssg ;
   CreatePasswordFailedState(this.mssg);
+}
+
+
+
+final class AddProfileSuccessState extends AuthState {
+  String mssg ;
+  AddProfileSuccessState(this.mssg);
+}
+final class AddProfileFailedState extends AuthState {
+  String mssg ;
+  AddProfileFailedState(this.mssg);
 }
 
 

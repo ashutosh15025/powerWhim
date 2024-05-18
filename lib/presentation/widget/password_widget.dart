@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class PasswordWidget extends StatefulWidget {
-  const PasswordWidget({super.key,  this.placeholder="Password"});
+  const PasswordWidget({super.key,  this.placeholder="Password", required this.setpassword, this.error});
   final String placeholder;
+   final Function(String) setpassword;
+   final String ? error;
 
   @override
   State<PasswordWidget> createState() => _PasswordWidgetState();
@@ -18,6 +20,9 @@ class _PasswordWidgetState extends State<PasswordWidget> {
       padding: EdgeInsets.all(8),
       child: TextField(
         style: TextStyle(color: Colors.white),
+        onChanged: (value){
+          widget.setpassword(value);
+        },
         obscureText: !passwordVisibility,
         decoration: InputDecoration(
           suffixIcon: passwordVisibility?InkWell(
@@ -40,11 +45,11 @@ class _PasswordWidgetState extends State<PasswordWidget> {
           ),
           fillColor: Colors.white,
           enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey,width: 2),
+              borderSide: BorderSide(color:widget.error == null?Colors.grey:Colors.red,width: 1),
               borderRadius: BorderRadius.circular(10)
           ),
           focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.white,width: 2),
+              borderSide: BorderSide(color:widget.error == null?Colors.white:Colors.red,width: 1),
               borderRadius: BorderRadius.circular(10)
           ),
           hintText: widget.placeholder,

@@ -5,7 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../constant/service_api_constant.dart';
 
 class DatePicker extends StatefulWidget {
-  const DatePicker({super.key});
+  const DatePicker({super.key, required this.setDOB});
+  final Function(String) setDOB;
 
   @override
   State<DatePicker> createState() => _DatePickerState();
@@ -92,6 +93,7 @@ class _DatePickerState extends State<DatePicker> {
     if (_pickDate != null) {
       setState(() {
         _dateController.text = _pickDate.toString().split(" ")[0];
+        widget.setDOB(_dateController.text);
       });
     }
   }

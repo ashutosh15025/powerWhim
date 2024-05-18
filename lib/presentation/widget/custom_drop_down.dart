@@ -4,22 +4,24 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:powerwhim/presentation/widget/selected_drop_item_widget.dart';
 
 class CustomDropDown extends StatefulWidget {
-  const CustomDropDown({super.key, required this.dropDownHeading});
+  const CustomDropDown({super.key, required this.dropDownHeading, required this.myList, required this.selectedItemFun});
   final String dropDownHeading;
+  final List<String> myList;
+  final void Function(List<String>) selectedItemFun;
+
 
   @override
   State<CustomDropDown> createState() => _CustomDropDownState();
 }
 
 class _CustomDropDownState extends State<CustomDropDown> {
-  List<String> myList = ["Option 1", "Option this is 2", "Option 3"];
-  List<String> selectedItem = ["Option 1", "Option this is 2", "Option 3","Option 3","Option 3","Option 3"];
+  List<String> selectedItems =[];
 
-  String selectedValue = "Option 1"; // Initial selection
+  String selectedValue = "Option 1";
 
   @override
   Widget build(BuildContext context) {
-    List<DropdownMenuItem<String>> dropdownItems = myList.map((String value) => DropdownMenuItem<String>(
+    List<DropdownMenuItem<String>> dropdownItems = widget.myList.map((String value) => DropdownMenuItem<String>(
       value: value,
       child: Container(
         child: Text(value,
@@ -55,7 +57,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
               child: DropdownButton<String>(
                 style: TextStyle(color: Colors.white),
                 selectedItemBuilder: (BuildContext context) {
-                return myList.map<Widget>((String item) {
+                return widget.myList.map<Widget>((String item) {
                 return Padding(
                   padding: const EdgeInsets.fromLTRB(0,12,0,0),
                   child: Text("Please select something",
@@ -72,8 +74,9 @@ class _CustomDropDownState extends State<CustomDropDown> {
                 value: selectedValue,
                 items: dropdownItems,
                 onChanged: (String? newValue) {
+                  if(newValue!=null)
+                    selectedItems.add(newValue!);
                   setState(() {
-                    
                     selectedValue = newValue!;
                   });
                 },
@@ -87,7 +90,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
             spacing: 8.0, // Adjust spacing between chips
             runSpacing: 4.0, // Adjust spacing between lines of chips
             children: List<Widget>.generate(
-              selectedItem.length,
+              selectedItems.length,
                   (int index) {
                 return Chip(
                   side: BorderSide(color: Color.fromRGBO(0, 156, 74, 1)),
@@ -97,7 +100,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
                   backgroundColor: Color.fromRGBO(0, 156, 74, 1),
                   shape: StadiumBorder(
                   ),
-                  label: Text(selectedItem[index],
+                  label: Text(selectedItems[index],
                   style: GoogleFonts.baloo2(
                     textStyle: TextStyle(
                       color: Colors.white,
@@ -105,10 +108,12 @@ class _CustomDropDownState extends State<CustomDropDown> {
                       fontWeight: FontWeight.w500
                     )
                   ),),
+
                   // You can also customize other properties of the Chip widget here
                   onDeleted: () {
                     setState(() {
-                      selectedItem.removeAt(index);
+                      selectedItems.removeAt(index);
+                      widget.selectedItemFun(selectedItems);
                     });
                   },
                 );

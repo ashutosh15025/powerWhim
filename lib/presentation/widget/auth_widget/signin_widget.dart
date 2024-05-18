@@ -61,8 +61,9 @@ class _SignInScreenState extends State<SignInScreen> {
               padding: const EdgeInsets.fromLTRB(0, 24, 0, 24),
               child: InkWell(
                  onTap: (){
-                   if(userEmail!=null)
-                   bloc.add(RegisterSucessEvent(userEmail!));
+                   if(userEmail!=null){
+                     print("clicked");
+                   bloc.add(RegisterEvent(userEmail!));}
                  },
                   child: GradientButtonGreenYellow(buttonText: "Next")),
             ),
