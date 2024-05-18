@@ -5,8 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../constant/service_api_constant.dart';
 
 class DatePicker extends StatefulWidget {
-  const DatePicker({super.key, required this.setDOB});
+  const DatePicker({super.key, required this.setDOB, this.error});
   final Function(String) setDOB;
+  final String ? error;
 
   @override
   State<DatePicker> createState() => _DatePickerState();
@@ -24,21 +25,21 @@ class _DatePickerState extends State<DatePicker> {
         children: [
           TextField(
             controller: _dateController,
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: widget.error==null?Colors.white:Colors.red),
             decoration: InputDecoration(
               fillColor: Colors.white,
               enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 1)
+                  borderSide: BorderSide(color: widget.error==null?Colors.grey:Colors.red, width: 1)
               ),
               focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 1)
+                  borderSide: BorderSide(color: widget.error==null?Colors.grey:Colors.red, width: 1)
               ),
               hintText: "Date of Birth",
               hintStyle: GoogleFonts.baloo2(
                 textStyle: TextStyle(
                     fontWeight: FontWeight.w200,
                     fontSize: 16,
-                    color: Colors.white
+                    color: widget.error==null?Colors.white:Colors.red
                 ),
               ),
             ),

@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomInputField extends StatefulWidget {
-  const CustomInputField({super.key, required this.title, required this.placeholder, required this.description, required this.updateName});
+  const CustomInputField({super.key, required this.title, required this.placeholder, required this.description, required this.updateName, this.error});
   final String title;
   final String placeholder;
   final String description;
   final Function(String) updateName;
+  final String ? error;
 
   @override
   State<CustomInputField> createState() => _CustomInputFielsState();
@@ -26,21 +27,21 @@ class _CustomInputFielsState extends State<CustomInputField> {
               widget.updateName(value);
             },
             cursorColor: Colors.yellow.shade600,
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: widget.error==null?Colors.white:Colors.red),
             decoration: InputDecoration(
               fillColor: Colors.white,
               enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey,width: 1)
+                borderSide: BorderSide(color: widget.error==null?Colors.grey:Colors.red,width: 1)
               ),
               focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white,width: 1)
+                  borderSide: BorderSide(color: widget.error==null?Colors.white:Colors.red,width: 1)
               ),
               hintText: widget.placeholder,
               hintStyle:GoogleFonts.baloo2(
                 textStyle:TextStyle(
                     fontWeight: FontWeight.w300,
                     fontSize: 16,
-                  color: Colors.white
+                    color: widget.error==null?Colors.white:Colors.red
                 ),),
             ),
           ),

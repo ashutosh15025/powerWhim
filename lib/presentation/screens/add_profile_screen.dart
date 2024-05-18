@@ -10,6 +10,7 @@ import 'package:powerwhim/presentation/widget/sliders/distance_slider.dart';
 import 'package:powerwhim/presentation/widget/sliders/range_slider_value_Indicator.dart';
 
 import '../../constant/service_api_constant.dart';
+import '../home.dart';
 import '../widget/checkbox_grid_widget.dart';
 import '../widget/custom/custom_slider_thumb.dart';
 import '../widget/custom_drop_down.dart';
@@ -28,49 +29,46 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
   int distance = 10;
   bool noRelaventSport = false;
   String dropdownvalue = "1";
-  String ? name;
-  String ? DOB;
-  String ? accomplishment;
-  String ? goals;
-  String ? hobbies;
-  String ? sports;
-  String ? ambition;
+  String? name;
+  String? DOB;
+  String? accomplishment;
+  String? goals;
+  String? hobbies;
+  String? sports;
 
   String start = "10";
   String end = "28";
 
   List<String> myList = ["Item 1", "Item 2", "Item 3"];
 
-
   List<String> sportsList = [];
   List<String> hobbiesList = [];
 
-
   String selectedValue = "Option 1";
-
 
   final List<String> selectedItem = [];
 
+  List<String> weekelyAvailability = List<String>.filled(14, "true");
 
 
-  List<bool> weekelyAvailability = List<bool>.filled(14, true);
-
+  String ? errorName = null;
+  String ? errorDOB = null;
 
 
   Widget build(BuildContext context) {
-    List<DropdownMenuItem<String>> dropdownItems = myList.map((String value) =>
-        DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        )).toList();
     return BlocProvider(
       create: (context) => AuthBloc(),
-
       child: BlocConsumer<AuthBloc, AuthState>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if(state is AddProfileSuccessState)
+            {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const Home()));
+            }
+        },
         builder: (context, state) {
           return Scaffold(
-            extendBody: true,
+            resizeToAvoidBottomInset: false,
+            extendBody: false,
             appBar: AppBar(
               title: Center(
                 child: Text("Add Profile",
@@ -78,96 +76,111 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
                       textStyle: TextStyle(
                           color: Colors.white,
                           fontSize: 20,
-                          fontWeight: FontWeight.w700
-                      ),)),
+                          fontWeight: FontWeight.w700),
+                    )),
               ),
               backgroundColor: Colors.black,
             ),
-            body: Container(
-              padding: EdgeInsets.all(16),
-
-              height: MediaQuery
-                  .of(context)
-                  .size
-                  .height - 0,
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomInputField(title: "Name",
-                      placeholder: "Enter Your Name",
-                      description: "If you dont want people guessing",
-                      updateName: setName,),
-                    DatePicker(setDOB: setDOB,),
-                    SetAgeRangeSlider(setageRange: setAgeRange,),
-                    DistanceSlider(),
-                     CustomDropDown(dropDownHeading: "Sports You Participated in", myList: myList, selectedItemFun: setSports),
-                     CustomDropDown(dropDownHeading: "Your hobbies", myList: myList, selectedItemFun: setSports),
-                    Checkbox(value: noRelaventSport, activeColor: green,
-                        onChanged: (value) {
-                          setState(() {
-                            noRelaventSport = value!;
-                          });
-                        }),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text("Estimated weekly availability",
-                          style: GoogleFonts.baloo2(
-                            textStyle: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16,
-                                color: Colors.white
-                            ),)),
-                    ),
-                    CustomTextarea(),
-                    CustomTextarea(),
-                    SizedBox(
-                        child: Container(
-                          padding: const EdgeInsets.all(8.0),
-                          margin: const EdgeInsets.all(8.0),
-                          child: CheckboxGridWidget(
-                            weekAvailability: weekAvailability,),
-                        )
-                    ),
-                    Center(
-                      child: InkWell(
-                        onTap: () {
-                          // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const Home()));
-                          sports = getListConcatElement(sportsList);
-                          hobbies = getListConcatElement(hobbiesList);
-                          print(sports);
-                          print(hobbies);
-
-
-                          BlocProvider.of<AuthBloc>(context).add(
-                              AddProfileEvent(AddProfileModel(name: name,
-                                  dateOfBirth: DOB,
-                                  sports: sports,
-                                  hobbies: hobbies,
-                                  ambition: ambition,
-                                  accomplishment: accomplishment,
-                                  userId: "28d53919-b837-4eee-b85b-f7389784ec6f",
-                                  age: Age(start: start, end: end))));
-                          print("ashes");
-                        },
-                        child: Center(child: Container(
-                            margin: EdgeInsets.fromLTRB(0, 16, 0, 0),
-                            width: MediaQuery
-                                .of(context)
-                                .size
-                                .width - 100,
-                            child: GradientButtonGreenYellow(
-                                buttonText: "Submit"))),
+            body: GestureDetector(
+              onTap: () {
+                FocusScope.of(context).unfocus();
+              },
+              child: Container(
+                padding: EdgeInsets.all(16),
+                height: MediaQuery.of(context).size.height - 0,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CustomInputField(
+                        title: "Name",
+                        placeholder: "Enter Your Name",
+                        description: "If you dont want people guessing",
+                        updateName: setName,
+                        error: errorName,
                       ),
-                    )
+                      DatePicker(
+                        setDOB: setDOB,
+                        error: errorDOB,
+                      ),
+                      SetAgeRangeSlider(
+                        setageRange: setAgeRange,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("Estimated weekly availability",
+                            style: GoogleFonts.baloo2(
+                              textStyle: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 16,
+                                  color: Colors.white),
+                            )),
+                      ),
+                      SizedBox(
+                          child: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        margin: const EdgeInsets.all(8.0),
+                        child: CheckboxGridWidget(
+                          weekAvailability: weekAvailability,
+                        ),
+                      )),
+                      DistanceSlider(setDistance: setMeetingDistance,),
+                      CustomDropDown(
+                          dropDownHeading: "Sports You Participated in",
+                          myList: myList,
+                          selectedItemFun: setSports),
+                      CustomDropDown(
+                          dropDownHeading: "Your hobbies",
+                          myList: myList,
+                          selectedItemFun: sethobbies),
+                      CustomTextarea(
+                        placeholder: "Your Goal/Ambition",
+                        setText: setGoals,
+                      ),
+                      CustomTextarea(
+                        placeholder: "Your Accomplishment",
+                        setText: setAccomplishment,
+                      ),
+                      Center(
+                        child: InkWell(
+                          onTap: () {
+                            sports = getListConcatElement(sportsList);
+                            hobbies = getListConcatElement(hobbiesList);
+                            print(sports);
+                            print(hobbies);
 
-                    ,
-                    Padding(padding: EdgeInsets.all(60)),
-                  ],
+                            if (name != null && DOB!=null && name!.isNotEmpty&& DOB!.isNotEmpty) {
+                                    onSubmitAllFieldSuccess(context);
+                            }
+                            else if(name==null || name!.isEmpty){
+                              setState(() {
+                                errorName = "Name cant be Empty";
+                              });
+
+                            }
+                            else{
+                              setState(() {
+                                errorDOB = "Date of birth cant be Empty";
+                              });
+                            }
+
+                          },
+                          child: Center(
+                              child: Container(
+                                  margin: EdgeInsets.fromLTRB(0, 16, 0, 0),
+                                  width:
+                                      MediaQuery.of(context).size.width - 100,
+                                  child: GradientButtonGreenYellow(
+                                      buttonText: "Submit"))),
+                        ),
+                      ),
+                      Padding(padding: EdgeInsets.all(60)),
+                    ],
+                  ),
                 ),
-              ),
-              decoration: BoxDecoration(
-                color: Colors.black,
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                ),
               ),
             ),
           );
@@ -176,61 +189,89 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
     );
   }
 
-    void setName(String value) {
-      name = value;
-    }
+  void setName(String value) {
+    name = value;
+    setState(() {
+      errorName = null;
+    });
+  }
 
-    void setDOB(String value) {
-      DOB = value;
-    }
+  void setDOB(String value) {
+    DOB = value;
+    setState(() {
+      errorDOB = null;
+    });
+  }
 
-    void setAccomplishment(String value) {
-      accomplishment = value;
-    }
+  void setAccomplishment(String value) {
+    accomplishment = value;
+  }
 
-    void setGoals(String value) {
-      goals = value;
-    }
+  void setGoals(String value) {
+    goals = value;
+  }
 
-    void setHobbies(String value) {
-      hobbies = value;
-    }
+  void setHobbies(String value) {
+    hobbies = value;
+  }
 
-    void setSport(String value) {
-      sports = value;
-    }
+  void setSport(String value) {
+    sports = value;
+  }
 
-    void setambition(String value) {
-      sports = value;
-    }
+  void setMeetingDistance(int val) {
+    distance = val;
+  }
 
-    void setAgeRange(String startAge, String endAge) {
-      start = startAge;
-      end = endAge;
-    }
+  void setAgeRange(String startAge, String endAge) {
+    start = startAge;
+    end = endAge;
+  }
 
-    void weekAvailability(int index) {
-      weekelyAvailability[index] = !weekelyAvailability[index];
-    }
-
-    void setSports(List<String> list) {
-      sportsList = list;
-    }
-
-    void sethobbies(List<String> list) {
-      hobbiesList = list;
-    }
-
-    String getListConcatElement(List<String> list) {
-      String outputString = "";
-      for (int i = 0; i < list.length; i++) {
-        outputString += list[i];
-        if (i != list.length - 1) {
-          outputString += " ,";
-        }
+  void weekAvailability(List<bool> list) {
+    for(int i=0;i<list.length;i++)
+      {
+        weekelyAvailability[i]=list[i].toString();
       }
-      return outputString;
-    }
+  }
 
+  void setSports(List<String> list) {
+    sportsList = list;
+    print(sportsList.length);
+  }
+
+  void sethobbies(List<String> list) {
+    hobbiesList = list;
+    print(hobbiesList.length);
+  }
+
+  String getListConcatElement(List<String> list) {
+    String outputString = "";
+    for (int i = 0; i < list.length; i++) {
+      outputString += list[i];
+      if (i != list.length - 1) {
+        outputString += " ,";
+      }
+    }
+    return outputString;
+  }
+
+
+  void onSubmitAllFieldSuccess(BuildContext context){
+    print("submitcalled");
+    BlocProvider.of<AuthBloc>(context).add(
+        AddProfileEvent(AddProfileModel(
+            name: name,
+            dateOfBirth: DOB,
+            sports: sports,
+            hobbies: hobbies,
+            ambition: goals,
+            meetingDistance: distance.toString(),
+            weekAvailability: weekelyAvailability,
+            accomplishment: accomplishment,
+            userId:
+            "28d53919-b837-4eee-b85b-f7389784ec6f",
+            age: Age(start: start, end: end))));
+  }
 
 }

@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomTextarea extends StatefulWidget {
-  const CustomTextarea({super.key});
+  const CustomTextarea({super.key, required this.placeholder, required this.setText});
+  final String placeholder;
+  final Function(String) setText;
 
   @override
   State<CustomTextarea> createState() => _CustomTextareaState();
@@ -13,10 +15,12 @@ class _CustomTextareaState extends State<CustomTextarea> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text("Your Goal/Ambition",
+          child: Text(widget.placeholder,
               style: GoogleFonts.baloo2(
                 textStyle:TextStyle(
                     fontWeight: FontWeight.w400,
@@ -40,6 +44,9 @@ class _CustomTextareaState extends State<CustomTextarea> {
                   color: Colors.white
               ),),
             keyboardType: TextInputType.multiline,
+            onChanged: (value){
+              widget.setText(value);
+            },
             decoration: InputDecoration.collapsed(filled: true, hintText: 'Enter a message',
               fillColor: Color.fromRGBO(0, 0, 0, 0),
               hintStyle:GoogleFonts.baloo2(

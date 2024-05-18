@@ -6,7 +6,8 @@ import '../../../constant/service_api_constant.dart';
 import '../custom/custom_slider_thumb.dart';
 
 class DistanceSlider extends StatefulWidget {
-  const DistanceSlider({super.key});
+  const DistanceSlider({super.key, required this.setDistance});
+  final Function(int) setDistance;
 
   @override
   State<DistanceSlider> createState() => _DistanceSliderState();
@@ -42,6 +43,7 @@ class _DistanceSliderState extends State<DistanceSlider> {
               onChanged: (value) {
                 setState(() {
                   distance = value.toInt();
+                   widget.setDistance(distance);
                 });
               },
               activeColor: green,

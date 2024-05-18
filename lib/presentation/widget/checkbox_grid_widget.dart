@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class CheckboxGridWidget extends StatefulWidget {
   const CheckboxGridWidget({super.key, required this.weekAvailability});
 
-  final Function(int) weekAvailability;
+  final Function(List<bool>) weekAvailability;
 
   @override
   State<CheckboxGridWidget> createState() => _CheckboxGridWidgetState();
@@ -12,8 +12,10 @@ class CheckboxGridWidget extends StatefulWidget {
 
 class _CheckboxGridWidgetState extends State<CheckboxGridWidget> {
   List<bool> isSelected =
-      List.generate(16, (_) => true); // List to hold checkbox states
-  bool checkedBox = false;
+      List.generate(16, (_) => true);
+  List<bool> weeklyAvailability =
+  List.generate(14, (_) => true);// List to hold checkbox states
+  bool checkedBox = true;
 
   @override
   Widget build(BuildContext context) {
@@ -41,12 +43,15 @@ class _CheckboxGridWidgetState extends State<CheckboxGridWidget> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
+                            print(index);
+                            checkedBox=false;
                             isSelected[index] = !isSelected[index];
                             if (index < 8)
-                              widget.weekAvailability(index);
+                              weeklyAvailability[index-1] = !isSelected[index];
                             else {
-                              widget.weekAvailability(index - 1);
+                              weeklyAvailability[index-2] = !isSelected[index];;
                             }
+                            widget.weekAvailability(isSelected);
                           });
                         },
                         child: Container(
@@ -85,7 +90,10 @@ class _CheckboxGridWidgetState extends State<CheckboxGridWidget> {
                     activeColor: Colors.green,
                     onChanged: (value) {
                       setState(() {
+                        if(value==true)
+                        isSelected = List<bool>.generate(isSelected.length, (index) => true);
                         checkedBox = value!;
+                        widget.weekAvailability(isSelected);
                       });
                     }),
                 Text(
