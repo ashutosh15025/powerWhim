@@ -19,7 +19,7 @@ class onBoardPageView extends StatelessWidget {
               color: Color.fromRGBO(0, 0, 0, 0),
               height: 250,
               child: CircleAvatar(
-                backgroundImage: AssetImage('assets/icon/logo.jpeg'), // Replace with your asset path
+                backgroundImage: AssetImage('assets/icon/logo.png'), // Replace with your asset path
                 radius: 125,
                 backgroundColor: Colors.black,
               ),

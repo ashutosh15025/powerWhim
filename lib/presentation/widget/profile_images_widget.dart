@@ -21,7 +21,7 @@ class _ProfileImageState extends State<ProfileImage> {
                 color: Colors.grey,
                 image: DecorationImage(
                   fit: BoxFit.fill,
-                  image: AssetImage('assets/icon/logo.png'),
+                  image: AssetImage('assets/icon/logoAndroid.png'),
                 )
             ),
           );

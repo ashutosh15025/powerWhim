@@ -61,12 +61,15 @@ class _HomeState extends State<Home> {
             MoltenTab(
               icon: Icon(Icons.home,
                 color:  _selectedIndex==0?Colors.white:Colors.blueGrey,),
-              title: Text("Home",
-                style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500
-                ),)
+              title: Padding(
+                padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                child: Text("Home",
+                  style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500
+                  ),),
+              )
             ),
             MoltenTab(
               icon: Icon(Icons.dashboard_rounded,
@@ -102,12 +105,15 @@ class _HomeState extends State<Home> {
             MoltenTab(
               icon: Icon(Icons.headphones_rounded,
                 color:  _selectedIndex==4?Colors.white:Colors.blueGrey,),
-                title: Text("Help",
-                style: GoogleFonts.poppins(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500
-                ),)
+                title: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
+                  child: Text("Help",
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500
+                  ),),
+                )
 
             ),
           ],

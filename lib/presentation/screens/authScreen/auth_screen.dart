@@ -88,7 +88,7 @@ class _LoginScreenState extends State<AuthScreen> {
                             height:180,
                             margin: EdgeInsets.fromLTRB(0, 120, 0, 10),
                             child: CircleAvatar(
-                              backgroundImage: AssetImage('assets/icon/logo.jpeg'),
+                              backgroundImage: AssetImage('assets/icon/logo.png'),
                               // Replace with your asset path
                               radius: 90,
                               backgroundColor: Colors.black,
