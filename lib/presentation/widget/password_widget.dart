@@ -19,6 +19,8 @@ class _PasswordWidgetState extends State<PasswordWidget> {
     return Container(
       padding: EdgeInsets.all(8),
       child: TextField(
+        enableInteractiveSelection: true,
+        cursorColor: Colors.yellowAccent,
         style: TextStyle(color: Colors.white),
         onChanged: (value){
           widget.setpassword(value);

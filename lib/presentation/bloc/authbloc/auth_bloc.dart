@@ -21,59 +21,73 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<VerifyOTPsEvent>(onVerifyOTPsEvent);
     on<CreatePasswordEvent>(onCreatePasswordEvent);
     on<AddProfileEvent>(onAddProfileEvent);
+    on<LoginEvent>(onLoginEvent);
   }
   void onRegisterSucessEvent(
       RegisterEvent event, Emitter<AuthState> emit) async {
+    emit(LoadingState());
     var response = await locator.get<AccountManagmentUsecase>().registerUser(email:event.email);
      if(response.response.statusCode == HttpStatus.ok&&response.data.data!=null&&response.data.data?.status!=null){
        print(response.data.data!.status.toString()+" "+STATUS.success.toString());
 
        switch(response.data.data!.status){
          case "success":{
+           USER_ID = response.data.data?.userId;
            emit(AuthRegistorSuccessState(response.data.data!.mssg!,response.data.data!.userId));}
           default:
-            emit(AuthRegistorFailedState(response.data.data!.mssg!));
+            emit(ApiFailedState(response.data.data!.mssg!));
        }
      }
      else{
-       emit(AuthRegistorFailedState(ERROR));
+       print("ashes");
+       emit(ApiFailedState(ERROR));
      }
   }
 
   void onVerifyOTPsEvent(VerifyOTPsEvent event , Emitter<AuthState> emit) async{
     print(USER_ID.toString());
+    emit(LoadingState());
     var response = await locator.get<AccountManagmentUsecase>().verifyOTP(userId: USER_ID!, otp: event.otp);
     if(response.response.statusCode == HttpStatus.ok&&response.data.data!=null&&response.data.data?.status!=null){
       switch(response.data.data!.status){
         case "success":{
-          print(response.data.data!.mssg!);
+          print(response.data.data!.mssg!+"success");
           emit(VerifyOTPSuccessState(response.data.data!.mssg!));}
         default:
-          emit(VerifyOTPSuccessFailed(ERROR));
+          emit(ApiFailedState(response.data.data!.mssg!));
       }
     }
     else{
-      emit(VerifyOTPSuccessFailed(ERROR));
+      emit(ApiFailedState(ERROR));
     }
   }
 
   void onLoginEvent(LoginEvent event , Emitter<AuthState> emit) async{
+    emit(LoadingState());
+    print("login api hit");
+    try{
     var response = await locator.get<AccountManagmentUsecase>().loginUser(email: event.email,password:event.password );
+    print("login api respose");
     if(response.response.statusCode == HttpStatus.ok&&response.data.data!=null&&response.data.data?.status!=null){
       switch(response.data.data!.status){
-        case "success":{
+        case "Success":{
           print(response.data.data!.mssg!);
           emit(LoginSuccessState(response.data.data!.mssg!));}
         default:
-          emit(LoginFailedState(ERROR));
+          emit(ApiFailedState(response.data.data!.mssg!));
       }
     }
     else{
-      emit(LoginFailedState(ERROR));
+      print("error");
+      emit(ApiFailedState(ERROR));
+    }}catch(e){
+      emit(ApiFailedState(ERROR));
     }
   }
 
   void onCreatePasswordEvent(CreatePasswordEvent event , Emitter<AuthState> emit) async{
+    emit(LoadingState());
+
     print("create password clicked");
     var response = await locator.get<AccountManagmentUsecase>().createPassword(userId: USER_ID!,password:event.password );
     print("create password clicked + ${response.data.data!.status!.toString()}");
@@ -84,29 +98,36 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           print(response.data.data!.mssg!);
           emit(CreatePasswordSuccessState(response.data.data!.mssg!));}
         default:
-          emit(CreatePasswordFailedState(ERROR));
+          emit(ApiFailedState(response.data.data!.mssg!));
       }
     }
     else{
-      emit(CreatePasswordFailedState(ERROR));
+      emit(ApiFailedState(ERROR));
     }
   }
 
 
   void onAddProfileEvent(AddProfileEvent event , Emitter<AuthState> emit) async{
+    emit(LoadingState());
     print("add profile called");
     var response = await locator.get<AccountManagmentUsecase>().addProfile(addProfileModel: event.addProfileModel);
+    print("adeded");
+   print(USER_ID);
     if(response.response.statusCode == HttpStatus.ok&&response.data.data!=null&&response.data.data?.status!=null){
       switch(response.data.data!.status){
         case "success":{
           print(response.data.data!.mssg!);
           emit(AddProfileSuccessState(response.data.data!.mssg!));}
-        default:
-          emit(AddProfileFailedState(response.data.data!.mssg!));
+        default:{
+          print(response.data.data!.status);
+          print(response.data.data!.mssg!);
+
+          emit(ApiFailedState(response.data.data!.mssg!));}
       }
     }
     else{
-      emit(AddProfileFailedState(ERROR));
+      print("error");
+      emit(ApiFailedState(ERROR));
     }
   }
 

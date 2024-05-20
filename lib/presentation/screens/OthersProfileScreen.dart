@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:powerwhim/data/model/profilemodel/full_profile.dart';
 
 import '../widget/content_description_widget.dart';
 import '../widget/profile_images_widget.dart';
 
 class OtherProfileScreen extends StatefulWidget {
-  const OtherProfileScreen({super.key});
+  const OtherProfileScreen({super.key, required this.fullProfileModel});
+  final FullProfileModel fullProfileModel;
 
   @override
   State<OtherProfileScreen> createState() => _OtherProfileScreenState();
@@ -40,7 +42,7 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
             children: [
               Row(children:[Container(
                 padding: EdgeInsets.fromLTRB(0, 16, 0, 16),
-                child: Text("Jennefer Lucy",
+                child: Text(widget.fullProfileModel.data!.name!,
                     style: GoogleFonts.lato(
                       textStyle:TextStyle(
                           fontSize: 22,
@@ -49,16 +51,16 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
                 ),
               ),
                 Spacer()
-                ,Text("age",
+                ,Text(widget.fullProfileModel.data!.age!.toString(),
                   style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
                       color: Colors.green
                   ),)]),
-              ContentDescription(title: "Sports:",description: "Football, Hockey"),
-              ContentDescription(title: "Knitting:",description: "Knitting and travel"),
-              ContentDescription(title: "Ambition:",description: " Run a marathon /n Run a marathon /n Run a marathon /nRun a marathon /n "),
-              ContentDescription(title: "Accomplishment:",description: "Knitting and travel"),
+              ContentDescription(title: "Sports:",description: widget.fullProfileModel.data!.sports!),
+              ContentDescription(title: "Knitting:",description: widget.fullProfileModel.data!.sports!),
+              ContentDescription(title: "Ambition:",description: widget.fullProfileModel.data!.ambition!),
+              ContentDescription(title: "Accomplishment:",description: widget.fullProfileModel.data!.sports!),
               ProfileImage()
             ],
           ),

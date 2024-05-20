@@ -8,8 +8,9 @@ import '../../bloc/authbloc/auth_bloc.dart';
 import '../gradient_button_green_yelllow.dart';
 
 class SignInScreen extends StatefulWidget {
-  const SignInScreen({super.key,required this.onPressNextButton});
-  final Function() onPressNextButton;
+  const SignInScreen({super.key,required this.onSignInLogIN});
+  final Function() onSignInLogIN;
+
 
   @override
   State<SignInScreen> createState() => _SignInScreenState();
@@ -17,31 +18,39 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
 
+  String ? userEmail= null;
 
   @override
   Widget build(BuildContext context) {
     var bloc =  BlocProvider.of<AuthBloc>(context);
-    String ? userEmail;
     return Container(
       margin: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: Color.fromRGBO(17, 17, 17, 1),
+        borderRadius: BorderRadius.circular(16),
+        color: Color.fromRGBO(31, 31, 31, 1),
       ),
         padding: EdgeInsets.all(24),
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text("My name is hada isjjnjnn?",
-                style: TextStyle(color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500),),
+            Container(
+              margin: EdgeInsets.all(16),
+              padding: EdgeInsets.all(8),
+              alignment: Alignment.center,
+              child: Text("Exchange perspective online for quality time offline ",
+                style: GoogleFonts.poppins(
+                    textStyle: TextStyle(color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16)
+                ),
+                textAlign: TextAlign.center,),
             ),
             TextField(
+              enableInteractiveSelection: true,
+              cursorColor: Colors.yellow,
               style: TextStyle(color: Colors.white),
               onChanged: (value){
                 userEmail = value;
+                print(userEmail);
               },
               decoration: InputDecoration(
                 fillColor: Colors.white,
@@ -50,19 +59,22 @@ class _SignInScreenState extends State<SignInScreen> {
                     borderRadius: BorderRadius.circular(12)
                 ),
                 focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.green,width: 2),
+                    borderSide: BorderSide(color: Colors.white,width: 2),
                     borderRadius: BorderRadius.circular(12)
                 ),
                 hintText: "Enter Your Email address",
-                hintStyle: TextStyle(color: Colors.white),
+                hintStyle: TextStyle(color: Colors.grey,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400
+                ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 24, 0, 24),
               child: InkWell(
                  onTap: (){
+                   print(userEmail.toString());
                    if(userEmail!=null){
-                     print("clicked");
                    bloc.add(RegisterEvent(userEmail!));}
                  },
                   child: GradientButtonGreenYellow(buttonText: "Next")),
@@ -71,18 +83,22 @@ class _SignInScreenState extends State<SignInScreen> {
               padding: const EdgeInsets.all(16.0),
               child: Text("-------------OR-------------",
                 style: TextStyle(color: Colors.grey,
-                    fontSize: 18),),
+                    fontSize: 16),),
             ),
             Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [Text("Alerady have Account?",
                   style: TextStyle(color: Colors.grey,
                       fontSize: 16),),
-                  Text("Login",
-                    style: GoogleFonts.baloo2(
-                      textStyle:TextStyle(color: green,
-                        fontSize: 16,
-                      fontWeight: FontWeight.w400),))]
+                  InkWell(
+                    onTap: (){widget.onSignInLogIN();
+                    },
+                    child: Text("Login",
+                      style: GoogleFonts.baloo2(
+                        textStyle:TextStyle(color: green,
+                          fontSize: 16,
+                        fontWeight: FontWeight.w500),)),
+                  )]
             ),
 
           ],

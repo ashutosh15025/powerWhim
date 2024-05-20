@@ -35,6 +35,7 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
   String? goals;
   String? hobbies;
   String? sports;
+  bool loadingState = false;
 
   String start = "10";
   String end = "28";
@@ -62,8 +63,13 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
         listener: (context, state) {
           if(state is AddProfileSuccessState)
             {
+              print("add profile Sucess");
+              loadingState = !loadingState;
               Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const Home()));
             }
+          else{
+            loadingState = !loadingState;
+          }
         },
         builder: (context, state) {
           return Scaffold(
@@ -85,102 +91,115 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
               onTap: () {
                 FocusScope.of(context).unfocus();
               },
-              child: Container(
-                padding: EdgeInsets.all(16),
-                height: MediaQuery.of(context).size.height - 0,
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CustomInputField(
-                        title: "Name",
-                        placeholder: "Enter Your Name",
-                        description: "If you dont want people guessing",
-                        updateName: setName,
-                        error: errorName,
-                      ),
-                      DatePicker(
-                        setDOB: setDOB,
-                        error: errorDOB,
-                      ),
-                      SetAgeRangeSlider(
-                        setageRange: setAgeRange,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text("Estimated weekly availability",
-                            style: GoogleFonts.baloo2(
-                              textStyle: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 16,
-                                  color: Colors.white),
-                            )),
-                      ),
-                      SizedBox(
-                          child: Container(
-                        padding: const EdgeInsets.all(8.0),
-                        margin: const EdgeInsets.all(8.0),
-                        child: CheckboxGridWidget(
-                          weekAvailability: weekAvailability,
+              child: Stack(
+                children: [
+                  Container(
+                  padding: EdgeInsets.all(16),
+                  height: MediaQuery.of(context).size.height - 0,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustomInputField(
+                          title: "Name",
+                          placeholder: "Enter Your Name",
+                          description: "If you dont want people guessing",
+                          updateName: setName,
+                          error: errorName,
                         ),
-                      )),
-                      DistanceSlider(setDistance: setMeetingDistance,),
-                      CustomDropDown(
-                          dropDownHeading: "Sports You Participated in",
-                          myList: myList,
-                          selectedItemFun: setSports),
-                      CustomDropDown(
-                          dropDownHeading: "Your hobbies",
-                          myList: myList,
-                          selectedItemFun: sethobbies),
-                      CustomTextarea(
-                        placeholder: "Your Goal/Ambition",
-                        setText: setGoals,
-                      ),
-                      CustomTextarea(
-                        placeholder: "Your Accomplishment",
-                        setText: setAccomplishment,
-                      ),
-                      Center(
-                        child: InkWell(
-                          onTap: () {
-                            sports = getListConcatElement(sportsList);
-                            hobbies = getListConcatElement(hobbiesList);
-                            print(sports);
-                            print(hobbies);
-
-                            if (name != null && DOB!=null && name!.isNotEmpty&& DOB!.isNotEmpty) {
-                                    onSubmitAllFieldSuccess(context);
-                            }
-                            else if(name==null || name!.isEmpty){
-                              setState(() {
-                                errorName = "Name cant be Empty";
-                              });
-
-                            }
-                            else{
-                              setState(() {
-                                errorDOB = "Date of birth cant be Empty";
-                              });
-                            }
-
-                          },
-                          child: Center(
-                              child: Container(
-                                  margin: EdgeInsets.fromLTRB(0, 16, 0, 0),
-                                  width:
-                                      MediaQuery.of(context).size.width - 100,
-                                  child: GradientButtonGreenYellow(
-                                      buttonText: "Submit"))),
+                        DatePicker(
+                          setDOB: setDOB,
+                          error: errorDOB,
                         ),
-                      ),
-                      Padding(padding: EdgeInsets.all(60)),
-                    ],
+                        SetAgeRangeSlider(
+                          setageRange: setAgeRange,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("Estimated weekly availability",
+                              style: GoogleFonts.baloo2(
+                                textStyle: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                    color: Colors.white),
+                              )),
+                        ),
+                        SizedBox(
+                            child: Container(
+                          padding: const EdgeInsets.all(8.0),
+                          margin: const EdgeInsets.all(8.0),
+                          child: CheckboxGridWidget(
+                            weekAvailability: weekAvailability,
+                          ),
+                        )),
+                        DistanceSlider(setDistance: setMeetingDistance,),
+                        CustomDropDown(
+                            dropDownHeading: "Sports You Participated in",
+                            myList: myList,
+                            selectedItemFun: setSports),
+                        CustomDropDown(
+                            dropDownHeading: "Your hobbies",
+                            myList: myList,
+                            selectedItemFun: sethobbies),
+                        CustomTextarea(
+                          placeholder: "Your Goal/Ambition",
+                          setText: setGoals,
+                        ),
+                        CustomTextarea(
+                          placeholder: "Your Accomplishment",
+                          setText: setAccomplishment,
+                        ),
+                        Center(
+                          child: InkWell(
+                            onTap: () {
+                              sports = getListConcatElement(sportsList);
+                              hobbies = getListConcatElement(hobbiesList);
+                              print(sports);
+                              print(hobbies);
+
+                              if (name != null && DOB!=null && name!.isNotEmpty&& DOB!.isNotEmpty) {
+                                      onSubmitAllFieldSuccess(context);
+                              }
+                              else if(name==null || name!.isEmpty){
+                                setState(() {
+                                  errorName = "Name cant be Empty";
+                                });
+
+                              }
+                              else{
+                                setState(() {
+                                  errorDOB = "Date of birth cant be Empty";
+                                });
+                              }
+
+                            },
+                            child: Center(
+                                child: Container(
+                                    margin: EdgeInsets.fromLTRB(0, 16, 0, 0),
+                                    width:
+                                        MediaQuery.of(context).size.width - 100,
+                                    child: GradientButtonGreenYellow(
+                                        buttonText: "Submit"))),
+                          ),
+                        ),
+                        Padding(padding: EdgeInsets.all(60)),
+                      ],
+                    ),
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.black,
                   ),
                 ),
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                ),
+                  Visibility(
+                    visible: loadingState,
+                      child: Container(
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.yellowAccent,
+                      ),
+                    ),
+                  ))
+                ]
               ),
             ),
           );
@@ -270,7 +289,7 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
             weekAvailability: weekelyAvailability,
             accomplishment: accomplishment,
             userId:
-            "28d53919-b837-4eee-b85b-f7389784ec6f",
+            USER_ID,
             age: Age(start: start, end: end))));
   }
 

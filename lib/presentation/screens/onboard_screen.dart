@@ -89,7 +89,7 @@ class _OnBoardPageState extends State<OnBoardPage> {
                         if (currentPage == 3) {
                           Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
-                                  builder: (_) => const AddProfileScreen()));
+                                  builder: (_) => const AuthScreen()));
                         } else {
                           controller.animateToPage(
                             currentPage + 1,
@@ -102,6 +102,7 @@ class _OnBoardPageState extends State<OnBoardPage> {
                       child: Container(
                         height: 50,
                         width: 50,
+                         margin: EdgeInsets.all(16),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(25),
                             color: green),

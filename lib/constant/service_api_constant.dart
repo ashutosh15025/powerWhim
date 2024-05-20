@@ -1,7 +1,7 @@
 
 import 'dart:ui';
 
-const BASE_URL = "http://192.168.29.226:3000/";
+const BASE_URL = "https://whim.cozytech.co.in/";
 
 const Color green = Color.fromRGBO(0, 156, 74, 1);
 
@@ -17,4 +17,4 @@ extension STATUSVALUE on STATUS {
 }
 const ERROR ="some error Accured";
 
-String ? USER_ID;
+String ? USER_ID = "28d53919-b837-4eee-b85b-f7389784ec6f";

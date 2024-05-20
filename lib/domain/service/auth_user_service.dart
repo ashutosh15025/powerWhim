@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:retrofit/dio.dart';
@@ -18,9 +17,10 @@ abstract class AuthUserService{
       @Body() Map<String, dynamic> body,
       );
 
-  @POST("api/user/verify-otp")
+  @GET("api/user/verify-otp")
   Future<HttpResponse<AccountManagementModel>> oTPVerifcation(
-      @Body() Map<String, dynamic> body,
+      @Query("user_id") String userId,
+      @Query("verify_otp") String password
       );
   
   @GET("api/user/create-password")
@@ -31,7 +31,7 @@ abstract class AuthUserService{
 
   @GET("api/user/login")
   Future<HttpResponse<AccountManagementModel>>login (
-      @Query("email") String email,
+      @Query("email_id") String email,
       @Query("password") String password
       );
   

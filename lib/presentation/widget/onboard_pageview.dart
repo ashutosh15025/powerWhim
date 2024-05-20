@@ -12,14 +12,14 @@ class onBoardPageView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
-          padding: EdgeInsets.fromLTRB(8, 16, 8, 0),
+          padding: EdgeInsets.fromLTRB(8, 32, 8, 16),
           height: MediaQuery.of(context).size.height/2,
           child: Center(
             child: Container(
               color: Color.fromRGBO(0, 0, 0, 0),
               height: 250,
               child: CircleAvatar(
-                backgroundImage: AssetImage('assets/icon/logo.png'), // Replace with your asset path
+                backgroundImage: AssetImage('assets/icon/logo.jpeg'), // Replace with your asset path
                 radius: 125,
                 backgroundColor: Colors.black,
               ),
@@ -27,26 +27,26 @@ class onBoardPageView extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(8, 16, 8, 0),
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
           child: Text("Find people who match with you",
-                  style: GoogleFonts.baloo2(
+                  style: GoogleFonts.poppins(
                  textStyle: TextStyle(
-                     fontSize: 24,
+                     fontSize: 20,
                      color: Colors.white,
-                     fontWeight: FontWeight.w600
+                     fontWeight: FontWeight.w500
                  )
                        ),
                 textAlign: TextAlign.center,
               ),
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(8, 16, 8, 0),
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
           child: Text("Join us socialize with millions of power which change match",
-            style: GoogleFonts.baloo2(
+            style: GoogleFonts.poppins(
                 textStyle: TextStyle(
                     fontSize: 18,
                     color: Colors.white,
-                    fontWeight: FontWeight.w500
+                    fontWeight: FontWeight.w400
                 )
             ),
             textAlign: TextAlign.center,

@@ -19,6 +19,7 @@ class _DistanceSliderState extends State<DistanceSlider> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),

@@ -13,7 +13,7 @@ class _AuthUserService implements AuthUserService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://192.168.29.226:3000/';
+    baseUrl ??= 'https://whim.cozytech.co.in/';
   }
 
   final Dio _dio;
@@ -52,15 +52,19 @@ class _AuthUserService implements AuthUserService {
 
   @override
   Future<HttpResponse<AccountManagementModel>> oTPVerifcation(
-      Map<String, dynamic> body) async {
+    String userId,
+    String password,
+  ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'user_id': userId,
+      r'verify_otp': password,
+    };
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(body);
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<AccountManagementModel>>(Options(
-      method: 'POST',
+      method: 'GET',
       headers: _headers,
       extra: _extra,
     )
@@ -121,7 +125,7 @@ class _AuthUserService implements AuthUserService {
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'email': email,
+      r'email_id': email,
       r'password': password,
     };
     final _headers = <String, dynamic>{};

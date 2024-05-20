@@ -1,26 +1,18 @@
-
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/material.dart' show BuildContext, StatelessWidget, Widget;
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:powerwhim/presentation/bloc/profilebloc/profilebloc_bloc.dart';
+import 'package:powerwhim/presentation/widget/list_profile_widget.dart';
 
-import '../widget/profile_card_widget.dart';
 
 class ViewProfilesScreen extends StatelessWidget {
   const ViewProfilesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    List<String> listItem =["ashes","ashes","ashes","ashes","ashes"];
-    return  Container(
-        color: Color.fromRGBO(0, 0, 0, .99),
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height - 0,
-          child: ListView.builder(
-          itemCount: listItem.length,
-            itemBuilder: (context,index){
-            return ProfileCardWidget();
-            },),
-        ),
-      );
+    return BlocProvider(
+      create: (context) => ProfileblocBloc(),
+      child: ListProfileWidget(),
+    );
   }
 }

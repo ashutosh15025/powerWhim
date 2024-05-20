@@ -27,24 +27,24 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
             Row(children:[Container(
               padding: EdgeInsets.fromLTRB(0, 16, 0, 16),
               child: Text("Jennefer Lucy",
-                  style: GoogleFonts.lato(
+                  style: GoogleFonts.poppins(
                     textStyle:TextStyle(
                         fontSize: 22,
-                        fontWeight: FontWeight.w800,
+                        fontWeight: FontWeight.w600,
                         color: green),)
               ),
             ),
               Spacer()
               ,Text("30 yrs",
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                    color: green
-                ),)]),
+                style: GoogleFonts.poppins(
+                  textStyle:TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w600,
+                      color: green),),)]),
             ContentDescription(title: "Sports:",description: "Football, Hockey"),
             ContentDescription(title: "Hobbies:",description: "Knitting and travel"),
-            ContentDescription(title: "Ambition:",description: " Run a marathon \n Run a 100km marathon \n Run a 100km marathon \n Run a 100km marathon  "),
-            ContentDescription(title: "Accomplishment:",description: "Knitting and travel \n Knitting and travel and every thing \n Knitting and travel and every thing \n Knitting and travel and every thing \n Knitting and travel and every thing "),
+            ContentDescription(title: "Ambition:",description: "Run a marathon \nRun a 100km marathon \nRun a 100km marathon \nRun a 100km marathon  "),
+            ContentDescription(title: "Accomplishment:",description: "Knitting and travel \nKnitting and travel and every thing \nKnitting and travel and every thing \nKnitting and travel and every thing \nKnitting and travel and every thing "),
             ProfileImage()
           ],
         ),

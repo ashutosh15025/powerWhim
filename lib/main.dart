@@ -30,9 +30,15 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
     return BlocProvider(
       create: (context) => AuthBloc(),
       child: MaterialApp(
+        theme: ThemeData(
+          textSelectionTheme: TextSelectionThemeData(
+            selectionHandleColor: Colors.transparent,
+          ),
+        ),
       initialRoute: '/',
     onGenerateRoute: RouteGenerator.routeGenerate,
     ));

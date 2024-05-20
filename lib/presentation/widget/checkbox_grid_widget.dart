@@ -51,7 +51,7 @@ class _CheckboxGridWidgetState extends State<CheckboxGridWidget> {
                             else {
                               weeklyAvailability[index-2] = !isSelected[index];;
                             }
-                            widget.weekAvailability(isSelected);
+                            widget.weekAvailability(weeklyAvailability);
                           });
                         },
                         child: Container(
@@ -93,7 +93,7 @@ class _CheckboxGridWidgetState extends State<CheckboxGridWidget> {
                         if(value==true)
                         isSelected = List<bool>.generate(isSelected.length, (index) => true);
                         checkedBox = value!;
-                        widget.weekAvailability(isSelected);
+                        widget.weekAvailability(weeklyAvailability);
                       });
                     }),
                 Text(

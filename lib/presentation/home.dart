@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:molten_navigationbar_flutter/molten_navigationbar_flutter.dart';
+import 'package:powerwhim/presentation/bloc/profilebloc/profilebloc_bloc.dart';
 import 'package:powerwhim/presentation/screens/chat_screen/chat_screen.dart';
 import 'package:powerwhim/presentation/screens/friend_screen.dart';
 import 'package:powerwhim/presentation/screens/help_screen.dart';
@@ -23,14 +25,16 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return  BlocProvider(
+  create: (context) => ProfileblocBloc(),
+  child: Scaffold(
       resizeToAvoidBottomInset : false,
       extendBody: true,
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: Center(
           child: Text("Power Whim",
-          style: GoogleFonts.baloo2(
+          style: GoogleFonts.poppins(
             textStyle: TextStyle(
               fontSize: 20,
               color: Colors.white,
@@ -58,20 +62,20 @@ class _HomeState extends State<Home> {
               icon: Icon(Icons.home,
                 color:  _selectedIndex==0?Colors.white:Colors.blueGrey,),
               title: Text("Home",
-                style: GoogleFonts.baloo2(
+                style: GoogleFonts.poppins(
                     color: Colors.white,
                     fontSize: 16,
-                    fontWeight: FontWeight.w400
+                    fontWeight: FontWeight.w500
                 ),)
             ),
             MoltenTab(
-              icon: Icon(Icons.groups,
+              icon: Icon(Icons.dashboard_rounded,
                 color:  _selectedIndex==1?Colors.white:Colors.blueGrey,),
                 title: Text("Friends",
-                  style: GoogleFonts.baloo2(
+                  style: GoogleFonts.poppins(
                       color: Colors.white,
                       fontSize: 16,
-                      fontWeight: FontWeight.w400
+                      fontWeight: FontWeight.w500
                   ),)
 
             ),
@@ -79,30 +83,30 @@ class _HomeState extends State<Home> {
               icon: Icon(Icons.chat,
                 color:  _selectedIndex==2?Colors.white:Colors.blueGrey,),
                 title: Text("Chats",
-                  style: GoogleFonts.baloo2(
+                  style: GoogleFonts.poppins(
                       color:  _selectedIndex==2?Colors.white:Colors.blueGrey,
                       fontSize: 16,
-                      fontWeight: FontWeight.w400
+                      fontWeight: FontWeight.w500
                   ),)
             ),
             MoltenTab(
-              icon: Icon(Icons.person,
+              icon: Icon(Icons.supervised_user_circle_outlined,
                 color:  _selectedIndex==3?Colors.white:Colors.blueGrey,),
                 title: Text("Profile",
-                  style: GoogleFonts.baloo2(
+                  style: GoogleFonts.poppins(
                       color: Colors.white,
                       fontSize: 16,
-                      fontWeight: FontWeight.w400
+                      fontWeight: FontWeight.w500
                   ),)
             ),
             MoltenTab(
               icon: Icon(Icons.headphones_rounded,
                 color:  _selectedIndex==4?Colors.white:Colors.blueGrey,),
                 title: Text("Help",
-                style: GoogleFonts.baloo2(
+                style: GoogleFonts.poppins(
                   color: Colors.white,
                   fontSize: 16,
-                  fontWeight: FontWeight.w400
+                  fontWeight: FontWeight.w500
                 ),)
 
             ),
@@ -110,7 +114,8 @@ class _HomeState extends State<Home> {
         ),
       ),
 
-    );
+    ),
+);
   }
 
 }

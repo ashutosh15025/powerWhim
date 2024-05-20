@@ -9,7 +9,7 @@ import '../model/account_managment_model.dart';
 class AccountManagmentUsecase{
   final AuthUserRepoImp _authUserRepoImp;
   AccountManagmentUsecase(this._authUserRepoImp);
-  @override
+
   Future<HttpResponse<AccountManagementModel>> verifyOTP({ required String userId, required String otp}) {
     return _authUserRepoImp.verifyOTP(userId, otp);
   }
@@ -28,5 +28,6 @@ class AccountManagmentUsecase{
   Future<HttpResponse<AccountManagementModel>> addProfile({required AddProfileModel addProfileModel}) {
     return  _authUserRepoImp.addProfile(addProfileModel);
   }
+
 
 }

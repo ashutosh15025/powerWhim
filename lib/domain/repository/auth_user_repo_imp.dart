@@ -23,11 +23,8 @@ class AuthUserRepoImp implements AuthUserRepo{
 
   @override
   Future<HttpResponse<AccountManagementModel>> verifyOTP(String userId, String OTP) {
-    var requestBody = {
-      "user_id" : userId,
-      "verify_otp" : OTP,
-    };
-    return authUserService.oTPVerifcation(requestBody);
+
+    return authUserService.oTPVerifcation(userId,OTP);
   }
 
   @override
@@ -43,20 +40,13 @@ class AuthUserRepoImp implements AuthUserRepo{
 
   @override
   Future<HttpResponse<AccountManagementModel>> loginUser(String email, String password) {
-    // TODO: implement loginUser
-    throw UnimplementedError();
+    return authUserService.login(email, password);
   }
-
-
-
-
-
 
   //AddProfile
   @override
   Future<HttpResponse<AccountManagementModel>> addProfile(AddProfileModel addProfileModel) {
    var body = addProfileModel.toJson();
-   print(body.toString());
    return addProfileService.addProfile(body);
   }
 

@@ -20,16 +20,16 @@ class _ContentDescriptionState extends State<ContentDescription> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text("${widget.title}",
-          style: GoogleFonts.roboto(
+          style: GoogleFonts.poppins(
             textStyle:TextStyle(
             fontWeight: FontWeight.w800,
             fontSize: 16,
             color: Colors.yellow.shade500,
           ),),),
           Text("${widget.description}",
-            style: GoogleFonts.roboto(
+            style: GoogleFonts.poppins(
               textStyle:TextStyle(
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w500,
               fontSize: 14,
               color: Colors.white,
             ),)),

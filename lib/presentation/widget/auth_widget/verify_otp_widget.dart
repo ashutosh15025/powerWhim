@@ -51,7 +51,6 @@ class _VerifyOptWidgetState extends State<VerifyOptWidget> {
               fieldWidth: 40.0,
               borderWidth:1.0,
               activeBorderColor: Colors.yellowAccent,
-              activeBackgroundColor: Colors.pink.shade100,
               borderRadius: BorderRadius.circular(10.0),
               keyboardType: TextInputType.number,
               autoHideKeyboard: false,
@@ -59,6 +58,7 @@ class _VerifyOptWidgetState extends State<VerifyOptWidget> {
               borderColor: Colors.yellowAccent,
               textStyle: TextStyle(
                 fontSize: 30.0,
+                 color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
               onComplete: (output) {
