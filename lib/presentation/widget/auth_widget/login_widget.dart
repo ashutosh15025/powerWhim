@@ -5,8 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:powerwhim/presentation/bloc/authbloc/auth_bloc.dart';
 
 import '../../../constant/service_api_constant.dart';
-import '../gradient_button_green_yelllow.dart';
-import '../password_widget.dart';
+import '../custom/gradient_button_green_yelllow.dart';
+import '../custom/password_widget.dart';
 
 class LoginWidget extends StatefulWidget {
   const LoginWidget({super.key, required this.signInLogin});

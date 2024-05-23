@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/authbloc/auth_bloc.dart';
-import '../gradient_button_green_yelllow.dart';
-import '../password_widget.dart';
+import '../custom/gradient_button_green_yelllow.dart';
+import '../custom/password_widget.dart';
 
 class CreatePasswordWidget extends StatefulWidget {
   const CreatePasswordWidget({super.key, required this.onPressCrossButton, required this.onPressVerifyButton});

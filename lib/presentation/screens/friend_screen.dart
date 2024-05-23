@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:powerwhim/presentation/widget/friend_dm_widget.dart';
+import 'package:powerwhim/presentation/widget/custom/friend_dm_widget.dart';
 
 class FriendsScreen extends StatefulWidget {
   const FriendsScreen({super.key});

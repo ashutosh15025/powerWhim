@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:powerwhim/presentation/screens/add_profile_screen.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../constant/service_api_constant.dart';
-import '../widget/onboard_pageview.dart';
+import '../widget/custom/onboard_pageview.dart';
 import 'authScreen/auth_screen.dart';
 
 class OnBoardPage extends StatefulWidget {

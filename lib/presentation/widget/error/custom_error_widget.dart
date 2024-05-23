@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:powerwhim/constant/service_api_constant.dart';
-import 'package:powerwhim/presentation/widget/gradient_button_green_yelllow.dart';
+import 'package:powerwhim/presentation/widget/custom/gradient_button_green_yelllow.dart';
 
 class CustomErrorWidget extends StatelessWidget {
   const CustomErrorWidget({super.key, this.mssg, required this.error, required this.closeErrorWidget});

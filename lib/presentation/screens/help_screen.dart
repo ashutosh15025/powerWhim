@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:powerwhim/data/model/help_model.dart';
 import 'package:powerwhim/presentation/bloc/profilebloc/profilebloc_bloc.dart';
 import 'package:powerwhim/presentation/widget/error/custom_error_widget.dart';
-import 'package:powerwhim/presentation/widget/gradient_button_green_yelllow.dart';
+import 'package:powerwhim/presentation/widget/custom/gradient_button_green_yelllow.dart';
 
 class HelpScreen extends StatefulWidget {
   const HelpScreen({super.key});

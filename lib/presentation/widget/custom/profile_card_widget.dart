@@ -4,10 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:powerwhim/presentation/bloc/profilebloc/profilebloc_bloc.dart';
 
-import '../../constant/color_constant.dart';
-import '../../constant/service_api_constant.dart';
-import '../screens/OthersProfileScreen.dart';
-import '../screens/my_profile_widget.dart';
+import '../../../constant/color_constant.dart';
+import '../../../constant/service_api_constant.dart';
+import '../../screens/OthersProfileScreen.dart';
+import '../../screens/my_profile_widget.dart';
 
 class ProfileCardWidget extends StatefulWidget {
   const ProfileCardWidget({super.key, required this.name, required this.age, required this.sport, required this.hobbies, required this.userId});

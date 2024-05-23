@@ -11,12 +11,12 @@ import 'package:powerwhim/presentation/widget/sliders/range_slider_value_Indicat
 
 import '../../constant/service_api_constant.dart';
 import '../home.dart';
-import '../widget/checkbox_grid_widget.dart';
+import '../widget/custom/checkbox_grid_widget.dart';
 import '../widget/custom/custom_slider_thumb.dart';
-import '../widget/custom_drop_down.dart';
-import '../widget/custom_input_Field.dart';
-import '../widget/date_picker_widget.dart';
-import '../widget/gradient_button_green_yelllow.dart';
+import '../widget/custom/custom_drop_down.dart';
+import '../widget/custom/custom_input_Field.dart';
+import '../widget/custom/date_picker_widget.dart';
+import '../widget/custom/gradient_button_green_yelllow.dart';
 
 class AddProfileScreen extends StatefulWidget {
   const AddProfileScreen({super.key});

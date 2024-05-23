@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:powerwhim/presentation/widget/selected_drop_item_widget.dart';
+import 'package:powerwhim/presentation/widget/custom/selected_drop_item_widget.dart';
 
-import '../../constant/service_api_constant.dart';
+import '../../../constant/service_api_constant.dart';
 
 class CustomDropDown extends StatefulWidget {
   const CustomDropDown({super.key, required this.dropDownHeading, required this.myList, required this.selectedItemFun});

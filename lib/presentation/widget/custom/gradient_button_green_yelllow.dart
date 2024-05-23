@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../constant/color_constant.dart';
+import '../../../constant/color_constant.dart';
 
 class GradientButtonGreenYellow extends StatelessWidget {
   const GradientButtonGreenYellow({super.key, required this.buttonText});

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:powerwhim/data/model/profilemodel/full_profile.dart';
 
-import '../widget/content_description_widget.dart';
-import '../widget/profile_images_widget.dart';
+import '../widget/custom/content_description_widget.dart';
+import '../widget/custom/profile_images_widget.dart';
 
 class OtherProfileScreen extends StatefulWidget {
   const OtherProfileScreen({super.key, required this.fullProfileModel});
@@ -22,6 +22,17 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
           iconTheme: IconThemeData(
             color: Colors.white, //change your color here
           ),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.message,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                // do something
+              },
+            )
+          ],
           centerTitle: true,
           backgroundColor: Colors.black,
         title: Text("Power Whim",
@@ -51,7 +62,7 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
                 ),
               ),
                 Spacer()
-                ,Text(widget.fullProfileModel.data!.age!.toString(),
+                ,Text(widget.fullProfileModel.data!.age!.toString()+"Yrs",
                   style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,

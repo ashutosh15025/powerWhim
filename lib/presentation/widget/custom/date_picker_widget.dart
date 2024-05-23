@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../constant/service_api_constant.dart';
+import '../../../constant/service_api_constant.dart';
 
 class DatePicker extends StatefulWidget {
   const DatePicker({super.key, required this.setDOB, this.error});
@@ -68,7 +68,7 @@ class _DatePickerState extends State<DatePicker> {
     DateTime ?_pickDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
+      firstDate: DateTime(1850),
       lastDate: DateTime(2100),
       builder: (context, child) {
         return Theme(

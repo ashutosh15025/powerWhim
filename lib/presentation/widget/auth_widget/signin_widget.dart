@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../constant/service_api_constant.dart';
 import '../../bloc/authbloc/auth_bloc.dart';
-import '../gradient_button_green_yelllow.dart';
+import '../custom/gradient_button_green_yelllow.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key,required this.onSignInLogIN});

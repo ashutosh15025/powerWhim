@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_pin_code_fields/flutter_pin_code_fields.dart';
 
 import '../../bloc/authbloc/auth_bloc.dart';
-import '../gradient_button_green_yelllow.dart';
+import '../custom/gradient_button_green_yelllow.dart';
 
 class VerifyOptWidget extends StatefulWidget {
   const VerifyOptWidget({super.key,required this.onPressCrossButton, required this.onPressVerifyButton});

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../constant/service_api_constant.dart';
+import '../../../constant/service_api_constant.dart';
 
 class FriendDmWidget extends StatelessWidget {
   const FriendDmWidget({super.key});
