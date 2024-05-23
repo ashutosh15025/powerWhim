@@ -74,14 +74,21 @@ class _OnBoardPageState extends State<OnBoardPage> {
                   children: [
                     Container(
                         padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          "Skip",
-                          style: GoogleFonts.baloo2(
-                              textStyle: TextStyle(
-                                  fontSize: 24,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500)),
-                          textAlign: TextAlign.center,
+                        child: InkWell(
+                          onTap: (){
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (_) => const AuthScreen()));
+                          },
+                          child: Text(
+                            "Skip",
+                            style: GoogleFonts.baloo2(
+                                textStyle: TextStyle(
+                                    fontSize: 24,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500)),
+                            textAlign: TextAlign.center,
+                          ),
                         )),
                     InkWell(
                       onTap: () {
