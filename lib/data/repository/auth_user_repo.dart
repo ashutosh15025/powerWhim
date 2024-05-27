@@ -1,5 +1,6 @@
 import 'package:powerwhim/data/model/account_managment_model.dart';
 import 'package:powerwhim/data/model/add_profile_model.dart';
+import 'package:powerwhim/data/model/sport_hobbies_model.dart';
 import 'package:retrofit/dio.dart';
 
 
@@ -14,5 +15,6 @@ abstract class AuthUserRepo{
 
   //addprofile
   Future<HttpResponse<AccountManagementModel>> addProfile(AddProfileModel addProfileModel);
-
+  Future<HttpResponse<SportHobbiesModel>> getSports();
+  Future<HttpResponse<SportHobbiesModel>> getHobbies();
 }

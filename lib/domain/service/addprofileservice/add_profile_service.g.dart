@@ -79,4 +79,16 @@ class _AddProfileService implements AddProfileService {
 
     return Uri.parse(dioBaseUrl).resolveUri(url).toString();
   }
+
+  @override
+  Future<HttpResponse<SportHobbiesModel>> getHobbies() {
+    // TODO: implement getHobbies
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<HttpResponse<SportHobbiesModel>> getSports() {
+    // TODO: implement getSports
+    throw UnimplementedError();
+  }
 }

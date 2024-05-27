@@ -82,10 +82,15 @@ class _LoginWidgetState extends State<LoginWidget> {
           error: error,),
           Container(
             alignment: Alignment.centerRight,
-            child: Text("Forget password?", style: TextStyle(color: Colors.white,
-                fontWeight: FontWeight.w500,
-                fontSize: 16),
-              textAlign: TextAlign.center,),
+            child: InkWell(
+              onTap: (){
+                widget.signInLogin();
+              },
+              child: Text("Forget password?", style: TextStyle(color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16),
+                textAlign: TextAlign.center,),
+            ),
           ),
           Container(
               margin: EdgeInsets.fromLTRB(8, 24, 8, 24),

@@ -2,6 +2,7 @@
 
 import 'package:dio/dio.dart';
 import 'package:powerwhim/data/model/account_managment_model.dart';
+import 'package:powerwhim/data/model/sport_hobbies_model.dart';
 import 'package:retrofit/dio.dart';
 import 'package:retrofit/http.dart';
 
@@ -19,4 +20,11 @@ abstract class AddProfileService{
   Future<HttpResponse<AccountManagementModel>> addProfile(
   @Body() Map<String, dynamic> body
   );
+
+  @GET("api/sport/get-sports")
+  Future<HttpResponse<SportHobbiesModel>>getSports ();
+
+
+  @GET("api/hobbies/get-hobbies")
+  Future<HttpResponse<SportHobbiesModel>>getHobbies ();
 }

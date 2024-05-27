@@ -1,4 +1,5 @@
 import 'package:powerwhim/data/model/add_profile_model.dart';
+import 'package:powerwhim/data/model/sport_hobbies_model.dart';
 import 'package:powerwhim/domain/service/addprofileservice/add_profile_service.dart';
 import 'package:retrofit/dio.dart';
 
@@ -48,6 +49,16 @@ class AuthUserRepoImp implements AuthUserRepo{
   Future<HttpResponse<AccountManagementModel>> addProfile(AddProfileModel addProfileModel) {
    var body = addProfileModel.toJson();
    return addProfileService.addProfile(body);
+  }
+
+  @override
+  Future<HttpResponse<SportHobbiesModel>> getHobbies() {
+    return addProfileService.getHobbies();
+  }
+
+  @override
+  Future<HttpResponse<SportHobbiesModel>> getSports() {
+    return addProfileService.getSports();
   }
 
 
