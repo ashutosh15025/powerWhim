@@ -12,8 +12,9 @@ class _CustomCircularLoadingBarState extends State<CustomCircularLoadingBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
+
       height: MediaQuery.of(context).size.height,
-      color: Colors.black12,
+      color: Colors.black,
       child: Center(
         child: CircularProgressIndicator(
           color: Colors.yellowAccent,

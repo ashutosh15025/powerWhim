@@ -3,14 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class OtherMessages extends StatefulWidget {
-  const OtherMessages({super.key});
-
-  @override
-  State<OtherMessages> createState() => _OtherMessagesState();
-}
-
-class _OtherMessagesState extends State<OtherMessages> {
+class OtherMessages extends StatelessWidget {
+  const OtherMessages({super.key, required this.message, required this.time});
+  final String message;
+  final String time;
   @override
   Widget build(BuildContext context) {
     return ChatBubble(
@@ -26,13 +22,13 @@ class _OtherMessagesState extends State<OtherMessages> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat",
+              message,
               style: GoogleFonts.baloo2(
                 textStyle: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 16),
               )
             ),
             Text(
-              "12:00 am",
+              time,
                 style: TextStyle(color: Colors.white)
             )
           ],

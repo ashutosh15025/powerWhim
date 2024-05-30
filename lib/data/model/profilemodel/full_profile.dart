@@ -31,6 +31,7 @@ class Data {
   String? sports;
   String? ambition;
   String? accomplishment;
+  String? userId;
 
   Data({
     this.name,
@@ -39,6 +40,7 @@ class Data {
     this.sports,
     this.ambition,
     this.accomplishment,
+    this.userId,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
@@ -48,6 +50,7 @@ class Data {
     sports: json["sports"],
     ambition: json["ambition"],
     accomplishment: json["accomplishment"],
+    userId: json["user_id"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -57,5 +60,6 @@ class Data {
     "sports": sports,
     "ambition": ambition,
     "accomplishment": accomplishment,
+    "user_id": userId,
   };
 }

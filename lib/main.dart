@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:powerwhim/presentation/bloc/authbloc/auth_bloc.dart';
+import 'package:powerwhim/presentation/bloc/chatbloc/chat_bloc.dart';
+import 'package:powerwhim/presentation/bloc/profilebloc/profilebloc_bloc.dart';
 import 'package:powerwhim/presentation/routes/routes_generator.dart';
 
 
@@ -31,8 +33,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return BlocProvider(
-      create: (context) => AuthBloc(),
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider<ProfileblocBloc>(create: (context) => ProfileblocBloc()),
+          BlocProvider<ChatBloc>(create: (context) => ChatBloc()),
+          BlocProvider<AuthBloc>(create: (context) => AuthBloc()),
+
+        ],
       child: MaterialApp(
         theme: ThemeData(
           textSelectionTheme: TextSelectionThemeData(

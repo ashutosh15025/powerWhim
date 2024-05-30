@@ -13,7 +13,7 @@ class CustomErrorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color.fromRGBO(0, 0, 0, .5),
+      color: Color.fromRGBO(0, 0, 0, .1),
       child: Center(
         child: Container(
           width: MediaQuery.of(context).size.width- 20,

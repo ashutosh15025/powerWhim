@@ -103,7 +103,7 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
                         CustomInputField(
                           title: "Name",
                           placeholder: "Enter Your Name",
-                          description: "If you dont want people guessing",
+                          description: "If you don't want people guessing use a nick name",
                           updateName: setName,
                           error: errorName,
                         ),

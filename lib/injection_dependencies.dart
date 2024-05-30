@@ -1,9 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:powerwhim/data/repository/user_profile_repo.dart';
+import 'package:powerwhim/data/usecase/chats_friends_usecase.dart';
 import 'package:powerwhim/data/usecase/user_profile_usecase.dart';
+import 'package:powerwhim/domain/repository/chats_friends_repo_imp.dart';
 import 'package:powerwhim/domain/repository/user_profile_repo_imp.dart';
 import 'package:powerwhim/domain/service/addprofileservice/add_profile_service.dart';
+import 'package:powerwhim/domain/service/chatsfriendsservice/chats_friends_service.dart';
 import 'package:powerwhim/domain/service/profileservice/user_profile_service.dart';
 
 import 'data/usecase/account_managment_usecase.dart';
@@ -22,6 +25,14 @@ Future<void> injectionDependencies() async {
   locator.registerSingleton<UserProfileService>(UserProfileService(locator()));
   locator.registerSingleton<UserProfileRepoImp>(UserProfileRepoImp(locator()));
   locator.registerSingleton<UserProfileUsecase>(UserProfileUsecase(locator()));
+
+
+  locator.registerSingleton<ChatsFriendsService>(ChatsFriendsService(locator()));
+  locator.registerSingleton<ChatsFriendsRepoImp>(ChatsFriendsRepoImp(locator()));
+  locator.registerSingleton<ChatsFriendsUsecase>(ChatsFriendsUsecase(locator()));
+
+
+
 
 
 }

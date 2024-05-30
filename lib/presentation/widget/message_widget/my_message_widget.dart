@@ -6,7 +6,9 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../constant/service_api_constant.dart';
 
 class MyMessageWidget extends StatelessWidget {
-  const MyMessageWidget({super.key});
+  const MyMessageWidget({super.key, required this.message, required this.time});
+  final String message;
+  final String time;
 
   @override
   Widget build(BuildContext context) {
@@ -24,13 +26,13 @@ class MyMessageWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+              message,
               style: GoogleFonts.baloo2(
                 textStyle: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 16),
               ),
             ),
             Text(
-              "12:00 am",
+              time,
               style: TextStyle(color: Colors.white),
             ),
           ],

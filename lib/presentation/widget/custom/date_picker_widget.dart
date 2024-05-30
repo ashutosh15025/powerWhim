@@ -50,7 +50,7 @@ class _DatePickerState extends State<DatePicker> {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(0,8, 0, 0),
-            child: Text("widget.description",
+            child: Text("This information can't be changed",
               style: GoogleFonts.baloo2(
                 textStyle: TextStyle(
                     fontWeight: FontWeight.w300,

@@ -1,10 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:powerwhim/constant/service_api_constant.dart';
 import 'package:powerwhim/data/model/profilemodel/full_profile.dart';
+import 'package:powerwhim/presentation/bloc/chatbloc/chat_bloc.dart';
 
 import '../widget/custom/content_description_widget.dart';
 import '../widget/custom/profile_images_widget.dart';
+import 'chat_screen/personal_chat_screen.dart';
 
 class OtherProfileScreen extends StatefulWidget {
   const OtherProfileScreen({super.key, required this.fullProfileModel});
@@ -17,7 +21,16 @@ class OtherProfileScreen extends StatefulWidget {
 class _OtherProfileScreenState extends State<OtherProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocListener<ChatBloc, ChatState>(
+  listener: (context, state) {
+     if(state is SetChatsSuccessState){
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (_) =>  PersonalChatScreen(chatId: state.chatId,)));
+      BlocProvider.of<ChatBloc>(context).add(GetPersonalChatEvent(state.chatId));
+      print("message clicked");
+     }
+  },
+  child: Scaffold(
       appBar: AppBar(
           iconTheme: IconThemeData(
             color: Colors.white, //change your color here
@@ -29,7 +42,7 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
                 color: Colors.white,
               ),
               onPressed: () {
-                // do something
+                BlocProvider.of<ChatBloc>(context).add(SetChatEvent(USER_ID!, widget.fullProfileModel.data!.userId!));
               },
             )
           ],
@@ -77,7 +90,8 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
           ),
         ),
       ),
-    );
+    ),
+);
 
 
   }

@@ -13,7 +13,7 @@ class _AddProfileService implements AddProfileService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'https://whim.cozytech.co.in/';
+    baseUrl ??= 'http://192.168.29.226:3000/';
   }
 
   final Dio _dio;
@@ -50,6 +50,62 @@ class _AddProfileService implements AddProfileService {
     return httpResponse;
   }
 
+  @override
+  Future<HttpResponse<SportHobbiesModel>> getSports() async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<SportHobbiesModel>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'api/sport/get-sports',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = SportHobbiesModel.fromJson(_result.data!);
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<SportHobbiesModel>> getHobbies() async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<SportHobbiesModel>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'api/hobbies/get-hobbies',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = SportHobbiesModel.fromJson(_result.data!);
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||
@@ -78,17 +134,5 @@ class _AddProfileService implements AddProfileService {
     }
 
     return Uri.parse(dioBaseUrl).resolveUri(url).toString();
-  }
-
-  @override
-  Future<HttpResponse<SportHobbiesModel>> getHobbies() {
-    // TODO: implement getHobbies
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<HttpResponse<SportHobbiesModel>> getSports() {
-    // TODO: implement getSports
-    throw UnimplementedError();
   }
 }

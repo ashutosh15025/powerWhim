@@ -15,6 +15,13 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
+
+  List<String> sportsList = [];
+
+  List<String> hobbiesList = [];
+
+
+
   AuthBloc() : super(AuthInitial()) {
     on<AuthEvent>((event, emit) async {});
     on<RegisterEvent>(onRegisterSucessEvent);
@@ -83,6 +90,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       var response = await locator
           .get<AccountManagmentUsecase>()
           .loginUser(email: event.email, password: event.password);
+
       print("login api respose");
       if (response.response.statusCode == HttpStatus.ok &&
           response.data.data != null &&
@@ -91,6 +99,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           case "Success":
             {
               print(response.data.data!.mssg!);
+              USER_ID = response.data.data!.userId!;
+              print(response.data.data!.userId!+" user id");
+              print(USER_ID);
+
               emit(LoginSuccessState(response.data.data!.mssg!));
             }
           default:
@@ -164,6 +176,29 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       switch (response.data.data!.status) {
         case "success":
           {
+            sportsList = response.data!.data!.list!;
+            emit(GetSportsSuccessState(response.data.data!.list!));
+          }
+        default:
+          {
+            emit(ApiFailedState(response.data.data!.mssg!));
+          }
+      }
+    } else {
+      emit(ApiFailedState(ERROR));
+    }
+  }
+
+  void ongetHobbiesEvent(AddProfileEvent event, Emitter<AuthState> emit) async {
+    emit(LoadingState());
+    var response = await locator.get<AccountManagmentUsecase>().getHobbies();
+    if (response.response.statusCode == HttpStatus.ok &&
+        response.data.data != null &&
+        response.data.data?.status != null) {
+      switch (response.data.data!.status) {
+        case "success":
+          {
+            hobbiesList = response.data!.data!.list!;
             emit(GetSportsSuccessState(response.data.data!.list!));
           }
         default:
