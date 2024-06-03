@@ -13,7 +13,7 @@ class _AuthUserService implements AuthUserService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://192.168.29.226:3000/';
+    baseUrl ??= 'https://whim.cozytech.co.in/';
   }
 
   final Dio _dio;
@@ -139,6 +139,35 @@ class _AuthUserService implements AuthUserService {
             .compose(
               _dio.options,
               'api/user/login',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = AccountManagementModel.fromJson(_result.data!);
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<AccountManagementModel>> checkProfile(
+      String userId) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'user_id': userId};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<AccountManagementModel>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'api/user/check-profile',
               queryParameters: queryParameters,
               data: _data,
             )

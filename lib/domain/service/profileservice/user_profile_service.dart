@@ -23,12 +23,15 @@ abstract class UserProfileService{
   factory UserProfileService(Dio dio) = _UserProfileService;
 
   @GET("api/user/profiles")
-  Future<HttpResponse<ProfilesModel>> getProfiles();
+  Future<HttpResponse<ProfilesModel>> getProfiles(
+      @Query("user_id")String userId,
+      );
 
 
   @GET("api/user/view-profile")
   Future<HttpResponse<FullProfileModel>> getFullProfiles(
       @Query("user_id")String userId,
+      @Query("my_user_id")String myUserId,
       );
 
   @POST("api/user/help")

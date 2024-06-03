@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:powerwhim/constant/full_profile_privious_screen.dart';
 import 'package:powerwhim/data/model/profilemodel/full_profile.dart';
 import 'package:powerwhim/presentation/screens/add_profile_screen.dart';
 import 'package:powerwhim/presentation/screens/authScreen/auth_screen.dart';
@@ -30,8 +31,8 @@ class RouteGenerator {
       case "/home":
         return MaterialPageRoute(builder: (_) => const Home());
       case "/profile":
-        var data = settings.arguments as FullProfileModel;
-          return MaterialPageRoute(builder: (_) =>  OtherProfileScreen(fullProfileModel: data,));
+        var data = settings.arguments as FullProfilePriviousScreen;
+          return MaterialPageRoute(builder: (_) =>  OtherProfileScreen(fullProfilePScreenModel: data));
       default:
         return _errorRoute();
 

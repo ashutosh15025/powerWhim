@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:powerwhim/constant/service_api_constant.dart';
 import 'package:powerwhim/data/model/friends_model.dart';
 import 'package:powerwhim/data/model/help_model.dart';
 import 'package:powerwhim/data/model/profilemodel/full_profile.dart';
@@ -21,12 +22,13 @@ class ProfileblocBloc extends Bloc<ProfileblocEvent, ProfileblocState> {
   }
 
   void ongetProfilesEvent(getProfilesEvent event,Emitter<ProfileblocState>emit)async{
-    var response = await locator.get<UserProfileUsecase>().getProfiles();
-    if(response.data.data!=null && response.data.data!.length>0 ){
-      print(response.data.data?.length);
+    var response = await locator.get<UserProfileUsecase>().getProfiles(USER_ID!);
+    if(response.data.data!=null && response.data.data!.profiles!=null && response.data.data!.profiles!.length>0 ){
       emit(getProfilesSuccessState(response.data));
     }
     else{
+      print(response.data.data);
+
       print("can fetch profiles");
     }
   }
@@ -34,9 +36,11 @@ class ProfileblocBloc extends Bloc<ProfileblocEvent, ProfileblocState> {
   void ongetFullProfileEvent(getFullProfileEvent event,Emitter<ProfileblocState>emit)async{
     print("view full profile");
 
-    var response = await locator.get<UserProfileUsecase>().getFullProfiles(event.userId);
+    var response = await locator.get<UserProfileUsecase>().getFullProfiles(event.userId,USER_ID!);
     print("view full profile");
+    print("user Id ${event.userId}");
     if(response.data!=null){
+      if(response.data!.data!=null)
       emit(getFullProfileSuccessState(response.data));
     }
     else{

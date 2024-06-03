@@ -68,7 +68,7 @@ class _ChatDmWidgetState extends State<ChatDmWidget> {
                 ),
                 Visibility(
                   visible: widget.time==null ? false:true,
-                  child: Text(widget.time==null ? "": getHours(widget.time!.toString()),
+                  child: Text(widget.time==null ? "": getHours(widget.time!),
                     style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
@@ -88,9 +88,10 @@ class _ChatDmWidgetState extends State<ChatDmWidget> {
       ),
     );
   }
-  String getHours(String datetime){
+  String getHours(DateTime datetime){
     print(datetime);
-    String formattedTime = datetime;
+    var localTIme = datetime.toLocal();
+    String formattedTime = localTIme.toString();
     List<String> parts = formattedTime.split(' ');
     String time = parts[1];
     int hour = int.parse(time.substring(0, 2));

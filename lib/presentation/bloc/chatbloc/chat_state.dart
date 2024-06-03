@@ -43,3 +43,13 @@ class SetChatsSuccessState extends ChatState {
   String chatId;
   SetChatsSuccessState(this.mssg,this.chatId);
 }
+
+class GetFriendsSuccessState extends ChatState {
+  FriendsModel friendsModel;
+  GetFriendsSuccessState(this.friendsModel);
+}
+
+class GetFullProfileSuccessState extends ChatState{
+  FullProfileModel fullProfile;
+  GetFullProfileSuccessState(this.fullProfile);
+}

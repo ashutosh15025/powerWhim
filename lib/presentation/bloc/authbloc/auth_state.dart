@@ -40,16 +40,29 @@ final class AddProfileSuccessState extends AuthState {
 }
 
 final class GetSportsSuccessState extends AuthState {
-  List<String?> sports;
+  List<String> sports;
 
   GetSportsSuccessState(this.sports);
 }
 
 final class GetHobbiesSuccessState extends AuthState {
-  SportHobbiesModel sportHobbiesModel;
+  List<String> hobbies;
 
-  GetHobbiesSuccessState(this.sportHobbiesModel);
+  GetHobbiesSuccessState(this.hobbies);
 }
+
+
+ class PendingProfileState extends AuthState {
+
+}
+
+final class CompleteProfileState extends AuthState {
+CompleteProfileState(){
+  print("emitted");
+}
+}
+
+
 
 final class ApiFailedState extends AuthState {
   String mssg;
@@ -58,5 +71,8 @@ final class ApiFailedState extends AuthState {
 }
 
 final class LoadingState extends AuthState {
-  LoadingState();
+
+  LoadingState(){
+    print("loading");
+  }
 }

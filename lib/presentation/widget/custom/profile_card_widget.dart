@@ -11,11 +11,11 @@ import '../../screens/my_profile_widget.dart';
 
 class ProfileCardWidget extends StatefulWidget {
   const ProfileCardWidget({super.key, required this.name, required this.age, required this.sport, required this.hobbies, required this.userId});
-  final String name;
-  final String age;
-  final String sport;
-  final String hobbies;
-  final String userId;
+  final String ? name;
+  final int ? age;
+  final String ? sport;
+  final String ? hobbies;
+  final String ? userId;
 
   @override
   State<ProfileCardWidget> createState() => _ProfileCardWidgetState();
@@ -26,7 +26,7 @@ class _ProfileCardWidgetState extends State<ProfileCardWidget> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: (){
-       BlocProvider.of<ProfileblocBloc>(context).add(getFullProfileEvent(widget.userId));
+       BlocProvider.of<ProfileblocBloc>(context).add(getFullProfileEvent(widget.userId!));
       },
       child: Container(
         padding: EdgeInsets.all(8),
@@ -36,7 +36,7 @@ class _ProfileCardWidgetState extends State<ProfileCardWidget> {
               padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
               child: Row(
                 children: [
-                  Text(widget.name,
+                  Text(widget.name!,
                   style: GoogleFonts.poppins(
                    textStyle:TextStyle(
                     color: green,
@@ -44,7 +44,7 @@ class _ProfileCardWidgetState extends State<ProfileCardWidget> {
                       fontWeight: FontWeight.w700
                   ),)),
                   Spacer(),
-                  Text(widget.age + "Yrs",
+                  Text(widget.age!.toString() + "Yrs",
                     style:  GoogleFonts.poppins(
                       textStyle:TextStyle(
                         color: green,
@@ -54,7 +54,7 @@ class _ProfileCardWidgetState extends State<ProfileCardWidget> {
                 ],
               ),
             ),
-            Row(
+            widget.sport!=null?Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text("Sports: ",
@@ -65,7 +65,7 @@ class _ProfileCardWidgetState extends State<ProfileCardWidget> {
                       fontWeight: FontWeight.w600
                   ),)),
                 Expanded(
-                  child: Text(widget.sport,
+                  child: Text(widget.sport!,
                       maxLines: 4,
                       style:  GoogleFonts.baloo2(
                     textStyle:TextStyle(
@@ -75,8 +75,8 @@ class _ProfileCardWidgetState extends State<ProfileCardWidget> {
                   ),)),
                 )
               ],
-            ),
-            Row(
+            ):SizedBox.shrink(),
+            widget.hobbies!=null?Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text("Hobbies: ",
@@ -87,7 +87,7 @@ class _ProfileCardWidgetState extends State<ProfileCardWidget> {
                           fontWeight: FontWeight.w600
                       ),)),
                 Expanded(
-                  child: Text( widget.hobbies,
+                  child: Text( widget.hobbies!,
                       maxLines: 4,
                       style:  GoogleFonts.baloo2(
                         textStyle:TextStyle(
@@ -97,7 +97,7 @@ class _ProfileCardWidgetState extends State<ProfileCardWidget> {
                         ),)),
                 )
               ],
-            ),
+            ):SizedBox.shrink(),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -107,7 +107,7 @@ class _ProfileCardWidgetState extends State<ProfileCardWidget> {
                   child: InkWell(
                     onTap: (){
                        print("api clicked");
-                      BlocProvider.of<ProfileblocBloc>(context).add(getFullProfileEvent(widget.userId));
+                      BlocProvider.of<ProfileblocBloc>(context).add(getFullProfileEvent(widget.userId!));
                     },
                     child: Text("View",
                     style:  GoogleFonts.baloo2(

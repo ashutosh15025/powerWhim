@@ -15,8 +15,8 @@ class AccountManagmentUsecase{
     return _authUserRepoImp.verifyOTP(userId, otp);
   }
 
-  Future<HttpResponse<AccountManagementModel>> registerUser({String email="0"}) {
-    return  _authUserRepoImp.registerUser(email);
+  Future<HttpResponse<AccountManagementModel>> registerUser({String email="0",required String forget}) {
+    return  _authUserRepoImp.registerUser(email,forget);
   }
 
   Future<HttpResponse<AccountManagementModel>> loginUser({required String email, required String password}) {
@@ -26,6 +26,11 @@ class AccountManagmentUsecase{
   Future<HttpResponse<AccountManagementModel>> createPassword({required String userId,required String password}) {
     return  _authUserRepoImp.createPassword(userId,password);
   }
+
+  Future<HttpResponse<AccountManagementModel>> checkProfile({required String userId}) {
+    return  _authUserRepoImp.checkProfile(userId);
+  }
+
   Future<HttpResponse<AccountManagementModel>> addProfile({required AddProfileModel addProfileModel}) {
     return  _authUserRepoImp.addProfile(addProfileModel);
   }

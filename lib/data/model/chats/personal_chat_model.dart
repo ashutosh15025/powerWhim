@@ -52,22 +52,26 @@ class Message {
   String? conversationMessage;
   DateTime? createdOn;
   String? userId;
+  dynamic image;
 
   Message({
     this.conversationMessage,
     this.createdOn,
     this.userId,
+    this.image,
   });
 
   factory Message.fromJson(Map<String, dynamic> json) => Message(
     conversationMessage: json["conversation_message"],
     createdOn: json["created_on"] == null ? null : DateTime.parse(json["created_on"]),
     userId: json["user_id"],
+    image: json["image"],
   );
 
   Map<String, dynamic> toJson() => {
     "conversation_message": conversationMessage,
     "created_on": createdOn?.toIso8601String(),
     "user_id": userId,
+    "image": image,
   };
 }

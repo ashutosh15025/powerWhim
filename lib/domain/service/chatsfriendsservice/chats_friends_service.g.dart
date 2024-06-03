@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'user_profile_service.dart';
+part of 'chats_friends_service.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -8,8 +8,8 @@ part of 'user_profile_service.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers
 
-class _UserProfileService implements UserProfileService {
-  _UserProfileService(
+class _ChatsFriendsService implements ChatsFriendsService {
+  _ChatsFriendsService(
     this._dio, {
     this.baseUrl,
   }) {
@@ -21,20 +21,20 @@ class _UserProfileService implements UserProfileService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<ProfilesModel>> getProfiles(String userId) async {
+  Future<HttpResponse<ChatsDetailsModel>> getChats(String userId) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'user_id': userId};
+    final queryParameters = <String, dynamic>{r'from_user_id': userId};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<ProfilesModel>>(Options(
+        _setStreamType<HttpResponse<ChatsDetailsModel>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              'api/user/profiles',
+              'api/chats/get-chats',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -43,62 +43,60 @@ class _UserProfileService implements UserProfileService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = ProfilesModel.fromJson(_result.data!);
+    final value = ChatsDetailsModel.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
 
   @override
-  Future<HttpResponse<FullProfileModel>> getFullProfiles(
+  Future<HttpResponse<PersonalChatModel>> getPersonalChat(String chatId) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'chat_id': chatId};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<PersonalChatModel>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'api/chats/get-conversations',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = PersonalChatModel.fromJson(_result.data!);
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<AccountManagementModel>> setSockedId(
     String userId,
-    String myUserId,
+    String socketId,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'user_id': userId,
-      r'my_user_id': myUserId,
+      r'socket_id': socketId,
     };
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<FullProfileModel>>(Options(
+        _setStreamType<HttpResponse<AccountManagementModel>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              'api/user/view-profile',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    final value = FullProfileModel.fromJson(_result.data!);
-    final httpResponse = HttpResponse(value, _result);
-    return httpResponse;
-  }
-
-  @override
-  Future<HttpResponse<AccountManagementModel>> getHelp(
-      Map<String, dynamic> body) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(body);
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<AccountManagementModel>>(Options(
-      method: 'POST',
-      headers: _headers,
-      extra: _extra,
-    )
-            .compose(
-              _dio.options,
-              'api/user/help',
+              'api/socket/update-socket-id',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -113,7 +111,7 @@ class _UserProfileService implements UserProfileService {
   }
 
   @override
-  Future<HttpResponse<FriendsModel>> getFriends(String userId) async {
+  Future<HttpResponse<FriendsModel>> getConnection(String userId) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'user_id': userId};
     final _headers = <String, dynamic>{};
@@ -136,6 +134,40 @@ class _UserProfileService implements UserProfileService {
               baseUrl,
             ))));
     final value = FriendsModel.fromJson(_result.data!);
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<AddChatModel>> setChats(
+    String fromUserId,
+    String toUserId,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'from_user_id': fromUserId,
+      r'to_user_id': toUserId,
+    };
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<AddChatModel>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'api/chats/add-chats',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = AddChatModel.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }

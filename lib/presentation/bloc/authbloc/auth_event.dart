@@ -6,8 +6,9 @@ sealed class AuthEvent {}
 //register
 class RegisterEvent extends AuthEvent {
   String email;
+  String forget;
 
-  RegisterEvent(this.email);
+  RegisterEvent(this.email,this.forget);
 }
 
 class RegisterFailedEvent extends AuthEvent {}
@@ -61,4 +62,12 @@ class AddProfileFailedEvent extends AuthEvent {}
 
 class GetSportEvent extends AuthEvent {
   GetSportEvent();
+}
+
+class GetHobbiesEvent extends AuthEvent {
+  GetHobbiesEvent();
+}
+
+class GetCheckProfileEvent extends AuthEvent {
+  GetCheckProfileEvent();
 }

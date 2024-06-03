@@ -21,7 +21,7 @@ abstract class AddProfileService{
   @Body() Map<String, dynamic> body
   );
 
-  @GET("api/sport/get-sports")
+  @GET("api/sport/get-sport")
   Future<HttpResponse<SportHobbiesModel>>getSports ();
 
 

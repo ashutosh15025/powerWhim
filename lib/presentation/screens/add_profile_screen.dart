@@ -29,21 +29,22 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
   int distance = 10;
   bool noRelaventSport = false;
   String dropdownvalue = "1";
-  String? name;
-  String? DOB;
-  String? accomplishment;
-  String? goals;
-  String? hobbies;
-  String? sports;
+  String? name = null;
+  String? DOB = null;
+  String? accomplishment = null;
+  String? goals = null;
+  String? hobbies = null;
+  String? sports = null;
   bool loadingState = false;
 
   String start = "10";
   String end = "28";
 
-  List<String> myList = ["Item 1", "Item 2", "Item 3"];
 
   List<String> sportsList = [];
   List<String> hobbiesList = [];
+
+
 
   String selectedValue = "Option 1";
 
@@ -57,154 +58,151 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
 
 
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AuthBloc(),
-      child: BlocConsumer<AuthBloc, AuthState>(
-        listener: (context, state) {
-          if(state is AddProfileSuccessState)
-            {
-              print("add profile Sucess");
-              loadingState = !loadingState;
-              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const Home()));
-            }
-          else{
+    return BlocConsumer<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if(state is AddProfileSuccessState)
+          {
+            print("add profile Sucess");
             loadingState = !loadingState;
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const Home()));
           }
-        },
-        builder: (context, state) {
-          return Scaffold(
-            resizeToAvoidBottomInset: false,
-            extendBody: false,
-            appBar: AppBar(
-              title: Center(
-                child: Text("Add Profile",
-                    style: GoogleFonts.baloo2(
-                      textStyle: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700),
-                    )),
-              ),
-              backgroundColor: Colors.black,
+        else{
+          loadingState = !loadingState;
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          resizeToAvoidBottomInset: false,
+          extendBody: false,
+          appBar: AppBar(
+            title: Center(
+              child: Text("Add Profile",
+                  style: GoogleFonts.baloo2(
+                    textStyle: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700),
+                  )),
             ),
-            body: GestureDetector(
-              onTap: () {
-                FocusScope.of(context).unfocus();
-              },
-              child: Stack(
-                children: [
-                  Container(
-                  padding: EdgeInsets.all(16),
-                  height: MediaQuery.of(context).size.height - 0,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CustomInputField(
-                          title: "Name",
-                          placeholder: "Enter Your Name",
-                          description: "If you don't want people guessing use a nick name",
-                          updateName: setName,
-                          error: errorName,
+            backgroundColor: Colors.black,
+          ),
+          body: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).unfocus();
+            },
+            child: Stack(
+              children: [
+                Container(
+                padding: EdgeInsets.all(16),
+                height: MediaQuery.of(context).size.height - 0,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CustomInputField(
+                        title: "Name",
+                        placeholder: "Enter Your Name",
+                        description: "If you don't want people guessing use a nick name",
+                        updateName: setName,
+                        error: errorName,
+                      ),
+                      DatePicker(
+                        setDOB: setDOB,
+                        error: errorDOB,
+                      ),
+                      SetAgeRangeSlider(
+                        setageRange: setAgeRange,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("Estimated weekly availability",
+                            style: GoogleFonts.baloo2(
+                              textStyle: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 16,
+                                  color: Colors.white),
+                            )),
+                      ),
+                      SizedBox(
+                          child: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        margin: const EdgeInsets.all(8.0),
+                        child: CheckboxGridWidget(
+                          weekAvailability: weekAvailability,
                         ),
-                        DatePicker(
-                          setDOB: setDOB,
-                          error: errorDOB,
-                        ),
-                        SetAgeRangeSlider(
-                          setageRange: setAgeRange,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text("Estimated weekly availability",
-                              style: GoogleFonts.baloo2(
-                                textStyle: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                    color: Colors.white),
-                              )),
-                        ),
-                        SizedBox(
-                            child: Container(
-                          padding: const EdgeInsets.all(8.0),
-                          margin: const EdgeInsets.all(8.0),
-                          child: CheckboxGridWidget(
-                            weekAvailability: weekAvailability,
-                          ),
-                        )),
-                        DistanceSlider(setDistance: setMeetingDistance,),
-                        CustomDropDown(
-                            dropDownHeading: "Sports You Participated in",
-                            myList: myList,
-                            selectedItemFun: setSports),
-                        CustomDropDown(
-                            dropDownHeading: "Your hobbies",
-                            myList: myList,
-                            selectedItemFun: sethobbies),
-                        CustomTextarea(
-                          placeholder: "Your Goal/Ambition",
-                          setText: setGoals,
-                        ),
-                        CustomTextarea(
-                          placeholder: "Your Accomplishment",
-                          setText: setAccomplishment,
-                        ),
-                        Center(
-                          child: InkWell(
-                            onTap: () {
-                              sports = getListConcatElement(sportsList);
-                              hobbies = getListConcatElement(hobbiesList);
-                              print(sports);
-                              print(hobbies);
+                      )),
+                      DistanceSlider(setDistance: setMeetingDistance,),
+                      CustomDropDown(
+                          dropDownHeading: "Sports You Participated in",
+                          name: "sports",
+                          selectedItemFun: setSports),
+                      CustomDropDown(
+                          dropDownHeading: "Your hobbies",
+                          name:"hobbies",
+                          selectedItemFun: sethobbies),
+                      CustomTextarea(
+                        placeholder: "Your Goal/Ambition",
+                        setText: setGoals,
+                      ),
+                      CustomTextarea(
+                        placeholder: "Your Accomplishment",
+                        setText: setAccomplishment,
+                      ),
+                      Center(
+                        child: InkWell(
+                          onTap: () {
+                            sports = getListConcatElement(sportsList);
+                            hobbies = getListConcatElement(hobbiesList);
+                            print(sports);
+                            print(hobbies);
 
-                              if (name != null && DOB!=null && name!.isNotEmpty&& DOB!.isNotEmpty) {
-                                      onSubmitAllFieldSuccess(context);
-                              }
-                              else if(name==null || name!.isEmpty){
-                                setState(() {
-                                  errorName = "Name cant be Empty";
-                                });
+                            if (name != null && DOB!=null && name!.isNotEmpty&& DOB!.isNotEmpty) {
+                                    onSubmitAllFieldSuccess(context);
+                            }
+                            else if(name==null || name!.isEmpty){
+                              setState(() {
+                                errorName = "Name cant be Empty";
+                              });
 
-                              }
-                              else{
-                                setState(() {
-                                  errorDOB = "Date of birth cant be Empty";
-                                });
-                              }
+                            }
+                            else{
+                              setState(() {
+                                errorDOB = "Date of birth cant be Empty";
+                              });
+                            }
 
-                            },
-                            child: Center(
-                                child: Container(
-                                    margin: EdgeInsets.fromLTRB(0, 16, 0, 0),
-                                    width:
-                                        MediaQuery.of(context).size.width - 100,
-                                    child: GradientButtonGreenYellow(
-                                        buttonText: "Submit"))),
-                          ),
+                          },
+                          child: Center(
+                              child: Container(
+                                  margin: EdgeInsets.fromLTRB(0, 16, 0, 0),
+                                  width:
+                                      MediaQuery.of(context).size.width - 100,
+                                  child: GradientButtonGreenYellow(
+                                      buttonText: "Submit"))),
                         ),
-                        Padding(padding: EdgeInsets.all(60)),
-                      ],
-                    ),
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.black,
+                      ),
+                      Padding(padding: EdgeInsets.all(60)),
+                    ],
                   ),
                 ),
-                  Visibility(
-                    visible: loadingState,
-                      child: Container(
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        color: Colors.yellowAccent,
-                      ),
-                    ),
-                  ))
-                ]
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                ),
               ),
+                Visibility(
+                  visible: loadingState,
+                    child: Container(
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.yellowAccent,
+                    ),
+                  ),
+                ))
+              ]
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -264,7 +262,7 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
     print(hobbiesList.length);
   }
 
-  String getListConcatElement(List<String> list) {
+  String? getListConcatElement(List<String> list) {
     String outputString = "";
     for (int i = 0; i < list.length; i++) {
       outputString += list[i];
@@ -272,6 +270,8 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
         outputString += " ,";
       }
     }
+    if(outputString.isEmpty)
+      return null;
     return outputString;
   }
 

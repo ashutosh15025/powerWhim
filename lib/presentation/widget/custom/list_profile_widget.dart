@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:powerwhim/presentation/widget/custom/profile_card_widget.dart';
 
+import '../../../constant/full_profile_privious_screen.dart';
 import '../../../constant/service_api_constant.dart';
 import '../../../data/model/profilemodel/profiles_model.dart';
 import '../../bloc/profilebloc/profilebloc_bloc.dart';
@@ -16,7 +17,7 @@ class ListProfileWidget extends StatefulWidget {
 }
 
 class _ListProfileWidgetState extends State<ListProfileWidget> {
-  List<SingleProfile> listItem = [];
+  List<Profile> listItem = [];
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +26,15 @@ class _ListProfileWidgetState extends State<ListProfileWidget> {
     return BlocConsumer<ProfileblocBloc, ProfileblocState>(
       listener: (context, state) {
         if(state is getProfilesSuccessState){
-          var newstate = state as getProfilesSuccessState;
-          listItem+= newstate.profilesModel.data!;
+          if(state.profilesModel.data!=null)
+          listItem+= state.profilesModel.data!.profiles!;
           print(listItem.length);
         }
         else if(state is getFullProfileSuccessState){
-          Navigator.of(context).pushNamed('/profile',arguments: state.fullProfile);
+          print("get full profile");
+          if(state.fullProfile!=null)
+            print(state.fullProfile.data!.profile!.name);
+          Navigator.of(context).pushNamed('/profile',arguments: FullProfilePriviousScreen(state.fullProfile,'viewProfile'));
         }
       },
       builder: (context, state) {
@@ -44,7 +48,7 @@ class _ListProfileWidgetState extends State<ListProfileWidget> {
             child: ListView.builder(
               itemCount: listItem.length,
               itemBuilder: (context, index) {
-                return ProfileCardWidget(name: listItem[index].name.toString(), age: listItem[index].age.toString(), sport: listItem[index].sports.toString(), hobbies: listItem[index].hobbies.toString(),userId: listItem[index].userId.toString(),);
+                return ProfileCardWidget(name: listItem[index].name, age: listItem[index].age, sport: listItem[index].sports, hobbies: listItem[index].hobbies,userId: listItem[index].userId,);
               },),
           ),
         );

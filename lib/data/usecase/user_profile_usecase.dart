@@ -12,12 +12,12 @@ class UserProfileUsecase{
   final UserProfileRepoImp _userProfileRepoImp;
   UserProfileUsecase(this._userProfileRepoImp);
 
-  Future<HttpResponse<ProfilesModel>> getProfiles(){
-    return _userProfileRepoImp.getProfiles();
+  Future<HttpResponse<ProfilesModel>> getProfiles(String userId){
+    return _userProfileRepoImp.getProfiles(userId);
   }
 
-  Future<HttpResponse<FullProfileModel>> getFullProfiles(String userId){
-    return _userProfileRepoImp.getFullProfile(userId);
+  Future<HttpResponse<FullProfileModel>> getFullProfiles(String userId,String myUserId){
+    return _userProfileRepoImp.getFullProfile(userId,myUserId);
   }
 
   Future<HttpResponse<AccountManagementModel>> getHelp(HelpModel helpModel){

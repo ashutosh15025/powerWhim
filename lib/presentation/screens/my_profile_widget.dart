@@ -35,7 +35,7 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
        });
      });}
    else if(state is getFullProfileSuccessState){
-     FullProfileModel myprofile = state.fullProfile;
+     Profile myprofile = state.fullProfile.data!.profile!;
      return Container(
        height: MediaQuery.of(context).size.height,
        padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -46,7 +46,7 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
            children: [
              Row(children:[Container(
                padding: EdgeInsets.fromLTRB(0, 16, 0, 16),
-               child: Text(myprofile.data!.name!=null?myprofile.data!.name!:"Name",
+               child: Text(myprofile!.name!=null?myprofile!.name!:"Name",
                    style: GoogleFonts.poppins(
                      textStyle:TextStyle(
                          fontSize: 22,
@@ -55,17 +55,17 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
                ),
              ),
                Spacer()
-               ,Text(myprofile.data!.age!=null?myprofile.data!.age!.toString():"age",
+               ,Text(myprofile.age!=null?myprofile.age!.toString()+"Yrs":"age",
                  style: GoogleFonts.poppins(
                    textStyle:TextStyle(
                        fontSize: 22,
                        fontWeight: FontWeight.w600,
                        color: green),),)]),
-             ContentDescription(title: "Sports:",description: myprofile.data!.sports!=null?myprofile.data!.sports!.toString():"I love every sports"),
-             ContentDescription(title: "Hobbies:",description: myprofile.data!.hobbies!=null?myprofile.data!.hobbies!.toString():"I love every sports"),
-             ContentDescription(title: "Ambition:",description:  myprofile.data!.ambition!=null?myprofile.data!.ambition!.toString():"I love every sports"),
-             ContentDescription(title: "Accomplishment:",description:  myprofile.data!.accomplishment!=null?myprofile.data!.accomplishment!.toString():"I love every sports"),
-             ProfileImage()
+             myprofile.sports==null?SizedBox.shrink():ContentDescription(title: "Sports:",description: myprofile.sports!=null?myprofile.sports!.toString():"I love every sports"),
+             myprofile.hobbies==null?SizedBox.shrink():ContentDescription(title: "Hobbies:",description: myprofile.hobbies!=null?myprofile.hobbies!.toString():"I love every sports"),
+             myprofile.ambition==null?SizedBox.shrink():ContentDescription(title: "Ambition:",description:  myprofile.ambition!=null?myprofile.ambition!.toString():"I love every sports"),
+             myprofile.accomplishment==null?SizedBox.shrink():ContentDescription(title: "Accomplishment:",description:  myprofile.accomplishment!=null?myprofile.accomplishment!.toString():"I love every sports"),
+             ProfileImage(visibility: true,)
            ],
          ),
        ),

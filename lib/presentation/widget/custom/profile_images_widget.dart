@@ -1,8 +1,11 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ProfileImage extends StatefulWidget {
-  const ProfileImage({super.key});
+  const ProfileImage({super.key, required this.visibility});
+  final bool visibility;
 
   @override
   State<ProfileImage> createState() => _ProfileImageState();
@@ -16,13 +19,26 @@ class _ProfileImageState extends State<ProfileImage> {
       child: GridView.builder(
         itemBuilder: (BuildContext context,int index){
           return Container(
-            child: Text("",),
+            height: 200,
+            width: double.maxFinite,
             decoration: BoxDecoration(
-                color: Colors.grey,
-                image: DecorationImage(
-                  fit: BoxFit.fill,
-                  image: AssetImage('assets/icon/logoAndroid.png'),
-                )
+              image: DecorationImage(
+                image: AssetImage('assets/icon/logoAndroid.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: ClipRRect( // make sure we apply clip it properly
+              child: BackdropFilter(
+                filter: widget.visibility?ImageFilter.blur(sigmaX: 0, sigmaY: 0):ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                child: Container(
+                  alignment: Alignment.center,
+                  color: Colors.grey.withOpacity(0.1),
+                  child: Text(
+                    "",
+                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
             ),
           );
         },

@@ -14,13 +14,13 @@ class UserProfileRepoImp extends UserProfileRepo{
   UserProfileRepoImp(this.userProfileService);
 
   @override
-  Future<HttpResponse<FullProfileModel>> getFullProfile(String userId) {
-    return userProfileService.getFullProfiles(userId);
+  Future<HttpResponse<FullProfileModel>> getFullProfile(String userId,String myUserId) {
+    return userProfileService.getFullProfiles(userId,myUserId);
   }
 
   @override
-  Future<HttpResponse<ProfilesModel>> getProfiles() {
-    return userProfileService.getProfiles();
+  Future<HttpResponse<ProfilesModel>> getProfiles(String userId) {
+    return userProfileService.getProfiles(userId);
   }
 
   @override

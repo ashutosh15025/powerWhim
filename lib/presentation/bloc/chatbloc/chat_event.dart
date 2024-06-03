@@ -33,9 +33,9 @@ class SetSocketEvent extends ChatEvent {
 }
 
 
-class GetConnectionEvent extends ChatEvent {
-  String mssg;
-  GetConnectionEvent(this.mssg );
+class GetFriendsEvent extends ChatEvent {
+  String userId;
+  GetFriendsEvent(this.userId );
 }
 
 class SetChatEvent extends ChatEvent {
@@ -43,3 +43,9 @@ class SetChatEvent extends ChatEvent {
   String toUserId;
   SetChatEvent(this.fromUserId,this.toUserId);
 }
+
+class GetFullProfileEvent extends ChatEvent{
+  String userId;
+  GetFullProfileEvent(this.userId);
+}
+

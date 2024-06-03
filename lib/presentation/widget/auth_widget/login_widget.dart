@@ -10,7 +10,7 @@ import '../custom/password_widget.dart';
 
 class LoginWidget extends StatefulWidget {
   const LoginWidget({super.key, required this.signInLogin});
-  final Function() signInLogin;
+  final Function(String) signInLogin;
 
   @override
   State<LoginWidget> createState() => _LoginWidgetState();
@@ -84,7 +84,7 @@ class _LoginWidgetState extends State<LoginWidget> {
             alignment: Alignment.centerRight,
             child: InkWell(
               onTap: (){
-                widget.signInLogin();
+                widget.signInLogin("yes");
               },
               child: Text("Forget password?", style: TextStyle(color: Colors.white,
                   fontWeight: FontWeight.w500,
@@ -115,7 +115,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                     fontSize: 16),),
                 InkWell(
                   onTap: (){
-                    widget.signInLogin();
+                    widget.signInLogin("no");
                   },
                   child: Text("Create Account.",
                     style: TextStyle(color: green,

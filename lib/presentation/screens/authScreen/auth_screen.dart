@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:powerwhim/constant/service_api_constant.dart';
 import 'package:powerwhim/presentation/bloc/authbloc/auth_bloc.dart';
+import 'package:powerwhim/presentation/bloc/profilebloc/profilebloc_bloc.dart';
 import 'package:powerwhim/presentation/home.dart';
 import 'package:powerwhim/presentation/widget/error/custom_error_widget.dart';
 
@@ -36,114 +37,127 @@ class _LoginScreenState extends State<AuthScreen> {
 
   bool loaderVisibility = false;
 
+  String forgetPassword = "no";
+
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-        create: (context) => AuthBloc(),
-        child: BlocConsumer<AuthBloc, AuthState>(
-          listener: (context, state) {
-            print("run");
-            if (state is AuthRegistorSuccessState) {
-              authMessage = state.mssg;
-              USER_ID = state.user_id.toString();
-              print(state.user_id);
-              showOTPPanel = true;
-            } else if (state is VerifyOTPSuccessState) {
-              showOTPPanel = !showOTPPanel;
-              showConfirmPasswordPanel = true;
-            } else if (state is CreatePasswordSuccessState) {
-              onPressVerifyPassword();
-            }
-            else if(state is LoginSuccessState){
-                  navigateToHomePage();
-            }
-            else if (state is ApiFailedState ){
-              errormsg = state.mssg;
-              setState(() {
-                showErrorWidget = true;
-              });
-            }
-            if(state is LoadingState){
-              loaderVisibility = true;
-              print("loadingstate");
-            }
-            else
-              {
-                loaderVisibility = false;
-              }
+    return BlocConsumer<AuthBloc, AuthState>(
+      listener: (context, state) {
+        print("run");
+        print(state);
+        if (state is AuthRegistorSuccessState) {
+          authMessage = state.mssg;
+          USER_ID = state.user_id.toString();
+          print(state.user_id);
+          showOTPPanel = true;
+        } else if (state is VerifyOTPSuccessState) {
+          showOTPPanel = !showOTPPanel;
+          showConfirmPasswordPanel = true;
+        } else if (state is CreatePasswordSuccessState) {
+          onPressVerifyPassword();
+        }
+        else if(state is LoginSuccessState){
+              navigateToHomePage();
+        }
+        else if (state is ApiFailedState ){
+          errormsg = state.mssg;
+          setState(() {
+            showErrorWidget = true;
+          });
+        }
+        else if( state is PendingProfileState){
+          BlocProvider.of<AuthBloc>(context).add(GetSportEvent());
+          BlocProvider.of<AuthBloc>(context).add(GetHobbiesEvent());
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => const AddProfileScreen()));
+        }
+        else if( state is CompleteProfileState){
+          print("ashese");
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => const Home()));
+        }
+        if(state is LoadingState){
+          loaderVisibility = true;
+          print("loadingstate");
+        }
+        else
+          {
+            loaderVisibility = false;
+          }
+      },
+      builder: (context, state) {
+        return GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(FocusNode());
           },
-          builder: (context, state) {
-            return GestureDetector(
-              onTap: () {
-                FocusScope.of(context).requestFocus(FocusNode());
-              },
-              child: Scaffold(
-                  backgroundColor: Colors.black,
-                  body: Stack(children: [
-                    SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Container(
-                            height:180,
-                            margin: EdgeInsets.fromLTRB(0, 120, 0, 10),
-                            child: CircleAvatar(
-                              backgroundImage: AssetImage('assets/icon/logo.png'),
-                              // Replace with your asset path
-                              radius: 90,
-                              backgroundColor: Colors.black,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              color: Colors.black,
-                            ),
-                          ),
-                          login?LoginWidget(signInLogin: onSignInLogIn):
-                          SignInScreen(
-                            onSignInLogIN: onSignInLogIn,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Visibility(
-                      visible: showConfirmPasswordPanel,
-                      child: Container(
-                        color: Colors.black.withOpacity(0.5),
-                        child: CreatePasswordWidget(
-                          onPressCrossButton: onPressCrossPassword,
-                          onPressVerifyButton: onPressVerifyPassword,
+          child: Scaffold(
+              backgroundColor: Colors.black,
+              body: Stack(children: [
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Container(
+                        height:180,
+                        margin: EdgeInsets.fromLTRB(0, 120, 0, 10),
+                        child: CircleAvatar(
+                          backgroundImage: AssetImage('assets/icon/logo.png'),
+                          // Replace with your asset path
+                          radius: 90,
+                          backgroundColor: Colors.black,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          color: Colors.black,
                         ),
                       ),
-                    ),
-                    Visibility(
-                      visible: showOTPPanel,
-                      child: Container(
-                        color: Colors.black.withOpacity(0.5),
-                        child: VerifyOptWidget(
-                          onPressCrossButton: onPressCrossOTP,
-                          onPressVerifyButton: onPressVerifyOTP,
-                        ),
+                      login?LoginWidget(signInLogin: onSignInLogIn):
+                      SignInScreen(
+                        onSignInLogIN: onSignInLogIn,
+                        forget: forgetPassword,
                       ),
+                    ],
+                  ),
+                ),
+                Visibility(
+                  visible: showConfirmPasswordPanel,
+                  child: Container(
+                    color: Colors.black.withOpacity(0.5),
+                    child: CreatePasswordWidget(
+                      onPressCrossButton: onPressCrossPassword,
+                      onPressVerifyButton: onPressVerifyPassword,
                     ),
-                    Visibility(
-                        visible: false,
-                        child: Container(
-                          height: MediaQuery.of(context).size.height,
-                          color: Color.fromRGBO(1, 1, 1, 0.4),
-                          child: Center(child: CircularProgressIndicator(
-                            color: Colors.yellow,
-                          )),
-                        )),
-                    Visibility(
-                         visible: showErrorWidget,
-                        child: CustomErrorWidget(mssg: errormsg,error: true, closeErrorWidget: () {
-                          setState(() {
-                            showErrorWidget = !showErrorWidget;
-                          });
-                        },)),
-                    Visibility(
-                       visible: loaderVisibility,
-                        child: Container(
+                  ),
+                ),
+                Visibility(
+                  visible: showOTPPanel,
+                  child: Container(
+                    color: Colors.black.withOpacity(0.5),
+                    child: VerifyOptWidget(
+                      onPressCrossButton: onPressCrossOTP,
+                      onPressVerifyButton: onPressVerifyOTP,
+                    ),
+                  ),
+                ),
+                Visibility(
+                    visible: false,
+                    child: Container(
+                      height: MediaQuery.of(context).size.height,
+                      color: Color.fromRGBO(1, 1, 1, 0.4),
+                      child: Center(child: CircularProgressIndicator(
+                        color: Colors.yellow,
+                      )),
+                    )),
+                Visibility(
+                    visible: showErrorWidget,
+                    child: CustomErrorWidget(mssg: errormsg,error: true, closeErrorWidget: () {
+                      setState(() {
+                        showErrorWidget = !showErrorWidget;
+                      });
+                    },)),
+                Visibility(
+                    visible: loaderVisibility,
+                    child: Container(
                       height: MediaQuery.of(context).size.height,
                       color: Color.fromRGBO(0,0,0,.4),
                       child: Center(
@@ -152,12 +166,11 @@ class _LoginScreenState extends State<AuthScreen> {
                         ),
                       ),
                     ))
-                  ])),
-            );
-          },
-        ));
+              ])),
+        );
+      },
+    );
   }
-
   void onPressCrossOTP() {
     setState(() {
       showOTPPanel = !showOTPPanel;
@@ -176,8 +189,7 @@ class _LoginScreenState extends State<AuthScreen> {
     setState(() {
       print("showConfirmPasswordPanel");
       showConfirmPasswordPanel = !showConfirmPasswordPanel;
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const AddProfileScreen()));
+      navigateToHomePage();
     });
   }
 
@@ -186,15 +198,14 @@ class _LoginScreenState extends State<AuthScreen> {
       showConfirmPasswordPanel = !showConfirmPasswordPanel;
     });
   }
-void onSignInLogIn() {
+void onSignInLogIn(String b) {
+    forgetPassword = b;
     setState(() {
       login=!login;
     });
   }
 
   void navigateToHomePage(){
-    Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const Home()));
-
+    BlocProvider.of<AuthBloc>(context).add(GetCheckProfileEvent());
   }
 }

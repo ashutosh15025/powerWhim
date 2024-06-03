@@ -8,8 +8,9 @@ import '../../bloc/authbloc/auth_bloc.dart';
 import '../custom/gradient_button_green_yelllow.dart';
 
 class SignInScreen extends StatefulWidget {
-  const SignInScreen({super.key,required this.onSignInLogIN});
-  final Function() onSignInLogIN;
+  const SignInScreen({super.key,required this.onSignInLogIN, required this.forget});
+  final Function(String) onSignInLogIN;
+  final String forget;
 
 
   @override
@@ -75,7 +76,7 @@ class _SignInScreenState extends State<SignInScreen> {
                  onTap: (){
                    print(userEmail.toString());
                    if(userEmail!=null){
-                   bloc.add(RegisterEvent(userEmail!));}
+                   bloc.add(RegisterEvent(userEmail!,widget.forget));}
                  },
                   child: GradientButtonGreenYellow(buttonText: "Next")),
             ),
@@ -91,7 +92,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   style: TextStyle(color: Colors.grey,
                       fontSize: 16),),
                   InkWell(
-                    onTap: (){widget.onSignInLogIN();
+                    onTap: (){widget.onSignInLogIN("no");
                     },
                     child: Text("Login",
                       style: GoogleFonts.baloo2(

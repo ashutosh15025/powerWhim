@@ -1,7 +1,7 @@
 
 import 'dart:ui';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-const BASE_URL = "http://192.168.29.226:3000/";
+const BASE_URL = "https://whim.cozytech.co.in/";
 
 const Color green = Color.fromRGBO(0, 156, 74, 1);
 
@@ -17,7 +17,7 @@ extension STATUSVALUE on STATUS {
 }
 const ERROR ="some error Accured";
 
-String ? USER_ID = "28d53919-b837-4eee-b85b-f7389784ec6f";
+String ? USER_ID ;
 
 IO.Socket ? SOCKET ;
 

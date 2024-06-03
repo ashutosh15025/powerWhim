@@ -9,8 +9,8 @@ import 'package:retrofit/dio.dart';
 import '../model/profilemodel/profiles_model.dart';
 
 abstract class UserProfileRepo{
-  Future<HttpResponse<ProfilesModel>> getProfiles();
-  Future<HttpResponse<FullProfileModel>> getFullProfile(String userId);
+  Future<HttpResponse<ProfilesModel>> getProfiles(String userId);
+  Future<HttpResponse<FullProfileModel>> getFullProfile(String userId,String myUserId);
   Future<HttpResponse<AccountManagementModel>> getHelp(HelpModel helpmodel);
   Future<HttpResponse<FriendsModel>> getFriends(String userId);
 

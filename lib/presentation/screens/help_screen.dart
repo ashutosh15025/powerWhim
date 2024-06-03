@@ -24,6 +24,12 @@ class _HelpScreenState extends State<HelpScreen> {
   String ? error = null;
   bool showError = false;
 
+  TextEditingController _topicControllerName = TextEditingController();
+  TextEditingController _topicControllerEmail = TextEditingController();
+  TextEditingController _topicControllerPhone = TextEditingController();
+  TextEditingController _topicControllerMessage = TextEditingController();
+
+
 
 
   bool errorWidget = false;
@@ -72,6 +78,7 @@ class _HelpScreenState extends State<HelpScreen> {
                     padding: EdgeInsets.all(16),
                     child: TextField(
                       cursorColor: Colors.yellow,
+                      controller: _topicControllerName,
                       style: TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                         fillColor: Colors.white,
@@ -103,6 +110,7 @@ class _HelpScreenState extends State<HelpScreen> {
                     padding: EdgeInsets.all(16),
                     child: TextField(
                       cursorColor: Colors.yellow,
+                      controller: _topicControllerEmail,
                       style: TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                         fillColor: Colors.white,
@@ -116,7 +124,7 @@ class _HelpScreenState extends State<HelpScreen> {
                                 color: error==null?Colors.yellow:Colors.redAccent, width: 1),
                             borderRadius: BorderRadius.circular(10)
                         ),
-                        hintText: "Enter Your Name",
+                        hintText: "Enter Your Email",
                         hintStyle: GoogleFonts.baloo2(
                             textStyle: TextStyle(color: Colors.grey,
                                 fontWeight: FontWeight.w400)
@@ -134,6 +142,7 @@ class _HelpScreenState extends State<HelpScreen> {
                     padding: EdgeInsets.all(16),
                     child: TextField(
                       cursorColor: Colors.yellow,
+                      controller: _topicControllerPhone,
                       style: TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                         fillColor: Colors.white,
@@ -147,7 +156,7 @@ class _HelpScreenState extends State<HelpScreen> {
                                 color: error==null?Colors.yellow:Colors.redAccent, width: 1),
                             borderRadius: BorderRadius.circular(10)
                         ),
-                        hintText: "Enter Your Name",
+                        hintText: "Enter Your Phone Number",
                         hintStyle: GoogleFonts.baloo2(
                             textStyle: TextStyle(color: Colors.grey,
                                 fontWeight: FontWeight.w400)
@@ -169,13 +178,13 @@ class _HelpScreenState extends State<HelpScreen> {
                     margin: EdgeInsets.all(16),
                     padding: EdgeInsets.all(4),
                     child: TextField(
+                      controller: _topicControllerMessage,
                       cursorColor: Colors.yellow,
                       maxLines: null,
                       expands: true,
                       style: GoogleFonts.baloo2(
                         textStyle: TextStyle(
                             fontWeight: FontWeight.w500,
-                            fontSize: 12,
                             color: Colors.white
                         ),),
                       keyboardType: TextInputType.multiline,
@@ -185,7 +194,6 @@ class _HelpScreenState extends State<HelpScreen> {
                         hintStyle: GoogleFonts.baloo2(
                           textStyle: TextStyle(
                               fontWeight: FontWeight.w500,
-                              fontSize: 12,
                               color: Colors.grey
                           ),),
                       ),
@@ -244,6 +252,13 @@ class _HelpScreenState extends State<HelpScreen> {
             child: CustomErrorWidget(mssg: errormsg==null?successmsg:errormsg,error:errormsg==null?false!:true, closeErrorWidget: () {
               setState(() {
                 errorWidget=!errorWidget ;
+                if(successmsg!=null){
+                  successmsg=null;
+                  _topicControllerName.clear();
+                  _topicControllerMessage.clear();
+                  _topicControllerPhone.clear();
+                  _topicControllerEmail.clear();
+                }
               });},))
 
     ]

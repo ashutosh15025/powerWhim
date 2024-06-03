@@ -34,6 +34,12 @@ abstract class AuthUserService{
       @Query("email_id") String email,
       @Query("password") String password
       );
+
+
+  @GET("api/user/check-profile")
+  Future<HttpResponse<AccountManagementModel>>checkProfile (
+      @Query("user_id") String userId,
+      );
   
 
 }

@@ -16,27 +16,33 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
-  List<String> sportsList = [];
+  List<String> sportsList = ["Footabll","Cricket","BasketBall"];
 
-  List<String> hobbiesList = [];
+  List<String> hobbiesList = ["photography", "hiking", "camping", "cooking", "baking", "gardening", "gaming", "coding", "playing music"];
 
 
 
   AuthBloc() : super(AuthInitial()) {
     on<AuthEvent>((event, emit) async {});
+    on<GetCheckProfileEvent>(onGetCheckProfileEvent);
     on<RegisterEvent>(onRegisterSucessEvent);
     on<VerifyOTPsEvent>(onVerifyOTPsEvent);
     on<CreatePasswordEvent>(onCreatePasswordEvent);
     on<AddProfileEvent>(onAddProfileEvent);
     on<LoginEvent>(onLoginEvent);
+    on<GetSportEvent>(onGetSportsEvent);
+    on<GetHobbiesEvent>(onGetHobbiesEvent);
+
+
   }
 
   void onRegisterSucessEvent(
       RegisterEvent event, Emitter<AuthState> emit) async {
     emit(LoadingState());
+    print(event.forget.toString());
     var response = await locator
         .get<AccountManagmentUsecase>()
-        .registerUser(email: event.email);
+        .registerUser(email: event.email,forget: event.forget);
     if (response.response.statusCode == HttpStatus.ok &&
         response.data.data != null &&
         response.data.data?.status != null) {
@@ -167,8 +173,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  void ongetSportsEvent(AddProfileEvent event, Emitter<AuthState> emit) async {
+  void onGetSportsEvent(GetSportEvent event, Emitter<AuthState> emit) async {
     emit(LoadingState());
+    try{
     var response = await locator.get<AccountManagmentUsecase>().getSports();
     if (response.response.statusCode == HttpStatus.ok &&
         response.data.data != null &&
@@ -176,8 +183,38 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       switch (response.data.data!.status) {
         case "success":
           {
+            print("sports");
             sportsList = response.data!.data!.list!;
-            emit(GetSportsSuccessState(response.data.data!.list!));
+            emit(GetSportsSuccessState(response.data!.data!.list!));
+            print(sportsList);
+
+          }
+        default:
+          {
+            emit(ApiFailedState(response.data.data!.mssg!));
+          }
+      }
+    } else {
+      emit(ApiFailedState(ERROR));
+    }}catch(error){
+      print(error);
+    }
+  }
+
+  void onGetHobbiesEvent(GetHobbiesEvent event, Emitter<AuthState> emit) async {
+    emit(LoadingState());
+    var response = await locator.get<AccountManagmentUsecase>().getHobbies();
+    if (response.response.statusCode == HttpStatus.ok &&
+        response.data.data != null &&
+        response.data.data?.status != null) {
+      switch (response.data.data!.status) {
+        case "success":
+          {
+            hobbiesList = response.data!.data!.list!;
+            emit(GetHobbiesSuccessState(response.data!.data!.list!));
+
+            print(hobbiesList);
+
           }
         default:
           {
@@ -189,17 +226,24 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  void ongetHobbiesEvent(AddProfileEvent event, Emitter<AuthState> emit) async {
+  void onGetCheckProfileEvent(GetCheckProfileEvent event, Emitter<AuthState> emit)  async{
     emit(LoadingState());
-    var response = await locator.get<AccountManagmentUsecase>().getHobbies();
+    var response = await locator.get<AccountManagmentUsecase>().checkProfile(userId: USER_ID!);
     if (response.response.statusCode == HttpStatus.ok &&
         response.data.data != null &&
         response.data.data?.status != null) {
       switch (response.data.data!.status) {
         case "success":
+          {   print(response.data.data!.mssg);
+              print("complet + run");
+              // emit(ApiFailedState("mssg"));
+              emit(CompleteProfileState());
+          }
+        case "pending":
           {
-            hobbiesList = response.data!.data!.list!;
-            emit(GetSportsSuccessState(response.data.data!.list!));
+            print("pending");
+
+            emit(PendingProfileState());
           }
         default:
           {

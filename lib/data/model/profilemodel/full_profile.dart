@@ -25,6 +25,34 @@ class FullProfileModel {
 }
 
 class Data {
+  String? status;
+  String? mssg;
+  Profile? profile;
+  bool? visibility;
+
+  Data({
+    this.status,
+    this.mssg,
+    this.profile,
+    this.visibility,
+  });
+
+  factory Data.fromJson(Map<String, dynamic> json) => Data(
+    status: json["status"],
+    mssg: json["mssg"],
+    profile: json["profile"] == null ? null : Profile.fromJson(json["profile"]),
+    visibility: json["visibility"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "status": status,
+    "mssg": mssg,
+    "profile": profile?.toJson(),
+    "visibility": visibility,
+  };
+}
+
+class Profile {
   String? name;
   int? age;
   String? hobbies;
@@ -33,7 +61,7 @@ class Data {
   String? accomplishment;
   String? userId;
 
-  Data({
+  Profile({
     this.name,
     this.age,
     this.hobbies,
@@ -43,7 +71,7 @@ class Data {
     this.userId,
   });
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
+  factory Profile.fromJson(Map<String, dynamic> json) => Profile(
     name: json["name"],
     age: json["age"],
     hobbies: json["hobbies"],
