@@ -13,7 +13,7 @@ class _AddProfileService implements AddProfileService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://10.0.2.2:3000/';
+    baseUrl ??= 'https://whim.cozytech.co.in';
   }
 
   final Dio _dio;
