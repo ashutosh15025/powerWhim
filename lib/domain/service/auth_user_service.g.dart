@@ -13,7 +13,7 @@ class _AuthUserService implements AuthUserService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'https://whim.cozytech.co.in';
+    baseUrl ??= 'https://whim.cozytech.co.in/';
   }
 
   final Dio _dio;
