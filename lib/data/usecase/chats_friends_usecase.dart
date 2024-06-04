@@ -16,8 +16,8 @@ class ChatsFriendsUsecase {
     return _chatsFriendsRepoImp.getChats(userId);
   }
 
-  Future<HttpResponse<PersonalChatModel>> getPersonalChat(String chatId) {
-    return _chatsFriendsRepoImp.getPersonalChat(chatId);
+  Future<HttpResponse<PersonalChatModel>> getPersonalChat(String chatId,int page) {
+    return _chatsFriendsRepoImp.getPersonalChat(chatId,page);
   }
 
   Future<HttpResponse<AccountManagementModel>> setSocketId(String userId,String socketId) {

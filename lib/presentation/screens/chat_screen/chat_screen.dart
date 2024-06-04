@@ -98,7 +98,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   )));
                           BlocProvider.of<ChatBloc>(context).add(
                               GetPersonalChatEvent(
-                                  chatsDetailsModel!.data![index]!.chatId!));
+                                  chatId:chatsDetailsModel!.data![index]!.chatId!,page: 0));
                         },
                         child: ChatDmWidget(
                           name: chatsDetailsModel!.data![index].userName==null?"ashes":chatsDetailsModel!.data![index].userName!,

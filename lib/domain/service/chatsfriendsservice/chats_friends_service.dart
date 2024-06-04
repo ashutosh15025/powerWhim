@@ -28,7 +28,8 @@ abstract class ChatsFriendsService{
 
   @GET("api/chats/get-conversations")
   Future<HttpResponse<PersonalChatModel>> getPersonalChat(
-      @Query("chat_id") String chatId
+      @Query("chat_id") String chatId,
+      @Query("offset") int page
       );
 
 

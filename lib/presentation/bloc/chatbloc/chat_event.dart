@@ -12,7 +12,9 @@ class GetChatsEvent extends ChatEvent {}
 
 class GetPersonalChatEvent extends ChatEvent {
   String chatId;
-  GetPersonalChatEvent(this.chatId);
+  int page;
+  bool ? scroll ;
+  GetPersonalChatEvent({required this.chatId,required this.page,this.scroll});
 }
 
 

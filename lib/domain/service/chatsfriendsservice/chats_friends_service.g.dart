@@ -13,7 +13,7 @@ class _ChatsFriendsService implements ChatsFriendsService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'https://whim.cozytech.co.in/';
+    baseUrl ??= 'http://10.0.2.2:3000/';
   }
 
   final Dio _dio;
@@ -49,9 +49,15 @@ class _ChatsFriendsService implements ChatsFriendsService {
   }
 
   @override
-  Future<HttpResponse<PersonalChatModel>> getPersonalChat(String chatId) async {
+  Future<HttpResponse<PersonalChatModel>> getPersonalChat(
+    String chatId,
+    int page,
+  ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'chat_id': chatId};
+    final queryParameters = <String, dynamic>{
+      r'chat_id': chatId,
+      r'offset': page,
+    };
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(

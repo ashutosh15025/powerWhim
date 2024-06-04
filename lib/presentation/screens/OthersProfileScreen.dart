@@ -23,7 +23,7 @@ class OtherProfileScreen extends StatefulWidget {
 class _OtherProfileScreenState extends State<OtherProfileScreen> {
 
   Profile ? fullprofile ;
-
+  int pageCount = 0;
   @override
   void initState() {
     if(widget.fullProfilePScreenModel.fullProfileModel!.data!.profile==null||widget.fullProfilePScreenModel.fullProfileModel==null||widget.fullProfilePScreenModel.fullProfileModel.data==null)
@@ -45,7 +45,7 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
                     previousScreen: "OthersProfileScreen",
                   )));
           BlocProvider.of<ChatBloc>(context)
-              .add(GetPersonalChatEvent(state.chatId));
+              .add(GetPersonalChatEvent(chatId:state.chatId,page: pageCount));
           print(state.chatId);
           print("message clicked");
         }

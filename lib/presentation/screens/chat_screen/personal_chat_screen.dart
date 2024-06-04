@@ -32,6 +32,9 @@ class PersonalChatScreen extends StatefulWidget {
   final String? previousScreen;
   final String? socketId;
 
+
+
+
   @override
   State<PersonalChatScreen> createState() => _PersonalChatScreenState();
 }
@@ -46,6 +49,13 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
   String? image = "https://whim.ams3.digitaloceanspaces.com/whim/Testimage.jpg";
   String? uploaded_file_url;
   final TextEditingController _controller = new TextEditingController();
+
+  int pageCount = 0;
+
+  bool scrollLoaderVisibility = false;
+
+
+  bool disableSendbutton = false;
 
 
   final ScrollController _scrollController = ScrollController();
@@ -76,17 +86,18 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
     });
     socketP!.on('message', (data) {
       // Listen for the 'message' event
+      print("message new is"+data['message_text'].toString());
       String chatId = data['chat_id'];
       if (widget.chatId == chatId) {
         setState(() {
-          listItem.add(Message(
+          listItem.insert(0,Message(
               conversationMessage: data['message_text'],
               image: data['image'],
               createdOn: DateTime.now(),
               userId: data['user_id']));
         });
       }
-      print('Received message: $data'); // Print "hi" on receiving a message
+      print('Received message dataaaaa: $data'); // Print "hi" on receiving a message
     });
 
     socketP?.onDisconnect((_) => print('Connection Disconnection'));
@@ -108,29 +119,27 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
       BlocProvider.of<ChatBloc>(context).add(SetSocketEvent(socketP!.id!));
     }
 
-    var bloc = BlocProvider.of<ChatBloc>(context);
-    if (traceList != bloc.personalChatList) {
-      listItem = bloc.personalChatList;
-      traceList = bloc.personalChatList;
-    }
+
     return BlocConsumer<ChatBloc, ChatState>(
       listener: (context, state) {},
       builder: (context, state) {
         if (state is ErrorState) {
           return Scaffold(
+            backgroundColor: Colors.black,
             body: CustomErrorWidget(
               error: true,
               closeErrorWidget: () {
                 setState(() {
                   BlocProvider.of<ChatBloc>(context)
-                      .add(GetPersonalChatEvent(widget.chatId));
+                      .add(GetPersonalChatEvent(chatId:widget.chatId,page:0));
                 });
               },
             ),
           );
         } else if (state is GetPersonalChatSuccessState) {
-          bloc.personalChatList = state.personalChatModel.data!.messages!;
-          listItem = bloc.personalChatList;
+          scrollLoaderVisibility = false;
+          listItem.addAll(state.personalChatModel.data!.messages!);
+          print("list"+listItem.length.toString());
           return PopScope(
             canPop: true,
             onPopInvoked: (bool didPop) {
@@ -189,110 +198,127 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                       Expanded(
                         child: SingleChildScrollView(
                           reverse: true,
-                          child: Column(
-                            children: [
-                              Container(
-                                height: MediaQuery.of(context).size.height -
-                                    MediaQuery.of(context).size.height / 5 -
-                                    MediaQuery.of(context).viewInsets.bottom,
-                                child: ListView.builder(
-                                    reverse: true,
-                                    itemCount: listItem.length,
-                                    itemBuilder: (context, i) {
-                                      int index = listItem.length - 1 - i;
-                                      if (USER_ID == listItem[index]!.userId)
-                                        return InkWell(
-                                          onTap: () {
-                                            if (listItem[index]!.image !=
-                                                null) {
-                                              onClickImage(listItem[index]!.image);
-                                            }
-                                          },
-                                          child: MyMessageWidget(
-                                            message: listItem[index]!
-                                                .conversationMessage,
-                                            time: getHours(listItem[index]!
-                                                .createdOn!),
-                                            image:  listItem[index].image,
-                                          ),
-                                        );
-                                      else
-                                        return InkWell(
-                                          onTap: () {
-                                            if (listItem[index]!.image !=
-                                                null) {
-                                              onClickImage(listItem[index]!.image);
-                                            }
-                                          },
-                                          child: OtherMessages(
-                                            message: listItem[index]!
-                                                .conversationMessage,
-                                            time: getHours(listItem[index]!
-                                                .createdOn!),
-                                            image: listItem[index].image,
-                                          ),
-                                        );
-                                    }),
-                              ),
-                              Container(
-                                constraints: BoxConstraints(
+                          child: Stack(
+                            children:[Column(
+                              children: [
+                                Container(
+                                  height: MediaQuery.of(context).size.height -
+                                      MediaQuery.of(context).size.height / 5 -
+                                      MediaQuery.of(context).viewInsets.bottom,
+                                  child: ListView.builder(
+                                      controller: _scrollController,
+                                      reverse: true,
+                                      itemCount: listItem.length,
+                                      itemBuilder: (context, i) {
+                                        if(i==listItem.length-1){
+                                          if(pageCount<state.personalChatModel!.data!.total!-1){
+                                            pageCount++;
+                                            BlocProvider.of<ChatBloc>(context).add(GetPersonalChatEvent(chatId: widget.chatId, page: pageCount));
+                                            scrollLoaderVisibility = true;
+                                          }
+                                          print("top");
+                                        }
+                                        int index =i;
+                                        if (USER_ID == listItem[index]!.userId)
+                                          return InkWell(
+                                            onTap: () {
+                                              if (listItem[index]!.image !=
+                                                  null) {
+                                                onClickImage(listItem[index]!.image);
+                                              }
+                                            },
+                                            child: MyMessageWidget(
+                                              message: listItem[index]!
+                                                  .conversationMessage,
+                                              time: getHours(listItem[index]!
+                                                  .createdOn!),
+                                              image:  listItem[index].image,
+                                            ),
+                                          );
+                                        else
+                                          return InkWell(
+                                            onTap: () {
+                                              if (listItem[index]!.image !=
+                                                  null) {
+                                                onClickImage(listItem[index]!.image);
+                                              }
+                                            },
+                                            child: OtherMessages(
+                                              message: listItem[index]!
+                                                  .conversationMessage,
+                                              time: getHours(listItem[index]!
+                                                  .createdOn!),
+                                              image: listItem[index].image,
+                                            ),
+                                          );
+                                      }),
+
+
+
                                 ),
-                                padding: EdgeInsets.fromLTRB(8, 16, 8, 16),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    file==null?SizedBox.shrink():InkWell(
+                                Container(
+                                  constraints: BoxConstraints(
+                                  ),
+                                  padding: EdgeInsets.fromLTRB(8, 16, 8, 16),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      file==null?SizedBox.shrink():InkWell(
                                         child: Icon(Icons.cancel_outlined,color:Colors.white),
-                                    onTap: () async {
+                                        onTap: () async {
                                           setState(() {
                                             file!.delete();
                                             file = null;
                                           });
-                                    },),
+                                        },),
 
-                                    file==null?SizedBox.shrink():Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      child: Image.file(
-                                        file!,
-                                        height: 200,
+                                      file==null?SizedBox.shrink():Container(
+                                        width: MediaQuery.of(context).size.width,
+                                        child: Image.file(
+                                          file!,
+                                          height: 200,
+                                        ),
                                       ),
-                                    ),
-                                    TextField(
-                                      controller: _controller,
-                                      cursorColor: Colors.yellow.shade600,
-                                      onChanged: (value) {
-                                        inputValue = value;
-                                      },
-                                      style: TextStyle(color: Colors.white),
-                                      decoration: InputDecoration(
-                                        prefixIcon: InkWell(
-                                            onTap: () {},
-                                            child: InkWell(
-                                                onTap: () {
-                                                  openImagePicker();
-                                                },
-                                                child: Icon(
-                                                    Icons.photo_library_sharp))),
-                                        prefixIconColor: Colors.yellow,
-                                        suffixIcon: InkWell(
-                                          child: Icon(Icons.send),
-                                          onTap: () async {
-                                            print(DateTime.now());
-                                            print("sent");
-                                            if (inputValue != null &&
-                                                inputValue!.isNotEmpty) {
-                                              if (file == null) {
-                                                print("input not null");
+                                      TextField(
+                                        controller: _controller,
+                                        cursorColor: Colors.yellow.shade600,
+                                        onChanged: (value) {
+                                          inputValue = value;
+                                        },
+                                        style: TextStyle(color: Colors.white),
+                                        decoration: InputDecoration(
+                                          prefixIcon: InkWell(
+                                              onTap: () {},
+                                              child: InkWell(
+                                                  onTap: () {
+                                                    openImagePicker();
+                                                  },
+                                                  child: Icon(
+                                                      Icons.photo_library_sharp))),
+                                          prefixIconColor: Colors.yellow,
+                                          suffixIcon: InkWell(
+                                            child: Icon(Icons.send),
+                                            onTap: () async {
+                                              if(disableSendbutton == false){
+                                                disableSendbutton = true;
 
-                                                print("input non empty");
-                                                socketP?.emit("message", {
-                                                  "message_text": "$inputValue",
-                                                  "chat_id": "${widget.chatId}",
-                                                  "user_id": "$USER_ID"
-                                                });
-                                              } else {
-                                                 await uploadfile();
-                                                 print(uploaded_file_url);
+                                                print(DateTime.now());
+                                              print("sent");
+                                              if (inputValue != null &&
+                                                  inputValue!.isNotEmpty) {
+                                                if (file == null) {
+                                                  print("input not null");
+
+                                                  print("input non empty");
+                                                  socketP?.emit("message", {
+                                                    "message_text": "$inputValue",
+                                                    "chat_id": "${widget.chatId}",
+                                                    "user_id": "$USER_ID"
+                                                  });
+                                                 _controller.clear();
+                                                } else {
+                                                  await uploadfile();
+                                                  print(uploaded_file_url);
                                                   socketP?.emit("message", {
                                                     "message_text": "$inputValue",
                                                     "chat_id": "${widget.chatId}",
@@ -302,47 +328,63 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                                   await file!.delete();
                                                   file = null;
                                                   _controller.clear();
-                                              }
-                                            } else if (file != null) {
-                                              print("file not null");
 
-                                              await uploadfile();
-                                              print(uploaded_file_url);
-                                              socketP?.emit("message", {
-                                                "chat_id": "${widget.chatId}",
-                                                "user_id": "$USER_ID",
-                                                "image": "$uploaded_file_url"
-                                              });
-                                              inputValue=null;
-                                              await file!.delete();
-                                              file = null;
-                                            }
-                                            _controller.clear();
-                                          },
-                                        ),
-                                        suffixIconColor: Colors.yellow,
-                                        fillColor: Colors.white,
-                                        enabledBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(30),
-                                            borderSide: BorderSide(
-                                                color: Colors.yellow, width: 1)),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(30),
-                                            borderSide: BorderSide(
-                                                color: Colors.yellow, width: 1)),
-                                        hintText: "type here",
-                                        hintStyle: GoogleFonts.baloo2(
-                                          textStyle: TextStyle(
-                                              fontWeight: FontWeight.w300,
-                                              fontSize: 16,
-                                              color: Colors.white),
+                                                }
+                                              } else if (file != null) {
+                                                print("file not null");
+
+                                                await uploadfile();
+                                                print(uploaded_file_url);
+                                                socketP?.emit("message", {
+                                                  "chat_id": "${widget.chatId}",
+                                                  "user_id": "$USER_ID",
+                                                  "image": "$uploaded_file_url"
+                                                });
+                                                inputValue=null;
+                                                await file!.delete();
+                                                file = null;
+                                              }
+                                              _controller.clear();
+                                                disableSendbutton = false;
+
+                                              }
+                                              },
+                                          ),
+                                          suffixIconColor: Colors.yellow,
+                                          fillColor: Colors.white,
+                                          enabledBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.circular(30),
+                                              borderSide: BorderSide(
+                                                  color: Colors.yellow, width: 1)),
+                                          focusedBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.circular(30),
+                                              borderSide: BorderSide(
+                                                  color: Colors.yellow, width: 1)),
+                                          hintText: "type here",
+                                          hintStyle: GoogleFonts.baloo2(
+                                            textStyle: TextStyle(
+                                                fontWeight: FontWeight.w300,
+                                                fontSize: 16,
+                                                color: Colors.white),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                              Visibility(child: Container(
+                                height: 40,
+                                color: Colors.black,
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    color: Colors.yellow,
+                                  ),
                                 ),
                               ),
-                            ],
+                                visible: scrollLoaderVisibility,
+                              ),]
                           ),
                         ),
                       ),

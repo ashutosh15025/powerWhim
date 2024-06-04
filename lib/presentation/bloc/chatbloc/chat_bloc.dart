@@ -57,8 +57,11 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   void onGetPersonalChatEvent(
       GetPersonalChatEvent event, Emitter<ChatState> emit) async {
+
+    if(event.scroll!=null)
     emit(LoadingState());
-    var apiResult = await locator.get<ChatsFriendsUsecase>().getPersonalChat(event.chatId);
+    print(event.page);
+    var apiResult = await locator.get<ChatsFriendsUsecase>().getPersonalChat(event.chatId,event.page);
     print(apiResult);
     print("get personal chat event");
     try {

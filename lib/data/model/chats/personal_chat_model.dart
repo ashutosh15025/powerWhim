@@ -28,23 +28,27 @@ class Data {
   List<Message>? messages;
   String? status;
   String? mssg;
+  int? total;
 
   Data({
     this.messages,
     this.status,
     this.mssg,
+    this.total,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
     messages: json["messages"] == null ? [] : List<Message>.from(json["messages"]!.map((x) => Message.fromJson(x))),
     status: json["status"],
     mssg: json["mssg"],
+    total: json["total"],
   );
 
   Map<String, dynamic> toJson() => {
     "messages": messages == null ? [] : List<dynamic>.from(messages!.map((x) => x.toJson())),
     "status": status,
     "mssg": mssg,
+    "total": total,
   };
 }
 

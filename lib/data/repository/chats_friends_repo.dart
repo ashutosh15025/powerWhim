@@ -7,7 +7,7 @@ import 'package:retrofit/dio.dart';
 
 abstract class ChatsFriendsRepo{
   Future<HttpResponse<ChatsDetailsModel>> getChats(String userId);
-  Future<HttpResponse<PersonalChatModel>> getPersonalChat(String chatId);
+  Future<HttpResponse<PersonalChatModel>> getPersonalChat(String chatId,int page);
 
 
   Future<HttpResponse<AccountManagementModel>> setSocketId(String userId, String socketId);

@@ -14,6 +14,7 @@ class FriendDmWidget extends StatelessWidget {
   final String description;
   final String userId;
   final String chatId;
+  final int pageCount = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +66,7 @@ class FriendDmWidget extends StatelessWidget {
                 InkWell(
                     onTap: (){
                       print(chatId +"chatId");
-                      BlocProvider.of<ChatBloc>(context).add(GetPersonalChatEvent(chatId));
+                      BlocProvider.of<ChatBloc>(context).add(GetPersonalChatEvent(chatId: chatId,page: pageCount,));
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (_) =>  PersonalChatScreen(chatId: chatId,name: name,previousScreen: "FriendsScreen",)));
                     },
