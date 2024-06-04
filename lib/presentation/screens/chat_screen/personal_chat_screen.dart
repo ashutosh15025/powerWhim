@@ -57,6 +57,8 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
 
   bool disableSendbutton = false;
 
+  bool imageLoader = false;
+
 
   final ScrollController _scrollController = ScrollController();
 
@@ -89,9 +91,9 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
       print("message new is"+data['message_text'].toString());
       String chatId = data['chat_id'];
       print("chatId"+chatId.toString());
-
       if (widget.chatId == chatId) {
         setState(() {
+          imageLoader =false;
           listItem.insert(0,Message(
               conversationMessage: data['message_text'],
               image: data['image'],
@@ -281,6 +283,18 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                           height: 200,
                                         ),
                                       ),
+                                      Visibility(
+                                        visible: imageLoader,
+                                        child: Container(
+                                          width: MediaQuery.of(context).size.width,
+                                          alignment: Alignment.center,
+                                            child: Text("sending...",
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.white
+                                            ),),
+                                        ),
+                                      ),
                                       TextField(
                                         controller: _controller,
                                         cursorColor: Colors.yellow.shade600,
@@ -309,6 +323,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                               if (inputValue != null &&
                                                   inputValue!.isNotEmpty) {
                                                 if (file == null) {
+                                                  imageLoader  = true;
                                                   print("input not null");
 
                                                   print("input non empty");
@@ -317,8 +332,11 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                                     "chat_id": "${widget.chatId}",
                                                     "user_id": "$USER_ID"
                                                   });
-                                                 _controller.clear();
+
                                                 } else {
+                                                  setState(() {
+                                                    imageLoader=true;
+                                                  });
                                                   await uploadfile();
                                                   print(uploaded_file_url);
                                                   socketP?.emit("message", {
@@ -329,12 +347,13 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                                   });
                                                   await file!.delete();
                                                   file = null;
-                                                  _controller.clear();
 
                                                 }
                                               } else if (file != null) {
                                                 print("file not null");
-
+                                                setState(() {
+                                                  imageLoader=true;
+                                                });
                                                 await uploadfile();
                                                 print(uploaded_file_url);
                                                 socketP?.emit("message", {
@@ -346,10 +365,12 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                                 await file!.delete();
                                                 file = null;
                                               }
-                                              _controller.clear();
                                                 disableSendbutton = false;
 
                                               }
+                                              _controller.clear();
+                                              inputValue = null;
+
                                               },
                                           ),
                                           suffixIconColor: Colors.yellow,
