@@ -88,6 +88,8 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
       // Listen for the 'message' event
       print("message new is"+data['message_text'].toString());
       String chatId = data['chat_id'];
+      print("chatId"+chatId.toString());
+
       if (widget.chatId == chatId) {
         setState(() {
           listItem.insert(0,Message(
@@ -123,6 +125,8 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
     return BlocConsumer<ChatBloc, ChatState>(
       listener: (context, state) {},
       builder: (context, state) {
+        print(state.toString());
+        print("build");
         if (state is ErrorState) {
           return Scaffold(
             backgroundColor: Colors.black,
@@ -132,13 +136,16 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                 setState(() {
                   BlocProvider.of<ChatBloc>(context)
                       .add(GetPersonalChatEvent(chatId:widget.chatId,page:0));
+                  print("errorrr");
                 });
               },
             ),
           );
         } else if (state is GetPersonalChatSuccessState) {
           scrollLoaderVisibility = false;
-          listItem.addAll(state.personalChatModel.data!.messages!);
+          print("ashes");
+          print(state.personalChatModel.data!.messages!.length.toString()+"state");
+          listItem=state.personalChatModel.data!.messages!;
           print("list"+listItem.length.toString());
           return PopScope(
             canPop: true,
@@ -211,15 +218,9 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                       itemCount: listItem.length,
                                       itemBuilder: (context, i) {
                                         if(i==listItem.length-1){
-                                          if(pageCount<state.personalChatModel!.data!.total!-1){
-                                            pageCount++;
-                                            BlocProvider.of<ChatBloc>(context).add(GetPersonalChatEvent(chatId: widget.chatId, page: pageCount));
-                                            scrollLoaderVisibility = true;
-                                          }
                                           print("top");
                                         }
-                                        int index =i;
-                                        if (USER_ID == listItem[index]!.userId)
+                                        int index =i; if (USER_ID == listItem[index]!.userId)
                                           return InkWell(
                                             onTap: () {
                                               if (listItem[index]!.image !=
@@ -251,6 +252,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                               image: listItem[index].image,
                                             ),
                                           );
+
                                       }),
 
 
