@@ -26,12 +26,19 @@ class _ChatDmWidgetState extends State<ChatDmWidget> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(widget.name,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: green
-                ),),
+                Container(
+                  constraints : BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width-200
+                  ),
+                  child: Text(widget.name,
+                  maxLines: 1,
+                 overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: green
+                  ),),
+                ),
                 Visibility(
                   visible:widget.count!=null&&int.parse(widget.count!)>0?true:false ,
                   child: Container(
@@ -58,12 +65,19 @@ class _ChatDmWidgetState extends State<ChatDmWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Visibility(
-                  child: Text(widget.lastMessage==null?"":widget.lastMessage!,
-                    style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.yellow.shade600
-                    ),),
+                  child: Container(
+                    constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width-200
+                    ),
+                    child: Text(widget.lastMessage==null?"":widget.lastMessage!,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.yellow.shade600
+                      ),),
+                  ),
                   visible: widget.lastMessage==null?false:true,
                 ),
                 Visibility(

@@ -46,12 +46,17 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
            children: [
              Row(children:[Container(
                padding: EdgeInsets.fromLTRB(0, 16, 0, 16),
-               child: Text(myprofile!.name!=null?myprofile!.name!:"Name",
-                   style: GoogleFonts.poppins(
-                     textStyle:TextStyle(
-                         fontSize: 22,
-                         fontWeight: FontWeight.w600,
-                         color: green),)
+               child: Container(
+                 width: MediaQuery.of(context).size.width - MediaQuery.of(context).size.width/4 ,
+                 child: Text(myprofile!.name!=null?myprofile!.name!:"Name",
+                     maxLines: 1,
+                     overflow: TextOverflow.ellipsis,
+                     style: GoogleFonts.poppins(
+                       textStyle:TextStyle(
+                           fontSize: 22,
+                           fontWeight: FontWeight.w600,
+                           color: green),)
+                 ),
                ),
              ),
                Spacer()
@@ -62,9 +67,9 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
                        fontWeight: FontWeight.w600,
                        color: green),),)]),
              myprofile.sports==null?SizedBox.shrink():ContentDescription(title: "Sports:",description: myprofile.sports!=null?myprofile.sports!.toString():"I love every sports"),
-             myprofile.hobbies==null?SizedBox.shrink():ContentDescription(title: "Hobbies:",description: myprofile.hobbies!=null?myprofile.hobbies!.toString():"I love every sports"),
-             myprofile.ambition==null?SizedBox.shrink():ContentDescription(title: "Ambition:",description:  myprofile.ambition!=null?myprofile.ambition!.toString():"I love every sports"),
-             myprofile.accomplishment==null?SizedBox.shrink():ContentDescription(title: "Accomplishment:",description:  myprofile.accomplishment!=null?myprofile.accomplishment!.toString():"I love every sports"),
+             myprofile.hobbies==null?SizedBox.shrink():ContentDescription(title: "Hobbies:",description: myprofile.hobbies!=null?myprofile.hobbies!.toString():"I love every doing everything"),
+             myprofile.ambition==null?SizedBox.shrink():ContentDescription(title: "Ambition:",description:  myprofile.ambition!=null?myprofile.ambition!.toString():"I have big ambitions"),
+             myprofile.accomplishment==null?SizedBox.shrink():ContentDescription(title: "Accomplishment:",description:  myprofile.accomplishment!=null?myprofile.accomplishment!.toString():"I have manny accomplishment"),
              ProfileImage(visibility: true,)
            ],
          ),

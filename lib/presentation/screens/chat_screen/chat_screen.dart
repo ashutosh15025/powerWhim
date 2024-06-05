@@ -26,13 +26,11 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   void initState() {
-    print("init run");
     initSocket();
     super.initState();
   }
 
   initSocket() {
-    print("in init ");
     socket = IO.io(BASE_URL, <String, dynamic>{
       'autoConnect': false,
       'transports': ['websocket'],
@@ -57,7 +55,6 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("object");
     if (socket != null && socket!.id != null) {
       BlocProvider.of<ChatBloc>(context).add(SetSocketEvent(socket!.id!));
     }
@@ -67,9 +64,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
       },
       builder: (context, state) {
-        print("state.runtimeType");
         if (state is GetChatsSuccessState) {
-          print("get chat");
           chatsDetailsModel = state.chatsDetailsModel;
           if(chatsDetailsModel !=null && chatsDetailsModel!.data!=null&& chatsDetailsModel!.data!.length>0)
           return PopScope(
@@ -83,10 +78,8 @@ class _ChatScreenState extends State<ChatScreen> {
               child: ListView.builder(
                   itemCount: chatsDetailsModel!.data!.length,
                   itemBuilder: (context, index) {
-                    print("${chatsDetailsModel!.data![index].updatedOn} ashese");
                     return InkWell(
                         onTap: () {
-                          print("screenchange");
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (_) => PersonalChatScreen(
                                     chatId: chatsDetailsModel!
@@ -146,16 +139,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
 
   void listenMessage(){
-    print("listen1");
     socket!.on('message', (data) {
-      print("listennning message"); // Listen for the 'message' event
       String chatId = data['chat_id'];
-      print("listenwwwww");
-
       if (chatsDetailsModel != null) {
-        print(chatsDetailsModel!.data!.length);
-
-        print("chat model not null");
         Datum? newMessageData;
         for (int i = 0; i < chatsDetailsModel!.data!.length; i++) {
           if (chatsDetailsModel!.data![i].chatId == chatId) {
@@ -165,7 +151,6 @@ class _ChatScreenState extends State<ChatScreen> {
           }
         }
         if (newMessageData != null) {
-          print("new message not null");
           newMessageData.lastConversations = data['message_text'];
           newMessageData.updatedOn = data['image'];
           newMessageData.unreadCount =
@@ -174,12 +159,7 @@ class _ChatScreenState extends State<ChatScreen> {
             chatsDetailsModel!.data!.insert(0, newMessageData!);
           });
         }
-        print("listenwwwww");
-
-        print(chatsDetailsModel!.data!.length);
-
       }
-      print('Received message: $data'); // Print "hi" on receiving a message
     });
 
 

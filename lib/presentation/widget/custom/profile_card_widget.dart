@@ -36,13 +36,20 @@ class _ProfileCardWidgetState extends State<ProfileCardWidget> {
               padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
               child: Row(
                 children: [
-                  Text(widget.name!,
-                  style: GoogleFonts.poppins(
-                   textStyle:TextStyle(
-                    color: green,
-                    fontSize: 18,
-                      fontWeight: FontWeight.w700
-                  ),)),
+                  Container(
+                    constraints:BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width- MediaQuery.of(context).size.width/4
+                    ),
+                    child: Text(widget.name!,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.poppins(
+                     textStyle:TextStyle(
+                      color: green,
+                      fontSize: 18,
+                        fontWeight: FontWeight.w700
+                    ),)),
+                  ),
                   Spacer(),
                   Text(widget.age!.toString() + "Yrs",
                     style:  GoogleFonts.poppins(
@@ -56,6 +63,7 @@ class _ProfileCardWidgetState extends State<ProfileCardWidget> {
             ),
             widget.sport!=null?Row(
               mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text("Sports: ",
                   style:  GoogleFonts.poppins(
@@ -78,6 +86,7 @@ class _ProfileCardWidgetState extends State<ProfileCardWidget> {
             ):SizedBox.shrink(),
             widget.hobbies!=null?Row(
               mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text("Hobbies: ",
                     style:  GoogleFonts.baloo2(

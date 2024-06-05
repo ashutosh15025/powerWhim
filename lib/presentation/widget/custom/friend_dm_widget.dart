@@ -33,25 +33,39 @@ class FriendDmWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(
-                        name,
-                        style: GoogleFonts.baloo2(
-                          textStyle: TextStyle(
-                            fontSize: 18,
-                            color: Colors.yellow.shade600,
-                            fontWeight: FontWeight.w500
-                          )
+                      Container(
+                        constraints:BoxConstraints(
+                          maxWidth: MediaQuery.of(context).size.width-MediaQuery.of(context).size.width/4,
+                        ),
+                        child: Text(
+                          name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.baloo2(
+                            textStyle: TextStyle(
+                              fontSize: 18,
+                              color: Colors.yellow.shade600,
+                              fontWeight: FontWeight.w500
+                            )
+                          ),
                         ),
                       ),
-                      Text(
-                        description,
-                        style: GoogleFonts.baloo2(
-                            textStyle: TextStyle(
-                                fontSize: 12,
-                                color: Colors.yellow.shade600,
-                                fontWeight: FontWeight.w400
+                      Container(
+                        constraints:BoxConstraints(
+                          maxWidth: MediaQuery.of(context).size.width-MediaQuery.of(context).size.width/4,
+                        ),
+                        child: Text(
+                          description,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.baloo2(
+                              textStyle: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.yellow.shade600,
+                                  fontWeight: FontWeight.w400
 
-                            )
+                              )
+                          ),
                         ),
                       )
                     ],

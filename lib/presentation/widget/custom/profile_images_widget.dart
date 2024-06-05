@@ -15,7 +15,7 @@ class _ProfileImageState extends State<ProfileImage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.fromLTRB(0, 16, 8, 8),
+      padding: EdgeInsets.fromLTRB(0, 8, 8, 8),
       child: GridView.builder(
         itemBuilder: (BuildContext context,int index){
           return Container(

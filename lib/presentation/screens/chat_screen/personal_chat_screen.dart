@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:powerwhim/constant/service_api_constant.dart';
 import 'package:powerwhim/data/model/chats/personal_chat_model.dart';
@@ -25,15 +26,13 @@ class PersonalChatScreen extends StatefulWidget {
       {super.key,
       required this.chatId,
       required this.name,
-      this.previousScreen, this.socketId});
+      this.previousScreen,
+      this.socketId});
 
   final String chatId;
   final String name;
   final String? previousScreen;
   final String? socketId;
-
-
-
 
   @override
   State<PersonalChatScreen> createState() => _PersonalChatScreenState();
@@ -54,11 +53,9 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
 
   bool scrollLoaderVisibility = false;
 
-
   bool disableSendbutton = false;
 
   bool imageLoader = false;
-
 
   final ScrollController _scrollController = ScrollController();
 
@@ -83,25 +80,23 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
     });
     socketP?.connect();
     socketP?.onConnect((_) {
-      print('Connection established');
       setState(() {});
     });
     socketP!.on('message', (data) {
       // Listen for the 'message' event
-      print("message new is"+data['message_text'].toString());
       String chatId = data['chat_id'];
-      print("chatId"+chatId.toString());
       if (widget.chatId == chatId) {
         setState(() {
-          imageLoader =false;
-          listItem.insert(0,Message(
-              conversationMessage: data['message_text'],
-              image: data['image'],
-              createdOn: DateTime.now(),
-              userId: data['user_id']));
+          imageLoader = false;
+          listItem.insert(
+              0,
+              Message(
+                  conversationMessage: data['message_text'],
+                  image: data['image'],
+                  createdOn: DateTime.now(),
+                  userId: data['user_id']));
         });
       }
-      print('Received message dataaaaa: $data'); // Print "hi" on receiving a message
     });
 
     socketP?.onDisconnect((_) => print('Connection Disconnection'));
@@ -123,12 +118,9 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
       BlocProvider.of<ChatBloc>(context).add(SetSocketEvent(socketP!.id!));
     }
 
-
     return BlocConsumer<ChatBloc, ChatState>(
       listener: (context, state) {},
       builder: (context, state) {
-        print(state.toString());
-        print("build");
         if (state is ErrorState) {
           return Scaffold(
             backgroundColor: Colors.black,
@@ -136,27 +128,22 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
               error: true,
               closeErrorWidget: () {
                 setState(() {
-                  BlocProvider.of<ChatBloc>(context)
-                      .add(GetPersonalChatEvent(chatId:widget.chatId,page:0));
-                  print("errorrr");
+                  BlocProvider.of<ChatBloc>(context).add(
+                      GetPersonalChatEvent(chatId: widget.chatId, page: 0));
                 });
               },
             ),
           );
         } else if (state is GetPersonalChatSuccessState) {
           scrollLoaderVisibility = false;
-          print("ashes");
-          print(state.personalChatModel.data!.messages!.length.toString()+"state");
-          listItem=state.personalChatModel.data!.messages!;
-          print("list"+listItem.length.toString());
+          listItem = state.personalChatModel.data!.messages!;
           return PopScope(
             canPop: true,
             onPopInvoked: (bool didPop) {
               if( widget.socketId!=null)
                 BlocProvider.of<ChatBloc>(context).add(SetSocketEvent(widget.socketId!));
 
-              socketP?.emit("active-time",
-                  {"user_id": "$USER_ID", "chat_id": "${widget.chatId}"});
+              emitActiveTime(widget.chatId);
               if (widget.previousScreen == "FriendsScreen") {
                 BlocProvider.of<ChatBloc>(context)
                     .add(GetFriendsEvent(USER_ID!));
@@ -170,10 +157,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                     onPressed: () {
                       if( widget.socketId!=null)
                         BlocProvider.of<ChatBloc>(context).add(SetSocketEvent(widget.socketId!));
-                      socketP?.emit("active-time", {
-                        "user_id": "$USER_ID",
-                        "chat_id": "${widget.chatId}"
-                      });
+                      emitActiveTime(widget.chatId);
                       if (widget.previousScreen == "FriendsScreen") {
                         BlocProvider.of<ChatBloc>(context)
                             .add(GetFriendsEvent(USER_ID!));
@@ -207,8 +191,8 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                       Expanded(
                         child: SingleChildScrollView(
                           reverse: true,
-                          child: Stack(
-                            children:[Column(
+                          child: Stack(children: [
+                            Column(
                               children: [
                                 Container(
                                   height: MediaQuery.of(context).size.height -
@@ -219,23 +203,23 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                       reverse: true,
                                       itemCount: listItem.length,
                                       itemBuilder: (context, i) {
-                                        if(i==listItem.length-1){
-                                          print("top");
-                                        }
-                                        int index =i; if (USER_ID == listItem[index]!.userId)
+                                        if (i == listItem.length - 1) {}
+                                        int index = i;
+                                        if (USER_ID == listItem[index]!.userId)
                                           return InkWell(
                                             onTap: () {
                                               if (listItem[index]!.image !=
                                                   null) {
-                                                onClickImage(listItem[index]!.image);
+                                                onClickImage(
+                                                    listItem[index]!.image);
                                               }
                                             },
                                             child: MyMessageWidget(
                                               message: listItem[index]!
                                                   .conversationMessage,
-                                              time: getHours(listItem[index]!
-                                                  .createdOn!),
-                                              image:  listItem[index].image,
+                                              time: getHours(
+                                                  listItem[index]!.createdOn!),
+                                              image: listItem[index].image,
                                             ),
                                           );
                                         else
@@ -243,56 +227,61 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                             onTap: () {
                                               if (listItem[index]!.image !=
                                                   null) {
-                                                onClickImage(listItem[index]!.image);
+                                                onClickImage(
+                                                    listItem[index]!.image);
                                               }
                                             },
                                             child: OtherMessages(
                                               message: listItem[index]!
                                                   .conversationMessage,
-                                              time: getHours(listItem[index]!
-                                                  .createdOn!),
+                                              time: getHours(
+                                                  listItem[index]!.createdOn!),
                                               image: listItem[index].image,
                                             ),
                                           );
-
                                       }),
-
-
-
                                 ),
                                 Container(
-                                  constraints: BoxConstraints(
-                                  ),
+                                  constraints: BoxConstraints(),
                                   padding: EdgeInsets.fromLTRB(8, 16, 8, 16),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      file==null?SizedBox.shrink():InkWell(
-                                        child: Icon(Icons.cancel_outlined,color:Colors.white),
-                                        onTap: () async {
-                                          setState(() {
-                                            file!.delete();
-                                            file = null;
-                                          });
-                                        },),
-
-                                      file==null?SizedBox.shrink():Container(
-                                        width: MediaQuery.of(context).size.width,
-                                        child: Image.file(
-                                          file!,
-                                          height: 200,
-                                        ),
-                                      ),
+                                      file == null
+                                          ? SizedBox.shrink()
+                                          : InkWell(
+                                              child: Icon(Icons.cancel_outlined,
+                                                  color: Colors.white),
+                                              onTap: () async {
+                                                setState(() {
+                                                  file!.delete();
+                                                  file = null;
+                                                });
+                                              },
+                                            ),
+                                      file == null
+                                          ? SizedBox.shrink()
+                                          : Container(
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              child: Image.file(
+                                                file!,
+                                                height: 200,
+                                              ),
+                                            ),
                                       Visibility(
                                         visible: imageLoader,
                                         child: Container(
-                                          width: MediaQuery.of(context).size.width,
+                                          width:
+                                              MediaQuery.of(context).size.width,
                                           alignment: Alignment.center,
-                                            child: Text("sending...",
+                                          child: Text(
+                                            "sending...",
                                             style: TextStyle(
-                                              fontSize: 20,
-                                              color: Colors.white
-                                            ),),
+                                                fontSize: 20,
+                                                color: Colors.white),
+                                          ),
                                         ),
                                       ),
                                       TextField(
@@ -309,80 +298,78 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                                   onTap: () {
                                                     openImagePicker();
                                                   },
-                                                  child: Icon(
-                                                      Icons.photo_library_sharp))),
+                                                  child: Icon(Icons
+                                                      .photo_library_sharp))),
                                           prefixIconColor: Colors.yellow,
                                           suffixIcon: InkWell(
                                             child: Icon(Icons.send),
                                             onTap: () async {
-                                              if(disableSendbutton == false){
+                                              if (disableSendbutton == false) {
                                                 disableSendbutton = true;
-
-                                                print(DateTime.now());
-                                              print("sent");
-                                              if (inputValue != null &&
-                                                  inputValue!.isNotEmpty) {
-                                                if (file == null) {
-                                                  imageLoader  = true;
-                                                  print("input not null");
-
-                                                  print("input non empty");
-                                                  socketP?.emit("message", {
-                                                    "message_text": "$inputValue",
-                                                    "chat_id": "${widget.chatId}",
-                                                    "user_id": "$USER_ID"
-                                                  });
-
-                                                } else {
+                                                if (inputValue != null &&
+                                                    inputValue!.isNotEmpty) {
+                                                  if (file == null) {
+                                                    imageLoader = true;
+                                                    socketP?.emit("message", {
+                                                      "message_text":
+                                                          "$inputValue",
+                                                      "chat_id":
+                                                          "${widget.chatId}",
+                                                      "user_id": "$USER_ID"
+                                                    });
+                                                  } else {
+                                                    setState(() {
+                                                      imageLoader = true;
+                                                    });
+                                                    await uploadfile();
+                                                    socketP?.emit("message", {
+                                                      "message_text":
+                                                          "$inputValue",
+                                                      "chat_id":
+                                                          "${widget.chatId}",
+                                                      "user_id": "$USER_ID",
+                                                      "image":
+                                                          "$uploaded_file_url"
+                                                    });
+                                                    await file!.delete();
+                                                    file = null;
+                                                  }
+                                                } else if (file != null) {
                                                   setState(() {
-                                                    imageLoader=true;
+                                                    imageLoader = true;
                                                   });
                                                   await uploadfile();
-                                                  print(uploaded_file_url);
                                                   socketP?.emit("message", {
-                                                    "message_text": "$inputValue",
-                                                    "chat_id": "${widget.chatId}",
+                                                    "chat_id":
+                                                        "${widget.chatId}",
                                                     "user_id": "$USER_ID",
-                                                    "image": "$uploaded_file_url"
+                                                    "image":
+                                                        "$uploaded_file_url"
                                                   });
+                                                  inputValue = null;
                                                   await file!.delete();
                                                   file = null;
-
                                                 }
-                                              } else if (file != null) {
-                                                print("file not null");
-                                                setState(() {
-                                                  imageLoader=true;
-                                                });
-                                                await uploadfile();
-                                                print(uploaded_file_url);
-                                                socketP?.emit("message", {
-                                                  "chat_id": "${widget.chatId}",
-                                                  "user_id": "$USER_ID",
-                                                  "image": "$uploaded_file_url"
-                                                });
-                                                inputValue=null;
-                                                await file!.delete();
-                                                file = null;
-                                              }
                                                 disableSendbutton = false;
-
                                               }
                                               _controller.clear();
                                               inputValue = null;
-
-                                              },
+                                            },
                                           ),
                                           suffixIconColor: Colors.yellow,
                                           fillColor: Colors.white,
                                           enabledBorder: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(30),
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
                                               borderSide: BorderSide(
-                                                  color: Colors.yellow, width: 1)),
+                                                  color: Colors.yellow,
+                                                  width: 1)),
                                           focusedBorder: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(30),
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
                                               borderSide: BorderSide(
-                                                  color: Colors.yellow, width: 1)),
+                                                  color: Colors.yellow,
+                                                  width: 1)),
                                           hintText: "type here",
                                           hintStyle: GoogleFonts.baloo2(
                                             textStyle: TextStyle(
@@ -397,7 +384,8 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                 ),
                               ],
                             ),
-                              Visibility(child: Container(
+                            Visibility(
+                              child: Container(
                                 height: 40,
                                 color: Colors.black,
                                 child: Center(
@@ -406,9 +394,9 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                   ),
                                 ),
                               ),
-                                visible: scrollLoaderVisibility,
-                              ),]
-                          ),
+                              visible: scrollLoaderVisibility,
+                            ),
+                          ]),
                         ),
                       ),
                     ],
@@ -424,7 +412,6 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
   }
 
   String getHours(DateTime datetime) {
-    print(datetime);
     var localTIme = datetime.toLocal();
     String formattedTime = localTIme.toString();
     List<String> parts = formattedTime.split(' ');
@@ -449,14 +436,11 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
       setState(() {
         file = File(result.files.single.path!);
       });
-      print("we get file");
     } else {}
   }
 
-
-  void onClickImage(String ? imageurl) {
-    print("clicked image");
-    if(imageurl!=null) {
+  void onClickImage(String? imageurl) {
+    if (imageurl != null) {
       Navigator.of(context).push(
           MaterialPageRoute(builder: (_) => ViewImageScreen(image: imageurl!)));
     }
@@ -474,20 +458,11 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
 
   Future<void> uploadfile() async {
     dospace.Spaces spaces = new dospace.Spaces(
-      //change with your project's region
-      region: "ams3",
-      //change with your project's accessKey
-      accessKey: "DO003CPQUP4NKAVJ362N",
-      //change with your project's secretKey
-      secretKey: "k2djROfqM4o9Lc01EzUHCdobFTi+OxLyCwJCb44KNvI",
+      region: dotenv.env['REGION'],
+      accessKey: dotenv.env['ACCESS_KEY'],
+      secretKey: dotenv.env['SECRET_KEY'],
     );
-
-    //change with your project's name
-    String project_name = "whim";
-    //change with your project's region
-    String region = "ams3";
-    //change with your project's folder
-    String folder_name = "whim";
+    String? project_name = dotenv.env['PROJECT_NAME'];
     String file_name = file!.path.split('/').last;
     String time = DateTime.now().toString();
     String charsToRemove = "-.: ";
@@ -498,11 +473,14 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
           file,
           p.extension(file!.path),
           dospace.Permissions.public);
-    uploaded_file_url = USER_ID! + '/' + result1 + '/' + file_name;
-      print("https://whim.ams3.digitaloceanspaces.com/"+USER_ID! + '/' + result1 + '/' + file_name);
+      uploaded_file_url = USER_ID! + '/' + result1 + '/' + file_name;
       await spaces.close();
     } catch (error) {
       print(error);
     }
+  }
+
+  void emitActiveTime(String chatId) {
+    socketP?.emit("active-time", {"user_id": "$USER_ID", "chat_id": "$chatId"});
   }
 }
