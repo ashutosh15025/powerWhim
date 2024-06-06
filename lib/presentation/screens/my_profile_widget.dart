@@ -70,7 +70,7 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
              myprofile.hobbies==null?SizedBox.shrink():ContentDescription(title: "Hobbies:",description: myprofile.hobbies!=null?myprofile.hobbies!.toString():"I love every doing everything"),
              myprofile.ambition==null?SizedBox.shrink():ContentDescription(title: "Ambition:",description:  myprofile.ambition!=null?myprofile.ambition!.toString():"I have big ambitions"),
              myprofile.accomplishment==null?SizedBox.shrink():ContentDescription(title: "Accomplishment:",description:  myprofile.accomplishment!=null?myprofile.accomplishment!.toString():"I have manny accomplishment"),
-             ProfileImage(visibility: true,)
+             ProfileImage(visibility: true, profiles: myprofile.photos,)
            ],
          ),
        ),

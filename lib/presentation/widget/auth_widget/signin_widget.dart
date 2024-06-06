@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../constant/service_api_constant.dart';
+import '../../../constant/color_constant.dart';
 import '../../bloc/authbloc/auth_bloc.dart';
 import '../custom/gradient_button_green_yelllow.dart';
 
@@ -90,15 +90,16 @@ class _SignInScreenState extends State<SignInScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [Text("Alerady have Account?",
                   style: TextStyle(color: Colors.grey,
+                      fontWeight: FontWeight.w600,
                       fontSize: 16),),
                   InkWell(
                     onTap: (){widget.onSignInLogIN("no");
                     },
                     child: Text("Login",
                       style: GoogleFonts.baloo2(
-                        textStyle:TextStyle(color: green,
-                          fontSize: 16,
-                        fontWeight: FontWeight.w500),)),
+                        textStyle:TextStyle(color: themeColorLight,
+                          fontSize: 18,
+                        fontWeight: FontWeight.w600),)),
                   )]
             ),
 

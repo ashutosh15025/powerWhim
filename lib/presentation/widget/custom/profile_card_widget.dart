@@ -28,125 +28,140 @@ class _ProfileCardWidgetState extends State<ProfileCardWidget> {
       onTap: (){
        BlocProvider.of<ProfileblocBloc>(context).add(getFullProfileEvent(widget.userId!));
       },
-      child: Container(
-        padding: EdgeInsets.all(8),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
-              child: Row(
-                children: [
-                  Container(
-                    constraints:BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width- MediaQuery.of(context).size.width/4
-                    ),
-                    child: Text(widget.name!,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.poppins(
-                     textStyle:TextStyle(
-                      color: green,
-                      fontSize: 18,
-                        fontWeight: FontWeight.w700
-                    ),)),
-                  ),
-                  Spacer(),
-                  Text(widget.age!.toString() + "Yrs",
-                    style:  GoogleFonts.poppins(
-                      textStyle:TextStyle(
-                        color: green,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600
-                    ),))
-                ],
-              ),
-            ),
-            widget.sport!=null?Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.fromLTRB(16, 8, 16, 0),
+            child: Column(
               children: [
-                Text("Sports: ",
-                  style:  GoogleFonts.poppins(
-                    textStyle:TextStyle(
-                      color: Colors.yellow.shade500,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600
-                  ),)),
-                Expanded(
-                  child: Text(widget.sport!,
-                      maxLines: 4,
-                      style:  GoogleFonts.baloo2(
-                    textStyle:TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500
-                  ),)),
-                )
-              ],
-            ):SizedBox.shrink(),
-            widget.hobbies!=null?Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Hobbies: ",
-                    style:  GoogleFonts.baloo2(
-                      textStyle:TextStyle(
-                          color: Colors.yellow.shade500,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600
-                      ),)),
-                Expanded(
-                  child: Text( widget.hobbies!,
-                      maxLines: 4,
-                      style:  GoogleFonts.baloo2(
-                        textStyle:TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500
-                        ),)),
-                )
-              ],
-            ):SizedBox.shrink(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                  margin:  EdgeInsets.fromLTRB(0, 6, 0, 6),
-                  padding:  EdgeInsets.fromLTRB(30, 6, 30, 6),
-                  child: InkWell(
-                    onTap: (){
-                       print("api clicked");
-                      BlocProvider.of<ProfileblocBloc>(context).add(getFullProfileEvent(widget.userId!));
-                    },
-                    child: Text("View",
-                    style:  GoogleFonts.baloo2(
-                      textStyle:TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500
-                      )),),
-                  ),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      gradient: const LinearGradient(colors: [
-                      themeColorSecond,
-                      themeColor,
-                      themeColorLight
-                      ]),
-                      )
-                  ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
-              child: Divider(
-                thickness: 0.3,
-                color: Colors.yellow.shade700,
-              ),
-            )
+                Column(
+                  children: [
+                    Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
+                          child: Row(
+                            children: [
+                              Container(
+                                constraints:BoxConstraints(
+                                  maxWidth: MediaQuery.of(context).size.width- MediaQuery.of(context).size.width/4
+                                ),
+                                child: Text(widget.name!,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.poppins(
+                                 textStyle:TextStyle(
+                                  color: themeColor,
+                                  fontSize: 18,
+                                    fontWeight: FontWeight.bold
+                                ),)),
+                              ),
+                              Spacer(),
+                              Text(widget.age!.toString() + "Yrs",
+                                style:  GoogleFonts.poppins(
+                                  textStyle:TextStyle(
+                                    color: green,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w500
+                                ),))
+                            ],
+                          ),
+                        ),
+                        widget.sport!=null?Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Sports : ",
+                              style:  GoogleFonts.poppins(
+                                textStyle:TextStyle(
+                                  color: themeColorLight,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold
+                              ),)),
+                            Expanded(
+                              child: Text(widget.sport!,
+                                  maxLines: 4,
+                                  style:  GoogleFonts.poppins(
+                                textStyle:TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500
+                              ),)),
+                            )
+                          ],
+                        ):SizedBox.shrink(),
+                        widget.hobbies!=null?Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Hobbies : ",
+                                style:  GoogleFonts.poppins(
+                                  textStyle:TextStyle(
+                                      color: themeColorLight,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold
+                                  ),)),
+                            Expanded(
+                              child: Text( widget.hobbies!,
+                                  maxLines: 4,
+                                  style:  GoogleFonts.poppins(
+                                    textStyle:TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500
+                                    ),)),
+                            )
+                          ],
+                        ):SizedBox.shrink(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              margin:  EdgeInsets.fromLTRB(0, 6, 0, 6),
+                              padding:  EdgeInsets.fromLTRB(30, 6, 30, 6),
+                              constraints: BoxConstraints(
+                                minWidth: 100
+                              ),
+                              child: InkWell(
+                                onTap: (){
+                                   print("api clicked");
+                                  BlocProvider.of<ProfileblocBloc>(context).add(getFullProfileEvent(widget.userId!));
+                                },
+                                child: Text("View",
+                                style:  GoogleFonts.baloo2(
+                                  textStyle:TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600
+                                  )),),
+                              ),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  gradient: const LinearGradient(colors: [
+                                  themeColorSecond,
+                                  themeColor,
+                                  themeColorLight
+                                  ]),
+                                  )
+                              ),
+                          ],
+                        ),
 
-          ],
-        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 16, 8, 8),
+            child: Divider(
+              thickness: 0.4,
+              color: themeColorLight,
+            ),
+          )
+        ],
       ),
     );
   }

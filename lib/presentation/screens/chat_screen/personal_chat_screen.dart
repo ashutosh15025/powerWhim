@@ -18,7 +18,6 @@ import 'package:powerwhim/presentation/widget/error/custom_error_widget.dart';
 import '../../widget/message_widget/my_message_widget.dart';
 import '../../widget/message_widget/other_messages.dart';
 import 'package:dospace/dospace.dart' as dospace;
-import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as p;
 
 class PersonalChatScreen extends StatefulWidget {

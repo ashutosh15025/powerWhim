@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:powerwhim/data/model/add_profile_model.dart';
 import 'package:powerwhim/presentation/bloc/authbloc/auth_bloc.dart';
+import 'package:powerwhim/presentation/screens/custom_profile/add_photos_profile.dart';
 import 'package:powerwhim/presentation/widget/custom_textarea/custom_textarea.dart';
 import 'package:powerwhim/presentation/widget/sliders/distance_slider.dart';
 import 'package:powerwhim/presentation/widget/sliders/range_slider_value_Indicator.dart';
@@ -12,14 +16,27 @@ import 'package:powerwhim/presentation/widget/sliders/range_slider_value_Indicat
 import '../../constant/service_api_constant.dart';
 import '../home.dart';
 import '../widget/custom/checkbox_grid_widget.dart';
-import '../widget/custom/custom_slider_thumb.dart';
 import '../widget/custom/custom_drop_down.dart';
 import '../widget/custom/custom_input_Field.dart';
 import '../widget/custom/date_picker_widget.dart';
 import '../widget/custom/gradient_button_green_yelllow.dart';
 
+import 'package:dospace/dospace.dart' as dospace;
+import 'package:path/path.dart' as p;
+
 class AddProfileScreen extends StatefulWidget {
-  const AddProfileScreen({super.key});
+  const AddProfileScreen({super.key, this.name, this.DOB});
+  final String ? name;
+  final String ? DOB;
+  final String ? accomplishment = null;
+  final String ? goals = null;
+  final String ? hobbies = null;
+  final String ? sports = null;
+  final List<String> ? profile = null;
+
+
+
+
 
   @override
   State<AddProfileScreen> createState() => _AddProfileScreenState();
@@ -36,9 +53,13 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
   String? hobbies = null;
   String? sports = null;
   bool loadingState = false;
+  List<String> profiles = [];
+
 
   String start = "10";
   String end = "28";
+
+  List<File> imagesCurrent = [];
 
 
   List<String> sportsList = [];
@@ -105,10 +126,12 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
                         description: "If you don't want people guessing use a nick name",
                         updateName: setName,
                         error: errorName,
+                          previousvalue:widget.name
                       ),
                       DatePicker(
                         setDOB: setDOB,
                         error: errorDOB,
+                        previousvalue: widget.DOB,
                       ),
                       SetAgeRangeSlider(
                         setageRange: setAgeRange,
@@ -148,9 +171,10 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
                         placeholder: "Your Accomplishment",
                         setText: setAccomplishment,
                       ),
+                      AddPhotosProfile(getProfile:getProfileImage),
                       Center(
                         child: InkWell(
-                          onTap: () {
+                          onTap: () async{
                             sports = getListConcatElement(sportsList);
                             hobbies = getListConcatElement(hobbiesList);
                             print(sports);
@@ -277,8 +301,9 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
   }
 
 
-  void onSubmitAllFieldSuccess(BuildContext context){
+  void onSubmitAllFieldSuccess(BuildContext context)async{
     print("submitcalled");
+    await uploadfile();
     BlocProvider.of<AuthBloc>(context).add(
         AddProfileEvent(AddProfileModel(
             name: name,
@@ -291,7 +316,60 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
             accomplishment: accomplishment,
             userId:
             USER_ID,
+            profileImage: profiles,
             age: Age(start: start, end: end))));
+
+    print(profiles.length);
+
+  }
+
+
+  void getProfileImage(List<File> profile){
+    imagesCurrent = profile;
+  }
+
+
+  Future<void> uploadfile() async {
+    dospace.Spaces spaces = new dospace.Spaces(
+      region: dotenv.env['REGION'],
+      accessKey: dotenv.env['ACCESS_KEY'],
+      secretKey: dotenv.env['SECRET_KEY'],
+    );
+    String? project_name = dotenv.env['PROJECT_NAME'];
+    for(int i=0 ;i<imagesCurrent.length;i++) {
+      File file = imagesCurrent[i];
+      String file_name = file!
+          .path
+          .split('/')
+          .last;
+      String time = DateTime.now().toString();
+      String charsToRemove = "-.: ";
+      String result1 = removeChars(time, charsToRemove);
+      try {
+        String? etag = await spaces.bucket(project_name).uploadFile(
+            USER_ID! + '/' + result1 + '/' + file_name,
+            file,
+            p.extension(file!.path),
+            dospace.Permissions.public);
+        var uploaded_file_url = USER_ID! + '/' + result1 + '/' + file_name;
+        profiles.add(uploaded_file_url);
+      } catch (error) {
+        print(error);
+      }
+    }
+    print("uploadfile");
+    await spaces.close();
+
+  }
+
+  String removeChars(String text, String charsToRemove) {
+    final newString = StringBuffer();
+    for (final char in text.runes) {
+      if (!charsToRemove.contains(String.fromCharCode(char))) {
+        newString.write(String.fromCharCode(char));
+      }
+    }
+    return newString.toString();
   }
 
 }

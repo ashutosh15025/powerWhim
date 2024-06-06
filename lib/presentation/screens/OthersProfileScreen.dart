@@ -135,7 +135,7 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
                   fullprofile!.accomplishment==null?SizedBox.shrink():ContentDescription(
                       title: "Accomplishment:",
                       description: fullprofile!.accomplishment!),
-                  ProfileImage(visibility:  widget.fullProfilePScreenModel.fullProfileModel!.data!.visibility!,)
+                  ProfileImage(visibility:  widget.fullProfilePScreenModel.fullProfileModel!.data!.visibility!,profiles:widget.fullProfilePScreenModel.fullProfileModel!.data!.profile?.photos)
                 ],
               ),
             ),

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:powerwhim/presentation/bloc/authbloc/auth_bloc.dart';
 
+import '../../../constant/color_constant.dart';
 import '../../../constant/service_api_constant.dart';
 import '../custom/gradient_button_green_yelllow.dart';
 import '../custom/password_widget.dart';
@@ -105,21 +106,20 @@ class _LoginWidgetState extends State<LoginWidget> {
                     }
                   },
                   child: GradientButtonGreenYellow(buttonText: "Login"))),
-          Text("-------------OR-------------",
-            style: TextStyle(color: Colors.grey,
-                fontSize: 18),),
           Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [Text("Dont have an account?",
                 style: TextStyle(color: Colors.grey,
+                    fontWeight:FontWeight.w500,
                     fontSize: 16),),
                 InkWell(
                   onTap: (){
                     widget.signInLogin("no");
                   },
-                  child: Text("Create Account.",
-                    style: TextStyle(color: green,
-                        fontSize: 16),),
+                  child: Text(" Create Account.",
+                    style: TextStyle(color: themeColorLight,
+                        fontSize: 16,
+                    fontWeight: FontWeight.w600),),
                 )]
 
 

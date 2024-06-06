@@ -4,8 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ProfileImage extends StatefulWidget {
-  const ProfileImage({super.key, required this.visibility});
+  const ProfileImage({super.key, required this.visibility, required this.profiles});
   final bool visibility;
+  final List<String>? profiles;
 
   @override
   State<ProfileImage> createState() => _ProfileImageState();
@@ -23,7 +24,7 @@ class _ProfileImageState extends State<ProfileImage> {
             width: double.maxFinite,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/icon/logoAndroid.png'),
+                image: NetworkImage("https://whim.ams3.digitaloceanspaces.com/"+widget.profiles![index]),
                 fit: BoxFit.cover,
               ),
             ),
@@ -42,7 +43,7 @@ class _ProfileImageState extends State<ProfileImage> {
             ),
           );
         },
-        itemCount: 9,
+        itemCount: widget.profiles==null?0:widget.profiles!.length,
         physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         gridDelegate:

@@ -15,6 +15,7 @@ class AddProfileModel {
   String? ambition;
   String? accomplishment;
   String? userId;
+  List<String>? profileImage;
 
   AddProfileModel({
     this.name,
@@ -27,6 +28,7 @@ class AddProfileModel {
     this.ambition,
     this.accomplishment,
     this.userId,
+    this.profileImage,
   });
 
   factory AddProfileModel.fromJson(Map<String, dynamic> json) => AddProfileModel(
@@ -36,10 +38,11 @@ class AddProfileModel {
     weekAvailability: json["week_availability"] == null ? [] : List<String>.from(json["week_availability"]!.map((x) => x)),
     meetingDistance: json["meeting_distance"],
     sports: json["sports"],
-    hobbies: json["hobbies"],
+    hobbies: json["hobbies "],
     ambition: json["ambition"],
     accomplishment: json["accomplishment"],
     userId: json["user_id"],
+    profileImage: json["profile_image"] == null ? [] : List<String>.from(json["profile_image"]!.map((x) => x)),
   );
 
   Map<String, dynamic> toJson() => {
@@ -49,10 +52,11 @@ class AddProfileModel {
     "week_availability": weekAvailability == null ? [] : List<dynamic>.from(weekAvailability!.map((x) => x)),
     "meeting_distance": meetingDistance,
     "sports": sports,
-    "hobbies": hobbies,
+    "hobbies ": hobbies,
     "ambition": ambition,
     "accomplishment": accomplishment,
     "user_id": userId,
+    "profile_image": profileImage == null ? [] : List<dynamic>.from(profileImage!.map((x) => x)),
   };
 }
 

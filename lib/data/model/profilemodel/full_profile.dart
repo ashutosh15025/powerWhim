@@ -55,10 +55,11 @@ class Data {
 class Profile {
   String? name;
   int? age;
-  String? hobbies;
+  dynamic hobbies;
   String? sports;
   String? ambition;
   String? accomplishment;
+  List<String>? photos;
   String? userId;
 
   Profile({
@@ -68,6 +69,7 @@ class Profile {
     this.sports,
     this.ambition,
     this.accomplishment,
+    this.photos,
     this.userId,
   });
 
@@ -78,6 +80,7 @@ class Profile {
     sports: json["sports"],
     ambition: json["ambition"],
     accomplishment: json["accomplishment"],
+    photos: json["photos"] == null ? [] : List<String>.from(json["photos"]!.map((x) => x)),
     userId: json["user_id"],
   );
 
@@ -88,6 +91,7 @@ class Profile {
     "sports": sports,
     "ambition": ambition,
     "accomplishment": accomplishment,
+    "photos": photos == null ? [] : List<dynamic>.from(photos!.map((x) => x)),
     "user_id": userId,
   };
 }

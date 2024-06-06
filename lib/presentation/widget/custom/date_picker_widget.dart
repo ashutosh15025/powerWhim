@@ -5,9 +5,10 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../constant/service_api_constant.dart';
 
 class DatePicker extends StatefulWidget {
-  const DatePicker({super.key, required this.setDOB, this.error});
+  const DatePicker({super.key, required this.setDOB, this.error, this.previousvalue});
   final Function(String) setDOB;
   final String ? error;
+  final String ? previousvalue;
 
   @override
   State<DatePicker> createState() => _DatePickerState();
@@ -16,6 +17,13 @@ class DatePicker extends StatefulWidget {
 class _DatePickerState extends State<DatePicker> {
   TextEditingController _dateController = TextEditingController();
 
+@override
+  void initState() {
+    if(widget.previousvalue!=null){
+    _dateController.text = widget.previousvalue!;
+    widget.setDOB(_dateController.text);}
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Padding(

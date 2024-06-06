@@ -3,18 +3,30 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomInputField extends StatefulWidget {
-  const CustomInputField({super.key, required this.title, required this.placeholder, required this.description, required this.updateName, this.error});
+  const CustomInputField({super.key, required this.title, required this.placeholder, required this.description, required this.updateName, this.error, this.previousvalue});
   final String title;
   final String placeholder;
   final String description;
   final Function(String) updateName;
   final String ? error;
+  final String ? previousvalue;
 
   @override
   State<CustomInputField> createState() => _CustomInputFielsState();
 }
 
 class _CustomInputFielsState extends State<CustomInputField> {
+  TextEditingController textEditingController = TextEditingController();
+
+  @override
+  void initState() {
+    if( widget.previousvalue!=null){
+    textEditingController.text = widget.previousvalue!;
+    widget.updateName(widget.previousvalue!);
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -23,6 +35,7 @@ class _CustomInputFielsState extends State<CustomInputField> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextField(
+            controller: textEditingController,
             onChanged: (value){
               widget.updateName(value);
             },

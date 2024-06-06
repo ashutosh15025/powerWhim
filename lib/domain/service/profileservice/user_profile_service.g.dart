@@ -13,7 +13,7 @@ class _UserProfileService implements UserProfileService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'https://whim.cozytech.co.in/';
+    baseUrl ??= 'http://192.168.29.226:3000/';
   }
 
   final Dio _dio;

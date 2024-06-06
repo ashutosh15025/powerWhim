@@ -41,7 +41,7 @@ class _CreatePasswordWidgetState extends State<CreatePasswordWidget> {
                   color: Colors.white,),
               ),
             ),
-            Text("Enter OTP",style: TextStyle(
+            Text("Enter Password",style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w500,
                 fontSize: 18
