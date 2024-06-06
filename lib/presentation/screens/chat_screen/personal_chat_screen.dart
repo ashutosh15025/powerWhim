@@ -286,6 +286,8 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                       ),
                                       TextField(
                                         controller: _controller,
+                                        minLines: 1,
+                                        maxLines: 3,
                                         cursorColor: Colors.yellow.shade600,
                                         onChanged: (value) {
                                           inputValue = value;

@@ -249,6 +249,7 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
     for(int i=0;i<list.length;i++)
       {
         weekelyAvailability[i]=list[i].toString();
+        print(list[i].toString());
       }
   }
 
