@@ -25,14 +25,17 @@ import 'package:dospace/dospace.dart' as dospace;
 import 'package:path/path.dart' as p;
 
 class AddProfileScreen extends StatefulWidget {
-  const AddProfileScreen({super.key, this.name, this.DOB});
+  const AddProfileScreen({super.key, this.name, this.DOB, this.ageRange, this.distance, this.accomplishment, this.goals, this.hobbies, this.sports, this.profile, this.weeklyAvailability});
   final String ? name;
   final String ? DOB;
-  final String ? accomplishment = null;
-  final String ? goals = null;
-  final String ? hobbies = null;
-  final String ? sports = null;
-  final List<String> ? profile = null;
+  final String ? accomplishment;
+  final String ? goals ;
+  final String ? hobbies ;
+  final String ? sports ;
+  final List<String> ? profile ;
+  final List<bool> ? weeklyAvailability;
+  final Age ? ageRange;
+  final String ? distance;
 
 
 
@@ -43,7 +46,7 @@ class AddProfileScreen extends StatefulWidget {
 }
 
 class _AddProfileScreenState extends State<AddProfileScreen> {
-  int distance = 10;
+  int distance = 11;
   bool noRelaventSport = false;
   String dropdownvalue = "1";
   String? name = null;
@@ -77,6 +80,38 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
   String ? errorName = null;
   String ? errorDOB = null;
 
+  @override
+  void initState() {
+    name = widget.name;
+    DOB = widget.DOB;
+    goals = widget.goals;
+    accomplishment = widget.accomplishment;
+    sports = widget.sports;
+    hobbies = widget.hobbies;
+    if(widget.ageRange!=null){
+      start = widget.ageRange!.start.toString();
+      end =  widget.ageRange!.end.toString();
+      print(start+end);
+    }
+    if(widget.distance!=null)
+   distance = int.parse(widget.distance!);
+    super.initState();
+    if(widget.profile!=null)
+    profiles = widget.profile!;
+    if(widget.weeklyAvailability!=null){
+      for(var i=0;i<widget.weeklyAvailability!.length;i++){
+        if(widget.weeklyAvailability![i])
+          weekelyAvailability[i] = "1";
+        else
+          weekelyAvailability[i] = "0";
+      }
+     }
+
+    print("photsos length"+profiles.length.toString());
+  }
+
+
+
 
   Widget build(BuildContext context) {
     return BlocConsumer<AuthBloc, AuthState>(
@@ -85,7 +120,10 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
           {
             print("add profile Sucess");
             loadingState = !loadingState;
+            if(widget.name==null)
             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const Home()));
+            else
+              Navigator.of(context).pop();
           }
         else{
           loadingState = !loadingState;
@@ -126,15 +164,17 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
                         description: "If you don't want people guessing use a nick name",
                         updateName: setName,
                         error: errorName,
-                          previousvalue:widget.name
+                          previousvalue:name
                       ),
                       DatePicker(
                         setDOB: setDOB,
                         error: errorDOB,
-                        previousvalue: widget.DOB,
+                        previousvalue: DOB,
                       ),
                       SetAgeRangeSlider(
                         setageRange: setAgeRange,
+                        startAge: start,
+                        endAge: end,
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -154,24 +194,28 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
                           weekAvailability: weekAvailability,
                         ),
                       )),
-                      DistanceSlider(setDistance: setMeetingDistance,),
+                      DistanceSlider(setDistance: setMeetingDistance,distance: distance,),
                       CustomDropDown(
                           dropDownHeading: "Sports You Participated in",
                           name: "sports",
-                          selectedItemFun: setSports),
+                          selectedItemFun: setSports,
+                      selectedItemString: sports,),
                       CustomDropDown(
                           dropDownHeading: "Your hobbies",
                           name:"hobbies",
-                          selectedItemFun: sethobbies),
+                          selectedItemFun: sethobbies,
+                      selectedItemString: hobbies,),
                       CustomTextarea(
                         placeholder: "Your Goal/Ambition",
                         setText: setGoals,
+                        text: goals,
                       ),
                       CustomTextarea(
                         placeholder: "Your Accomplishment",
                         setText: setAccomplishment,
+                        text: accomplishment,
                       ),
-                      AddPhotosProfile(getProfile:getProfileImage),
+                      AddPhotosProfile(getProfile:getProfileImage,previousImages: profiles,),
                       Center(
                         child: InkWell(
                           onTap: () async{
@@ -232,6 +276,7 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
 
   void setName(String value) {
     name = value;
+    print(name.toString()+"value");
     setState(() {
       errorName = null;
     });
@@ -303,6 +348,7 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
 
   void onSubmitAllFieldSuccess(BuildContext context)async{
     print("submitcalled");
+    BlocProvider.of<AuthBloc>(context).add(GetLoadingEvent());
     await uploadfile();
     BlocProvider.of<AuthBloc>(context).add(
         AddProfileEvent(AddProfileModel(
@@ -324,7 +370,8 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
   }
 
 
-  void getProfileImage(List<File> profile){
+  void getProfileImage(List<File> profile,List<String>previousList){
+    profiles = previousList;
     imagesCurrent = profile;
   }
 
@@ -353,6 +400,7 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
             dospace.Permissions.public);
         var uploaded_file_url = USER_ID! + '/' + result1 + '/' + file_name;
         profiles.add(uploaded_file_url);
+        print(profiles.length.toString()+"this is final length");
       } catch (error) {
         print(error);
       }

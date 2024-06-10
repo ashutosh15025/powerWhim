@@ -11,8 +11,11 @@ import 'package:powerwhim/constant/color_constant.dart';
 import '../../../constant/service_api_constant.dart';
 
 class AddPhotosProfile extends StatefulWidget {
-  const AddPhotosProfile({super.key, required this.getProfile});
-  final Function(List<File>) getProfile;
+  const AddPhotosProfile({super.key, required this.getProfile, this.imagesCurrent, this.previousImages});
+  final Function(List<File>,List<String>) getProfile;
+  final List<String> ? imagesCurrent;
+  final List<String> ? previousImages;
+
 
   @override
   State<AddPhotosProfile> createState() => _AddPhotosProfileState();
@@ -22,6 +25,13 @@ class _AddPhotosProfileState extends State<AddPhotosProfile> {
 
   File? file;
   List<File> imagesCurrent = [];
+  List<String> previousImageList =[];
+  @override
+  void initState() {
+    if(widget.previousImages!=null)
+      previousImageList = widget.previousImages!;
+    super.initState();
+  }
 
 
   @override
@@ -68,16 +78,21 @@ class _AddPhotosProfileState extends State<AddPhotosProfile> {
                   Container(
                     height: 200,
                     width: double.maxFinite,
-                    child:  Image.file(
-                      imagesCurrent[index]!,
+                    child:  index>=previousImageList.length?Image.file(
+                      imagesCurrent[index-previousImageList.length]!,
                       fit: BoxFit.fill,
-                    ),
+                    ):Image(image: NetworkImage("https://whim.ams3.digitaloceanspaces.com/"+previousImageList[index]),
+                    fit: BoxFit.fill,),
                   ),
                   InkWell(
                     onTap:(){
                       setState(() {
-                        imagesCurrent.removeAt(index);
-                        widget.getProfile(imagesCurrent);
+                        if(index>=previousImageList.length)
+                        imagesCurrent.removeAt(index-previousImageList.length);
+                        else{
+                          previousImageList.removeAt(index);
+                        }
+                        widget.getProfile(imagesCurrent,previousImageList);
                       });
                   },
                     child: Container(
@@ -98,7 +113,7 @@ class _AddPhotosProfileState extends State<AddPhotosProfile> {
                 ],
               );
             },
-            itemCount: imagesCurrent.length,
+            itemCount: imagesCurrent.length+previousImageList.length,
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             gridDelegate:
@@ -126,7 +141,7 @@ class _AddPhotosProfileState extends State<AddPhotosProfile> {
         file = File(result.files.single.path!);
         setState(() {
           imagesCurrent.add(file!);
-          widget.getProfile(imagesCurrent);
+          widget.getProfile(imagesCurrent,previousImageList);
         });
       });
     } else {}

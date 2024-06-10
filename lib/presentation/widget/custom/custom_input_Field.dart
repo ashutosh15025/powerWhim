@@ -20,10 +20,8 @@ class _CustomInputFielsState extends State<CustomInputField> {
 
   @override
   void initState() {
-    if( widget.previousvalue!=null){
+    if(widget.previousvalue!=null)
     textEditingController.text = widget.previousvalue!;
-    widget.updateName(widget.previousvalue!);
-    }
     super.initState();
   }
 

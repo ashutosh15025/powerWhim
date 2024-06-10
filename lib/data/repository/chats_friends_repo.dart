@@ -6,8 +6,8 @@ import 'package:powerwhim/data/model/chats/personal_chat_model.dart';
 import 'package:retrofit/dio.dart';
 
 abstract class ChatsFriendsRepo{
-  Future<HttpResponse<ChatsDetailsModel>> getChats(String userId);
-  Future<HttpResponse<PersonalChatModel>> getPersonalChat(String chatId,int page);
+  Future<HttpResponse<ChatsDetailsModel>> getChats(String userId,int activeChatStatu);
+  Future<HttpResponse<PersonalChatModel>> getPersonalChat(String chatId,int page,String userId);
 
 
   Future<HttpResponse<AccountManagementModel>> setSocketId(String userId, String socketId);
@@ -17,7 +17,6 @@ abstract class ChatsFriendsRepo{
 
   Future<HttpResponse<AddChatModel>> setChats(String fromUserId ,String toUserId);
 
-
-
+  Future<HttpResponse<AccountManagementModel>> startEndChats(String userId ,String chatId,int ? deactivate_on);
 
 }

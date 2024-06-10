@@ -27,27 +27,26 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<SetChatEvent>(onSetChatEvent);
     on<GetFriendsEvent>(onGetFriendsEvent);
     on<GetFullProfileEvent>(onGetFullProfileEvent);
+    on<GetStartEndChatsEvent>(onGetStartEndChat);
   }
 
   void onGetChatsSuccessEvent(
       GetChatsEvent event, Emitter<ChatState> emit) async {
     emit(LoadingState());
-    var apiResult = await locator.get<ChatsFriendsUsecase>().getChats(USER_ID!);
+
+    var apiResult = await locator.get<ChatsFriendsUsecase>().getChats(USER_ID!,event.activeStatus);
     print(apiResult);
-    print("hit");
+    print("hit chat api");
     try {
       if (apiResult.response.statusCode == HttpStatus.ok) {
-        print(apiResult.data.data!.length);
         if (apiResult.data != null &&
             apiResult.data.data != null &&
-            apiResult.data.data!.length >=0) {
-          for(int i=0 ;i<apiResult.data.data!.length;i++ ){
-            print(apiResult.data.data![i].updatedOn);
-          }
-         print("--------------------------------------------------------------------------------------");
-          emit(GetChatsSuccessState(apiResult.data!));
-        } else
-          emit(ErrorState(ERROR));
+            apiResult.data.data!.status=="success") {
+          print("success chat sucess");
+            emit(GetChatsSuccessState(apiResult.data!));
+        } else{
+          print("not ok");
+          emit(ErrorState(ERROR));}
       }
     } catch (e) {
       print("not ok");
@@ -61,7 +60,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     if(event.scroll!=null)
     emit(LoadingState());
     print(event.page);
-    var apiResult = await locator.get<ChatsFriendsUsecase>().getPersonalChat(event.chatId,event.page);
+    var apiResult = await locator.get<ChatsFriendsUsecase>().getPersonalChat(event.chatId,event.page,USER_ID!);
     print(apiResult);
     print("get personal chat event");
     try {
@@ -73,8 +72,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           }
           print("--------------------------------------------------------------------------------------");
           emit(GetPersonalChatSuccessState(apiResult.data));
-        } else
-          emit(ErrorState(ERROR));
+        } else{
+          print("not ok");
+          emit(ErrorState(ERROR));}
       }
     } catch (e) {
       print("not ok");
@@ -121,7 +121,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
             apiResult.data.data != null &&
             apiResult.data.data!.status=="success") {
           print(apiResult.data.data!.chatId);
-          emit(SetChatsSuccessState(apiResult.data.data!.mssg!, apiResult.data.data!.chatId!));
+          emit(SetChatsSuccessState(apiResult.data.data!.mssg!, apiResult.data.data!.chatId!,apiResult.data.data!.deactivateOn));
         }
       else{
           print("kuch or error"+apiResult.data!.data!.mssg.toString());
@@ -165,6 +165,29 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     var response = await locator.get<UserProfileUsecase>().getFullProfiles(event.userId,USER_ID!);
     if(response.data!=null){
       emit(GetFullProfileSuccessState(response.data));
+    }
+    else{
+      print("can fetch profiles");
+    }
+  }
+
+
+
+
+  void onGetStartEndChat(GetStartEndChatsEvent event, Emitter<ChatState> emit) async{
+    print(event.chatId.toString() + "chatId");
+    var response = await locator.get<ChatsFriendsUsecase>().startEndChats(USER_ID!, event.chatId, event.deactivate_on);
+
+    if(response.data!.data!=null){
+      if(response.data.data!.status=="success"){
+        print(response.data.data!.mssg!+"this is the message success");
+      // emit(GetStartEndChatsState(response.data.data!.mssg!));
+      }
+      else{
+        print(response.data!.data!.mssg!);
+        // emit(ErrorState(response.data!.data!.mssg!+"this is the message"));
+      }
+
     }
     else{
       print("can fetch profiles");

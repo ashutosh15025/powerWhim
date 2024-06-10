@@ -9,11 +9,12 @@ import '../../../constant/service_api_constant.dart';
 
 class CustomDropDown extends StatefulWidget {
   const CustomDropDown(
-      {super.key, required this.dropDownHeading, required this.selectedItemFun, this.name,});
+      {super.key, required this.dropDownHeading, required this.selectedItemFun, this.name, this.selectedItemString,});
 
   final String dropDownHeading;
   final String ? name;
   final void Function(List<String>) selectedItemFun;
+  final String ? selectedItemString;
 
 
   @override
@@ -26,9 +27,14 @@ class _CustomDropDownState extends State<CustomDropDown> {
   List<String> selectedItem = [];
   bool notRelavent = false;
 
+
+
   String ? selectedValue; // Initial selection
   @override
   void initState() {
+    if(widget.selectedItemString!=null){
+      selectedItem = widget.selectedItemString!.split(',');
+    }
     super.initState();
   }
 

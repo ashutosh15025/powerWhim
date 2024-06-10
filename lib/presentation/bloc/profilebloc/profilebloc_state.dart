@@ -49,7 +49,22 @@ class getFriendSuccessState extends ProfileblocState{
   FriendsModel friendsModel;
   getFriendSuccessState(this.friendsModel);
 }
+
 class getFriendsFailedState extends ProfileblocState{
   String mssg;
   getFriendsFailedState(this.mssg);
 }
+
+
+class getMyFullProfileSuccessState extends ProfileblocState{
+  MyFullProfileModel myFullProfileModel;
+  getMyFullProfileSuccessState(this.myFullProfileModel);
+}
+
+
+class getMyFullProfileFailedState extends ProfileblocState{
+  String mssg;
+  getMyFullProfileFailedState(this.mssg);
+}
+
+

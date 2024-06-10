@@ -71,3 +71,10 @@ class GetHobbiesEvent extends AuthEvent {
 class GetCheckProfileEvent extends AuthEvent {
   GetCheckProfileEvent();
 }
+
+class GetLoadingEvent extends AuthEvent {
+  GetLoadingEvent();
+}
+
+
+

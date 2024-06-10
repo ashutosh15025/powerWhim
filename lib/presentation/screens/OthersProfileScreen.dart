@@ -6,6 +6,7 @@ import 'package:powerwhim/constant/full_profile_privious_screen.dart';
 import 'package:powerwhim/constant/service_api_constant.dart';
 import 'package:powerwhim/data/model/profilemodel/full_profile.dart';
 import 'package:powerwhim/presentation/bloc/chatbloc/chat_bloc.dart';
+import 'package:powerwhim/presentation/widget/error/custom_error_widget.dart';
 
 import '../widget/custom/content_description_widget.dart';
 import '../widget/custom/profile_images_widget.dart';
@@ -24,6 +25,10 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
 
   Profile ? fullprofile ;
   int pageCount = 0;
+
+
+  bool errorWidgetVisibility = false;
+  String ? errorMssg ="";
   @override
   void initState() {
     if(widget.fullProfilePScreenModel.fullProfileModel!.data!.profile==null||widget.fullProfilePScreenModel.fullProfileModel==null||widget.fullProfilePScreenModel.fullProfileModel.data==null)
@@ -43,11 +48,23 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
                     chatId: state.chatId,
                     name: fullprofile!.name==null?"":fullprofile!.name!,
                     previousScreen: "OthersProfileScreen",
+                deactivate_on: state.deactivate_on,
                   )));
           BlocProvider.of<ChatBloc>(context)
               .add(GetPersonalChatEvent(chatId:state.chatId,page: pageCount));
           print(state.chatId);
           print("message clicked");
+        }
+        else if(state is ErrorState){
+          setState(() {
+            errorWidgetVisibility = true;
+            errorMssg = state.mssg;
+          });
+      }
+        else if( state is GetStartEndChatsState){
+          BlocProvider.of<ChatBloc>(context).add(SetChatEvent(
+              USER_ID!,
+              fullprofile!.userId!));
         }
       },
       child: PopScope(
@@ -81,6 +98,7 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
                       BlocProvider.of<ChatBloc>(context).add(SetChatEvent(
                           USER_ID!,
                           fullprofile!.userId!));
+
                   },
                 )
               ],
@@ -94,54 +112,64 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
                         color: Colors.white,
                         fontWeight: FontWeight.w700)),
               )),
-          body: Container(
-            height: MediaQuery.of(context).size.height,
-            padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
-            color: Color.fromRGBO(0, 0, 0, 0.95),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(children: [
-                    Container(
-                      padding: EdgeInsets.fromLTRB(0, 16, 0, 16),
-                      child:fullprofile!.name==null?SizedBox.shrink():Text(
-                          fullprofile!.name!,
-                          style: GoogleFonts.lato(
-                            textStyle: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w800,
-                                color: Colors.green),
-                          )),
-                    ),
-                    Spacer(),
-                    fullprofile!.age==null?SizedBox.shrink():Text(
-                      "${fullprofile!.age!} Yrs",
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.green),
-                    )
-                  ]),
-                  fullprofile!.sports==null?SizedBox.shrink():ContentDescription(
-                      title: "Sports:",
-                      description: fullprofile!.sports!),
-                  fullprofile!.hobbies==null?SizedBox.shrink():ContentDescription(
-                      title: "Hobbies:",
-                      description: fullprofile!.hobbies!),
-                  fullprofile!.ambition==null?SizedBox.shrink(): ContentDescription(
-                      title: "Ambition:",
-                      description: fullprofile!.ambition!),
-                  fullprofile!.accomplishment==null?SizedBox.shrink():ContentDescription(
-                      title: "Accomplishment:",
-                      description: fullprofile!.accomplishment!),
-                  ProfileImage(visibility:  widget.fullProfilePScreenModel.fullProfileModel!.data!.visibility!,profiles:widget.fullProfilePScreenModel.fullProfileModel!.data!.profile?.photos)
-                ],
+          body: Stack(
+            children: [Container(
+              height: MediaQuery.of(context).size.height,
+              padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+              color: Color.fromRGBO(0, 0, 0, 0.95),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(children: [
+                      Container(
+                        padding: EdgeInsets.fromLTRB(0, 16, 0, 16),
+                        child:fullprofile!.name==null?SizedBox.shrink():Text(
+                            fullprofile!.name!,
+                            style: GoogleFonts.lato(
+                              textStyle: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w800,
+                                  color: Colors.green),
+                            )),
+                      ),
+                      Spacer(),
+                      fullprofile!.age==null?SizedBox.shrink():Text(
+                        "${fullprofile!.age!} Yrs",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.green),
+                      )
+                    ]),
+                    fullprofile!.sports==null?SizedBox.shrink():ContentDescription(
+                        title: "Sports:",
+                        description: fullprofile!.sports!),
+                    fullprofile!.hobbies==null?SizedBox.shrink():ContentDescription(
+                        title: "Hobbies:",
+                        description: fullprofile!.hobbies!),
+                    fullprofile!.ambition==null?SizedBox.shrink(): ContentDescription(
+                        title: "Ambition:",
+                        description: fullprofile!.ambition!),
+                    fullprofile!.accomplishment==null?SizedBox.shrink():ContentDescription(
+                        title: "Accomplishment:",
+                        description: fullprofile!.accomplishment!),
+                    ProfileImage(visibility:  widget.fullProfilePScreenModel.fullProfileModel!.data!.visibility!,profiles:widget.fullProfilePScreenModel.fullProfileModel!.data!.profile?.photos)
+                  ],
+                ),
               ),
-            ),
+            ),Visibility(
+                visible: errorWidgetVisibility,
+                child: CustomErrorWidget(mssg:errorMssg ,error:true ,closeErrorWidget: closeErrorWidget,))],
           ),
         ),
       ),
     );
+  }
+
+  void closeErrorWidget(){
+    setState(() {
+      errorWidgetVisibility = !errorWidgetVisibility;
+    });
   }
 }

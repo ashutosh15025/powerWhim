@@ -44,7 +44,9 @@ class _FriendsScreenState extends State<FriendsScreen> {
                       name: friend.userName!=null?friend.userName!:"Name",
                       description: friend.description!=null?friend.description!:"description",
                       userId: friend.userId!=null?friend.userId!:"userid",
-                      chatId: friend.chatId!=null?friend.chatId!:"chatid",);
+                      chatId: friend.chatId!=null?friend.chatId!:"chatid",
+                      deactivate_on: friend.deactivateOn,
+                  );
                 },
               ),
             ),

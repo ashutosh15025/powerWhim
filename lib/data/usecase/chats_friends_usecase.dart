@@ -12,12 +12,12 @@ class ChatsFriendsUsecase {
 
   ChatsFriendsUsecase(this._chatsFriendsRepoImp);
 
-  Future<HttpResponse<ChatsDetailsModel>> getChats(String userId) {
-    return _chatsFriendsRepoImp.getChats(userId);
+  Future<HttpResponse<ChatsDetailsModel>> getChats(String userId,int activeChatStatu) {
+    return _chatsFriendsRepoImp.getChats(userId,activeChatStatu);
   }
 
-  Future<HttpResponse<PersonalChatModel>> getPersonalChat(String chatId,int page) {
-    return _chatsFriendsRepoImp.getPersonalChat(chatId,page);
+  Future<HttpResponse<PersonalChatModel>> getPersonalChat(String chatId,int page,String userId) {
+    return _chatsFriendsRepoImp.getPersonalChat(chatId,page,userId);
   }
 
   Future<HttpResponse<AccountManagementModel>> setSocketId(String userId,String socketId) {
@@ -31,4 +31,9 @@ class ChatsFriendsUsecase {
   Future<HttpResponse<AddChatModel>> setChats(String fromUserId,String toUserId) {
     return _chatsFriendsRepoImp.setChats(fromUserId, toUserId);
   }
+
+  Future<HttpResponse<AccountManagementModel>> startEndChats(String userId,String chatId,int ? deactivate_on) {
+    return _chatsFriendsRepoImp.startEndChats(userId, chatId, deactivate_on);
+  }
+
 }

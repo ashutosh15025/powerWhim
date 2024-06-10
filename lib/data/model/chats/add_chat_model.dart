@@ -1,3 +1,6 @@
+// To parse this JSON data, do
+//
+//     final addChatModel = addChatModelFromJson(jsonString);
 
 import 'dart:convert';
 
@@ -25,22 +28,26 @@ class Data {
   String? status;
   String? mssg;
   String? chatId;
+  DateTime? deactivateOn;
 
   Data({
     this.status,
     this.mssg,
     this.chatId,
+    this.deactivateOn,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
     status: json["status"],
     mssg: json["mssg"],
     chatId: json["chat_id"],
+    deactivateOn: json["deactivate_on"] == null ? null : DateTime.parse(json["deactivate_on"]),
   );
 
   Map<String, dynamic> toJson() => {
     "status": status,
     "mssg": mssg,
     "chat_id": chatId,
+    "deactivate_on": deactivateOn?.toIso8601String(),
   };
 }

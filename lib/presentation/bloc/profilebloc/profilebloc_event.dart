@@ -27,6 +27,12 @@ class getFriendsEvent extends ProfileblocEvent{
 }
 
 
+class getMyFullProfileEvent extends ProfileblocEvent{
+  String userId;
+  getMyFullProfileEvent(this.userId);
+}
+
+
 
 
 

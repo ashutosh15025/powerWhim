@@ -49,15 +49,17 @@ class Data {
 }
 
 class Friend {
-  String? description;
+  dynamic description;
   String? chatId;
   String? userName;
+  DateTime? deactivateOn;
   String? userId;
 
   Friend({
     this.description,
     this.chatId,
     this.userName,
+    this.deactivateOn,
     this.userId,
   });
 
@@ -65,6 +67,7 @@ class Friend {
     description: json["description"],
     chatId: json["chat_id"],
     userName: json["user_name"],
+    deactivateOn: json["deactivate_on"] == null ? null : DateTime.parse(json["deactivate_on"]),
     userId: json["user_id"],
   );
 
@@ -72,6 +75,7 @@ class Friend {
     "description": description,
     "chat_id": chatId,
     "user_name": userName,
+    "deactivate_on": deactivateOn?.toIso8601String(),
     "user_id": userId,
   };
 }

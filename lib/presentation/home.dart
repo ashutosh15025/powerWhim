@@ -88,7 +88,7 @@ class _HomeState extends State<Home> {
                   _selectedIndex = clickedIndex;
 
                   if(clickedIndex == 2){
-                  BlocProvider.of<ChatBloc>(context).add(GetChatsEvent());
+                  BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(1));
                   }
                   if(clickedIndex == 1){
                     BlocProvider.of<ChatBloc>(context).add(GetFriendsEvent(USER_ID!));

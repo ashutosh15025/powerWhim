@@ -32,6 +32,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LoginEvent>(onLoginEvent);
     on<GetSportEvent>(onGetSportsEvent);
     on<GetHobbiesEvent>(onGetHobbiesEvent);
+    on<GetLoadingEvent>(onGetLoadingEvent);
+
 
 
   }
@@ -91,7 +93,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   void onLoginEvent(LoginEvent event, Emitter<AuthState> emit) async {
     emit(LoadingState());
-    print("login api hit");
     try {
       var response = await locator
           .get<AccountManagmentUsecase>()
@@ -115,8 +116,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             emit(ApiFailedState(response.data.data!.mssg!));
         }
       } else {
-        print("error");
-        emit(ApiFailedState(ERROR));
+        emit(ApiFailedState("email password not match"));
       }
     } catch (e) {
       emit(ApiFailedState(ERROR));
@@ -225,7 +225,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(ApiFailedState(ERROR));
     }
   }
-
+  void onGetLoadingEvent(GetLoadingEvent event, Emitter<AuthState> emit)  async{
+    emit(LoadingState());
+  }
   void onGetCheckProfileEvent(GetCheckProfileEvent event, Emitter<AuthState> emit)  async{
     emit(LoadingState());
     var response = await locator.get<AccountManagmentUsecase>().checkProfile(userId: USER_ID!);

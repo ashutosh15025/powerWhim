@@ -2,6 +2,7 @@ import 'package:powerwhim/data/model/account_managment_model.dart';
 import 'package:powerwhim/data/model/friends_model.dart';
 import 'package:powerwhim/data/model/help_model.dart';
 import 'package:powerwhim/data/model/profilemodel/full_profile.dart';
+import 'package:powerwhim/data/model/profilemodel/my_full_profile_model.dart';
 import 'package:powerwhim/data/model/profilemodel/profiles_model.dart';
 import 'package:powerwhim/data/repository/user_profile_repo.dart';
 import 'package:powerwhim/domain/service/profileservice/user_profile_service.dart';
@@ -37,6 +38,11 @@ class UserProfileRepoImp extends UserProfileRepo{
   @override
   Future<HttpResponse<FriendsModel>> getFriends(String userId) {
     return userProfileService.getFriends(userId);
+  }
+
+  @override
+  Future<HttpResponse<MyFullProfileModel>> getMyFullProfile(String userId) {
+   return userProfileService.getMyProfile(userId);
   }
 
 

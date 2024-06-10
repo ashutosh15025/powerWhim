@@ -29,12 +29,14 @@ class Data {
   String? status;
   String? mssg;
   int? total;
+  bool? activeChats;
 
   Data({
     this.messages,
     this.status,
     this.mssg,
     this.total,
+    this.activeChats,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
@@ -42,6 +44,7 @@ class Data {
     status: json["status"],
     mssg: json["mssg"],
     total: json["total"],
+    activeChats: json["active_chats"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -49,13 +52,14 @@ class Data {
     "status": status,
     "mssg": mssg,
     "total": total,
+    "active_chats": activeChats,
   };
 }
 
 class Message {
   String? conversationMessage;
   DateTime? createdOn;
-  String? userId;
+  dynamic userId;
   dynamic image;
 
   Message({

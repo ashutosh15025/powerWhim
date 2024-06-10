@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:powerwhim/constant/color_constant.dart';
 import 'package:powerwhim/constant/service_api_constant.dart';
+import 'package:powerwhim/data/model/chats/chats_details_model.dart';
 import 'package:powerwhim/data/model/chats/personal_chat_model.dart';
 import 'package:powerwhim/presentation/bloc/chatbloc/chat_bloc.dart';
 import 'package:powerwhim/presentation/screens/view_image_screen/view_image_screen.dart';
@@ -26,12 +28,14 @@ class PersonalChatScreen extends StatefulWidget {
       required this.chatId,
       required this.name,
       this.previousScreen,
-      this.socketId});
+      this.socketId,
+      this.deactivate_on});
 
   final String chatId;
   final String name;
   final String? previousScreen;
   final String? socketId;
+  final DateTime? deactivate_on;
 
   @override
   State<PersonalChatScreen> createState() => _PersonalChatScreenState();
@@ -56,19 +60,28 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
 
   bool imageLoader = false;
 
+  DateTime? deactivate_on;
+
+  bool textFeildEnable = false;
+
+  bool errorWidgetVisibility = false;
+
+  bool endReasonWidget = false;
+
+  final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
+
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
+    deactivate_on = widget.deactivate_on;
     initSocket();
     super.initState();
     _scrollToBottom();
   }
 
   void _scrollToBottom() async {
-    // Wait for the ListView to build (optional, adjust based on your needs)
     await Future.delayed(Duration(milliseconds: 100));
-    // _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
   }
 
   initSocket() {
@@ -116,6 +129,8 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
     if (socketP != null && socketP!.id != null) {
       BlocProvider.of<ChatBloc>(context).add(SetSocketEvent(socketP!.id!));
     }
+    FocusScope.of(context).unfocus();
+
 
     return BlocConsumer<ChatBloc, ChatState>(
       listener: (context, state) {},
@@ -133,40 +148,95 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
               },
             ),
           );
-        } else if (state is GetPersonalChatSuccessState) {
+        }
+        else if (state is GetStartEndChatsState){
+          if(state.mssg == "Chat Activated"){
+            print("activated Chat");
+            deactivate_on = null;}
+          else if(state.mssg == "Chat Deactivated"){
+            deactivate_on = DateTime.now();
+          }
+          BlocProvider.of<ChatBloc>(context).add(
+              GetPersonalChatEvent(chatId: widget.chatId, page: 0));
+          return  CustomCircularLoadingBar();
+        }
+        else if (state is GetPersonalChatSuccessState) {
           scrollLoaderVisibility = false;
           listItem = state.personalChatModel.data!.messages!;
           return PopScope(
             canPop: true,
             onPopInvoked: (bool didPop) {
-              if( widget.socketId!=null)
-                BlocProvider.of<ChatBloc>(context).add(SetSocketEvent(widget.socketId!));
+              if (widget.socketId != null)
+                BlocProvider.of<ChatBloc>(context)
+                    .add(SetSocketEvent(widget.socketId!));
 
               emitActiveTime(widget.chatId);
               if (widget.previousScreen == "FriendsScreen") {
                 BlocProvider.of<ChatBloc>(context)
                     .add(GetFriendsEvent(USER_ID!));
               } else if (widget.previousScreen == "ChatScreen")
-                BlocProvider.of<ChatBloc>(context).add(GetChatsEvent());
+                BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(1));
+              else if(widget.previousScreen == "AllChatScreen")
+                BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(0));
+              print("popscope  wala");
+
             },
             child: Scaffold(
+              key: _key,
+              drawer: Drawer(),
               appBar: AppBar(
                 leading: new IconButton(
                     icon: new Icon(Icons.arrow_back),
                     onPressed: () {
-                      if( widget.socketId!=null)
-                        BlocProvider.of<ChatBloc>(context).add(SetSocketEvent(widget.socketId!));
-                      emitActiveTime(widget.chatId);
-                      if (widget.previousScreen == "FriendsScreen") {
-                        BlocProvider.of<ChatBloc>(context)
-                            .add(GetFriendsEvent(USER_ID!));
-                      } else if (widget.previousScreen == "ChatScreen")
-                        BlocProvider.of<ChatBloc>(context).add(GetChatsEvent());
-                      Navigator.pop(context, true);
+                      Navigator.pop(context);
                     }),
                 iconTheme: IconThemeData(
                   color: Colors.white, //change your color here
                 ),
+                actions: [
+                  PopupMenuButton(
+                      itemBuilder: (context) => [
+                            PopupMenuItem(
+                              onTap: () {
+                                if (deactivate_on == null) {
+                                  setState(() {
+                                    endReasonWidget = !endReasonWidget;
+                                  });
+                                } else {
+                                  print("activate");
+                                  if(state.personalChatModel.data?.activeChats == true) {
+                                    deactivate_on = null;
+                                    BlocProvider.of<ChatBloc>(context).add(
+                                        GetStartEndChatsEvent(
+                                            USER_ID!, widget.chatId, 0));
+                                  }
+                                  else{
+                                    setState(() {
+                                      errorWidgetVisibility = !errorWidgetVisibility;
+                                    });
+                                  }
+                                }
+                              },
+                              child: deactivate_on == null
+                                  ? Center(
+                                      child: Text(
+                                      "End Chat",
+                                      style: GoogleFonts.poppins(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 16),
+                                    ))
+                                  : Center(
+                                      child: Text(
+                                      "Start Chat",
+                                      style: GoogleFonts.poppins(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 16),
+                                    )),
+                            )
+                          ])
+                ],
                 centerTitle: true,
                 title: Text(
                   widget.name,
@@ -185,231 +255,364 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                 child: Container(
                   height: MediaQuery.of(context).size.height,
                   color: Color.fromRGBO(0, 0, 0, .9),
-                  child: Column(
+                  child: Stack(
                     children: [
                       Expanded(
-                        child: SingleChildScrollView(
-                          reverse: true,
-                          child: Stack(children: [
-                            Column(
-                              children: [
-                                Container(
-                                  height: MediaQuery.of(context).size.height -
-                                      MediaQuery.of(context).size.height / 5 -
-                                      MediaQuery.of(context).viewInsets.bottom,
-                                  child: ListView.builder(
-                                      controller: _scrollController,
-                                      reverse: true,
-                                      itemCount: listItem.length,
-                                      itemBuilder: (context, i) {
-                                        if (i == listItem.length - 1) {}
-                                        int index = i;
-                                        if (USER_ID == listItem[index]!.userId)
-                                          return InkWell(
-                                            onTap: () {
-                                              if (listItem[index]!.image !=
-                                                  null) {
-                                                onClickImage(
-                                                    listItem[index]!.image);
-                                              }
-                                            },
-                                            child: MyMessageWidget(
-                                              message: listItem[index]!
-                                                  .conversationMessage,
-                                              time: getHours(
-                                                  listItem[index]!.createdOn!),
-                                              image: listItem[index].image,
-                                            ),
-                                          );
-                                        else
-                                          return InkWell(
-                                            onTap: () {
-                                              if (listItem[index]!.image !=
-                                                  null) {
-                                                onClickImage(
-                                                    listItem[index]!.image);
-                                              }
-                                            },
-                                            child: OtherMessages(
-                                              message: listItem[index]!
-                                                  .conversationMessage,
-                                              time: getHours(
-                                                  listItem[index]!.createdOn!),
-                                              image: listItem[index].image,
-                                            ),
-                                          );
-                                      }),
-                                ),
-                                Container(
-                                  constraints: BoxConstraints(),
-                                  padding: EdgeInsets.fromLTRB(8, 16, 8, 16),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      file == null
-                                          ? SizedBox.shrink()
-                                          : InkWell(
-                                              child: Icon(Icons.cancel_outlined,
-                                                  color: Colors.white),
-                                              onTap: () async {
-                                                setState(() {
-                                                  file!.delete();
-                                                  file = null;
-                                                });
-                                              },
-                                            ),
-                                      file == null
-                                          ? SizedBox.shrink()
-                                          : Container(
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              child: Image.file(
-                                                file!,
-                                                height: 200,
-                                              ),
-                                            ),
-                                      Visibility(
-                                        visible: imageLoader,
-                                        child: Container(
-                                          width:
-                                              MediaQuery.of(context).size.width,
+                      child: SingleChildScrollView(
+                        reverse: true,
+                        child: Stack(children: [
+                          Column(
+                            children: [
+                              Container(
+                                height: MediaQuery.of(context).size.height -
+                                    MediaQuery.of(context).size.height / 5 -
+                                    MediaQuery.of(context).viewInsets.bottom,
+                                child: ListView.builder(
+                                    controller: _scrollController,
+                                    reverse: true,
+                                    itemCount: listItem.length,
+                                    itemBuilder: (context, i) {
+                                      if (i == listItem.length - 1) {}
+                                      int index = i;
+                                      if (USER_ID == listItem[index]!.userId)
+                                        return InkWell(
+                                          onTap: () {
+                                            if (listItem[index]!.image !=
+                                                null) {
+                                              onClickImage(
+                                                  listItem[index]!.image);
+                                            }
+                                          },
+                                          child: MyMessageWidget(
+                                            message: listItem[index]!
+                                                .conversationMessage,
+                                            time: getHours(
+                                                listItem[index]!.createdOn!),
+                                            image: listItem[index].image,
+                                          ),
+                                        );
+                                      else if (listItem[index]!.userId !=
+                                          null) {
+                                        return InkWell(
+                                          onTap: () {
+                                            if (listItem[index]!.image !=
+                                                null) {
+                                              onClickImage(
+                                                  listItem[index]!.image);
+                                            }
+                                          },
+                                          child: OtherMessages(
+                                            message: listItem[index]!
+                                                .conversationMessage,
+                                            time: getHours(
+                                                listItem[index]!.createdOn!),
+                                            image: listItem[index].image,
+                                          ),
+                                        );
+                                      } else {
+                                        return Container(
+                                          margin: EdgeInsets.fromLTRB(16, 16, 16, 0),
+                                          padding: EdgeInsets.all(8),
+                                          constraints: BoxConstraints(
+                                            maxWidth: 500,
+                                          ),
+                                          decoration: BoxDecoration(
+                                              color: Color.fromRGBO(
+                                                  218, 202, 58, .1),
+                                              borderRadius:
+                                                  BorderRadius.circular(16)),
                                           alignment: Alignment.center,
                                           child: Text(
-                                            "sending...",
-                                            style: TextStyle(
-                                                fontSize: 20,
-                                                color: Colors.white),
+                                            listItem[index]!
+                                                .conversationMessage!,
+                                            style: GoogleFonts.poppins(
+                                                textStyle: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 12)),
                                           ),
+                                        );
+                                      }
+                                    }),
+                              ),
+                              Container(
+                                constraints: BoxConstraints(),
+                                padding: EdgeInsets.fromLTRB(8, 16, 8, 16),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    file == null
+                                        ? SizedBox.shrink()
+                                        : InkWell(
+                                            child: Icon(Icons.cancel_outlined,
+                                                color: Colors.white),
+                                            onTap: () async {
+                                              setState(() {
+                                                file!.delete();
+                                                file = null;
+                                              });
+                                            },
+                                          ),
+                                    file == null
+                                        ? SizedBox.shrink()
+                                        : Container(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            child: Image.file(
+                                              file!,
+                                              height: 200,
+                                            ),
+                                          ),
+                                    Visibility(
+                                      visible: imageLoader,
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          "sending...",
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.white),
                                         ),
                                       ),
-                                      TextField(
-                                        controller: _controller,
-                                        minLines: 1,
-                                        maxLines: 3,
-                                        cursorColor: Colors.yellow.shade600,
-                                        onChanged: (value) {
-                                          inputValue = value;
-                                        },
-                                        style: TextStyle(color: Colors.white),
-                                        decoration: InputDecoration(
-                                          prefixIcon: InkWell(
-                                              onTap: () {},
-                                              child: InkWell(
-                                                  onTap: () {
-                                                    openImagePicker();
-                                                  },
-                                                  child: Icon(Icons
-                                                      .photo_library_sharp))),
-                                          prefixIconColor: Colors.yellow,
-                                          suffixIcon: InkWell(
-                                            child: Icon(Icons.send),
-                                            onTap: () async {
-                                              if (disableSendbutton == false) {
-                                                disableSendbutton = true;
-                                                if (inputValue != null &&
-                                                    inputValue!.isNotEmpty) {
-                                                  if (file == null) {
-                                                    imageLoader = true;
-                                                    socketP?.emit("message", {
-                                                      "message_text":
-                                                          "$inputValue",
-                                                      "chat_id":
-                                                          "${widget.chatId}",
-                                                      "user_id": "$USER_ID"
-                                                    });
-                                                  } else {
-                                                    setState(() {
-                                                      imageLoader = true;
-                                                    });
-                                                    await uploadfile();
-                                                    socketP?.emit("message", {
-                                                      "message_text":
-                                                          "$inputValue",
-                                                      "chat_id":
-                                                          "${widget.chatId}",
-                                                      "user_id": "$USER_ID",
-                                                      "image":
-                                                          "$uploaded_file_url"
-                                                    });
-                                                    await file!.delete();
-                                                    file = null;
-                                                  }
-                                                } else if (file != null) {
+                                    ),
+                                    TextField(
+                                      controller: _controller,
+                                      minLines: 1,
+                                      maxLines: 3,
+                                      cursorColor: Colors.yellow.shade600,
+                                      onChanged: (value) {
+                                        inputValue = value;
+                                      },
+                                      style: TextStyle(color: Colors.white),
+                                      decoration: InputDecoration(
+                                        prefixIcon: InkWell(
+                                            onTap: () {},
+                                            child: InkWell(
+                                                onTap: () {
+                                                  openImagePicker();
+                                                },
+                                                child: Icon(Icons
+                                                    .photo_library_sharp))),
+                                        prefixIconColor: Colors.yellow,
+                                        suffixIcon: InkWell(
+                                          child: Icon(Icons.send),
+                                          onTap: () async {
+                                            FocusScope.of(context).unfocus();
+                                            if (disableSendbutton == false &&
+                                                deactivate_on == null) {
+                                              disableSendbutton = true;
+                                              if (inputValue != null &&
+                                                  inputValue!.isNotEmpty) {
+                                                if (file == null) {
+                                                  imageLoader = true;
+                                                  socketP?.emit("message", {
+                                                    "message_text":
+                                                        "$inputValue",
+                                                    "chat_id":
+                                                        "${widget.chatId}",
+                                                    "user_id": "$USER_ID"
+                                                  });
+                                                } else {
                                                   setState(() {
                                                     imageLoader = true;
                                                   });
                                                   await uploadfile();
                                                   socketP?.emit("message", {
+                                                    "message_text":
+                                                        "$inputValue",
                                                     "chat_id":
                                                         "${widget.chatId}",
                                                     "user_id": "$USER_ID",
                                                     "image":
                                                         "$uploaded_file_url"
                                                   });
-                                                  inputValue = null;
                                                   await file!.delete();
                                                   file = null;
                                                 }
-                                                disableSendbutton = false;
+                                              } else if (file != null) {
+                                                setState(() {
+                                                  imageLoader = true;
+                                                });
+                                                await uploadfile();
+                                                socketP?.emit("message", {
+                                                  "chat_id":
+                                                      "${widget.chatId}",
+                                                  "user_id": "$USER_ID",
+                                                  "image":
+                                                      "$uploaded_file_url"
+                                                });
+                                                inputValue = null;
+                                                await file!.delete();
+                                                file = null;
                                               }
-                                              _controller.clear();
-                                              inputValue = null;
-                                            },
-                                          ),
-                                          suffixIconColor: Colors.yellow,
-                                          fillColor: Colors.white,
-                                          enabledBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(30),
-                                              borderSide: BorderSide(
-                                                  color: Colors.yellow,
-                                                  width: 1)),
-                                          focusedBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(30),
-                                              borderSide: BorderSide(
-                                                  color: Colors.yellow,
-                                                  width: 1)),
-                                          hintText: "type here",
-                                          hintStyle: GoogleFonts.baloo2(
-                                            textStyle: TextStyle(
-                                                fontWeight: FontWeight.w300,
-                                                fontSize: 16,
-                                                color: Colors.white),
-                                          ),
+                                              disableSendbutton = false;
+                                            } else if (deactivate_on !=
+                                                null) {
+                                              setState(() {
+                                                errorWidgetVisibility =
+                                                    !errorWidgetVisibility;
+                                                FocusScope.of(context).unfocus();
+
+                                              });
+                                            }
+                                            _controller.clear();
+                                            inputValue = null;
+                                          },
+                                        ),
+                                        suffixIconColor: Colors.yellow,
+                                        fillColor: Colors.white,
+                                        enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            borderSide: BorderSide(
+                                                color: Colors.yellow,
+                                                width: 1)),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            borderSide: BorderSide(
+                                                color: Colors.yellow,
+                                                width: 1)),
+                                        hintText: "type here",
+                                        hintStyle: GoogleFonts.baloo2(
+                                          textStyle: TextStyle(
+                                              fontWeight: FontWeight.w300,
+                                              fontSize: 16,
+                                              color: Colors.white),
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Visibility(
-                              child: Container(
-                                height: 40,
-                                color: Colors.black,
-                                child: Center(
-                                  child: CircularProgressIndicator(
-                                    color: Colors.yellow,
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              visible: scrollLoaderVisibility,
+                            ],
+                          ),
+                          Visibility(
+                            child: Container(
+                              height: 40,
+                              color: Colors.black,
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.yellow,
+                                ),
+                              ),
                             ),
-                          ]),
-                        ),
+                            visible: scrollLoaderVisibility,
+                          ),
+                        ]),
                       ),
-                    ],
+                    ), Visibility(
+                          visible: errorWidgetVisibility,
+                          child: Container(
+                            height: MediaQuery.of(context).size.height -
+                                MediaQuery.of(context).size.height / 4,
+                            child: CustomErrorWidget(
+                              error: true,
+                              mssg:
+                              "This chat is diable to chat first activate this chat",
+                              closeErrorWidget: closeErrorWidget,
+                            ),
+                          )),
+                      Visibility(
+                          visible: endReasonWidget,
+                          child: Container(
+                            color: Color.fromRGBO(0, 0, 0, .4),
+                            height: MediaQuery.of(context).size.height -
+                                MediaQuery.of(context).size.height / 5,
+                            child: Center(
+                              child: Container(
+                                height: MediaQuery.of(context)
+                                    .size
+                                    .height -
+                                    MediaQuery.of(context).size.height /
+                                        3,
+                                width: MediaQuery.of(context).size.width -
+                                    MediaQuery.of(context).size.width / 3,
+                                decoration: BoxDecoration(
+                                  color: Color.fromRGBO(0, 0, 0, 1),
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: ListView.builder(
+                                  itemBuilder: (context, i) {
+                                    if (i == 0)
+                                      return Container(
+                                        padding: EdgeInsets.all(8),
+                                        alignment: Alignment.centerRight,
+                                        child: IconButton(
+                                          icon:
+                                          Icon(Icons.cancel_rounded),
+                                          color: Colors.white,
+                                          onPressed: () {
+                                            onPressChatEndCancelWidget();
+                                          },
+                                        ),
+                                      );
+                                    else
+                                      return Container(
+                                        alignment: Alignment.center,
+                                        child: InkWell(
+                                          onTap: () {
+                                            socketP?.emit("message", {
+                                              "chat_id":
+                                              "${widget.chatId}",
+                                              "message_text":
+                                              "${CHATENDREASON[i-1]} ${USER_ID!}"
+                                            });
+                                            print(widget.chatId!+"chat id to deactivate");
+                                            BlocProvider.of<ChatBloc>(
+                                                context)
+                                                .add(
+                                                GetStartEndChatsEvent(
+                                                    USER_ID!,
+                                                    widget.chatId,
+                                                    1));
+                                            deactivate_on = DateTime.now();
+                                            endReasonWidget = !endReasonWidget;
+                                          },
+                                          child: Container(
+                                            margin: EdgeInsets.fromLTRB(
+                                                2, 2, 2, 2),
+                                            alignment: Alignment.center,
+                                            padding: EdgeInsets.all(16),
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            color: Color.fromRGBO(
+                                                218, 202, 58, .2),
+                                            child: Text(
+                                              CHATENDREASON[i - 1],
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 12,
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                  },
+                                  itemCount: CHATENDREASON.length + 1,
+                                ),
+                              ),
+                            ),
+                          ))]
                   ),
                 ),
               ),
             ),
           );
-        } else
+        } else {
           return CustomCircularLoadingBar();
+        }
       },
     );
+  }
+
+  void closeErrorWidget() {
+    setState(() {
+      FocusScope.of(context).unfocus();
+      errorWidgetVisibility = !errorWidgetVisibility;
+    });
   }
 
   String getHours(DateTime datetime) {
@@ -483,5 +686,11 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
 
   void emitActiveTime(String chatId) {
     socketP?.emit("active-time", {"user_id": "$USER_ID", "chat_id": "$chatId"});
+  }
+
+  void onPressChatEndCancelWidget() {
+    setState(() {
+      endReasonWidget = !endReasonWidget;
+    });
   }
 }

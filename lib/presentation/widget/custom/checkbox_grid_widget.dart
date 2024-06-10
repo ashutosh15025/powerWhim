@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CheckboxGridWidget extends StatefulWidget {
-  const CheckboxGridWidget({super.key, required this.weekAvailability});
+  const CheckboxGridWidget({super.key, required this.weekAvailability, this.previousweekAvailability});
 
   final Function(List<bool>) weekAvailability;
+  final List<String> ?previousweekAvailability;
 
   @override
   State<CheckboxGridWidget> createState() => _CheckboxGridWidgetState();
@@ -13,6 +14,18 @@ class CheckboxGridWidget extends StatefulWidget {
 
 class _CheckboxGridWidgetState extends State<CheckboxGridWidget> {
   List<bool> isSelected = List.generate(16, (_) => true);
+  @override
+  void initState() {
+    if( widget.previousweekAvailability!=null){
+      for(var i=0;i<widget.previousweekAvailability!.length;i++){
+        if(widget.previousweekAvailability![i]=="1")
+          weeklyAvailability[i] = true;
+        else
+          weeklyAvailability[i] = false;
+      }
+    }
+    super.initState();
+  }
 
   List<String> weekDays = ["","S", "M", "T", "W", "T", "F", "S"];
 

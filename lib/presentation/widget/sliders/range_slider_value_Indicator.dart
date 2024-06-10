@@ -6,8 +6,10 @@ import '../../../constant/service_api_constant.dart';
 import '../message_widget/custom_range_thumb.dart';
 
 class SetAgeRangeSlider extends StatefulWidget {
-  const SetAgeRangeSlider({super.key, required this.setageRange});
+  const SetAgeRangeSlider({super.key, required this.setageRange, this.startAge, this.endAge});
   final Function(String,String) setageRange;
+  final String ? startAge;
+  final String ? endAge;
 
   @override
   State<SetAgeRangeSlider> createState() => _SetAgeRangeSliderState();
@@ -15,7 +17,14 @@ class SetAgeRangeSlider extends StatefulWidget {
 
 class _SetAgeRangeSliderState extends State<SetAgeRangeSlider> {
   late IndicatorRangeSliderThumbShape<int> indicatorRangeSliderThumbShape =
-  IndicatorRangeSliderThumbShape(start.toInt(), end.toInt());
+  IndicatorRangeSliderThumbShape(int.parse(widget.startAge!), int.parse(widget.endAge!));
+
+  @override
+  void initState() {
+     start =double.parse(widget.startAge!);
+     end =  double.parse(widget.endAge!);
+    super.initState();
+  }
 
   double start =18;
   double end = 28;

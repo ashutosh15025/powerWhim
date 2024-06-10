@@ -9,6 +9,7 @@ import 'package:powerwhim/data/model/account_managment_model.dart';
 import 'package:powerwhim/data/model/friends_model.dart';
 import 'package:powerwhim/data/model/help_model.dart';
 import 'package:powerwhim/data/model/profilemodel/full_profile.dart';
+import 'package:powerwhim/data/model/profilemodel/my_full_profile_model.dart';
 import 'package:powerwhim/data/model/profilemodel/profiles_model.dart';
 import 'package:retrofit/dio.dart';
 import 'package:retrofit/http.dart';
@@ -42,6 +43,11 @@ abstract class UserProfileService{
 
   @GET("api/connections/get-connections")
   Future<HttpResponse<FriendsModel>> getFriends(
+      @Query("user_id")String userId,
+      );
+
+  @GET("api/user/my-profile")
+  Future<HttpResponse<MyFullProfileModel>> getMyProfile(
       @Query("user_id")String userId,
       );
 

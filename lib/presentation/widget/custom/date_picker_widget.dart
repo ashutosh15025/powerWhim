@@ -19,9 +19,8 @@ class _DatePickerState extends State<DatePicker> {
 
 @override
   void initState() {
-    if(widget.previousvalue!=null){
+    if(widget.previousvalue!=null)
     _dateController.text = widget.previousvalue!;
-    widget.setDOB(_dateController.text);}
     super.initState();
   }
   @override
@@ -107,3 +106,6 @@ class _DatePickerState extends State<DatePicker> {
     }
   }
 }
+
+
+

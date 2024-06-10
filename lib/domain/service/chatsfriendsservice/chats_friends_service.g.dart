@@ -13,7 +13,7 @@ class _ChatsFriendsService implements ChatsFriendsService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'https://whim.cozytech.co.in/';
+    baseUrl ??= 'http://10.0.2.2:3000/';
   }
 
   final Dio _dio;
@@ -21,9 +21,15 @@ class _ChatsFriendsService implements ChatsFriendsService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<ChatsDetailsModel>> getChats(String userId) async {
+  Future<HttpResponse<ChatsDetailsModel>> getChats(
+    String userId,
+    int chatActiveStatus,
+  ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'from_user_id': userId};
+    final queryParameters = <String, dynamic>{
+      r'from_user_id': userId,
+      r'chat_active_status': chatActiveStatus,
+    };
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
@@ -52,11 +58,13 @@ class _ChatsFriendsService implements ChatsFriendsService {
   Future<HttpResponse<PersonalChatModel>> getPersonalChat(
     String chatId,
     int page,
+    String UserId,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'chat_id': chatId,
       r'offset': page,
+      r'user_id': UserId,
     };
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
@@ -174,6 +182,36 @@ class _ChatsFriendsService implements ChatsFriendsService {
               baseUrl,
             ))));
     final value = AddChatModel.fromJson(_result.data!);
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<AccountManagementModel>> startEndChats(
+      Map<String, dynamic> body) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(body);
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<AccountManagementModel>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'api/chats/start-end-chat',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = AccountManagementModel.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }

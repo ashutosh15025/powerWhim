@@ -2,6 +2,7 @@ import 'package:powerwhim/data/model/account_managment_model.dart';
 import 'package:powerwhim/data/model/friends_model.dart';
 import 'package:powerwhim/data/model/help_model.dart';
 import 'package:powerwhim/data/model/profilemodel/full_profile.dart';
+import 'package:powerwhim/data/model/profilemodel/my_full_profile_model.dart';
 import 'package:powerwhim/data/model/profilemodel/profiles_model.dart';
 
 import 'package:powerwhim/domain/repository/user_profile_repo_imp.dart';
@@ -26,5 +27,9 @@ class UserProfileUsecase{
 
   Future<HttpResponse<FriendsModel>> getFriend(String userId){
     return _userProfileRepoImp.getFriends(userId);
+  }
+
+  Future<HttpResponse<MyFullProfileModel>> getMyFullProfile(String userId){
+    return _userProfileRepoImp.getMyFullProfile(userId);
   }
 }

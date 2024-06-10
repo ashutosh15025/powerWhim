@@ -7,7 +7,10 @@ class LoadApiEvent extends ChatEvent {}
 
 class ErrorApiEvent extends ChatEvent {}
 
-class GetChatsEvent extends ChatEvent {}
+class GetChatsEvent extends ChatEvent {
+  int activeStatus;
+  GetChatsEvent(this.activeStatus);
+}
 
 
 class GetPersonalChatEvent extends ChatEvent {
@@ -49,5 +52,13 @@ class SetChatEvent extends ChatEvent {
 class GetFullProfileEvent extends ChatEvent{
   String userId;
   GetFullProfileEvent(this.userId);
+}
+
+
+class GetStartEndChatsEvent extends ChatEvent{
+  String userId;
+  String chatId;
+  int ? deactivate_on;
+  GetStartEndChatsEvent(this.userId,this.chatId,this.deactivate_on);
 }
 

@@ -1,7 +1,7 @@
 
 import 'dart:ui';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-const BASE_URL = "https://whim.cozytech.co.in/";
+const BASE_URL = "http://10.0.2.2:3000/";
 
 const Color green = Color.fromRGBO(0, 156, 74, 1);
 
@@ -20,4 +20,8 @@ const ERROR ="some error Accured";
 String ? USER_ID ;
 
 IO.Socket ? SOCKET ;
+
+
+
+List<String> CHATENDREASON = ["aise hi  kar raha hu","man nhi h baat krne ka","maza ni aa raha h"];
 

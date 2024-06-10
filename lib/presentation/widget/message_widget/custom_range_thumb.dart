@@ -48,7 +48,7 @@ class IndicatorRangeSliderThumbShape<T> extends RangeSliderThumbShape {
     // Draw tooltip background
     final tooltipPaint = Paint()..color = green; // Background color for tooltip
 
-    final double textWidth = 40.0;
+    final double textWidth = 35.0;
     final double textHeight = 28.0;
     final double tooltipWidth = textWidth;
     final double tooltipHeight = textHeight + 6.0; // Height of the tooltip background

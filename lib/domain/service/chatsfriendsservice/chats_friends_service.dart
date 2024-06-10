@@ -22,14 +22,16 @@ abstract class ChatsFriendsService{
 
   @GET("api/chats/get-chats")
   Future<HttpResponse<ChatsDetailsModel>> getChats(
-      @Query("from_user_id") String userId
-      );
+      @Query("from_user_id") String userId,
+     @Query("chat_active_status") int chatActiveStatus
+  );
 
 
   @GET("api/chats/get-conversations")
   Future<HttpResponse<PersonalChatModel>> getPersonalChat(
       @Query("chat_id") String chatId,
-      @Query("offset") int page
+      @Query("offset") int page,
+      @Query("user_id") String UserId
       );
 
 
@@ -50,5 +52,11 @@ abstract class ChatsFriendsService{
   Future<HttpResponse<AddChatModel>> setChats(
       @Query("from_user_id") String fromUserId,
       @Query("to_user_id") String toUserId,
+      );
+
+
+  @POST("api/chats/start-end-chat")
+  Future<HttpResponse<AccountManagementModel>> startEndChats(
+      @Body() Map<String, dynamic> body
       );
 }

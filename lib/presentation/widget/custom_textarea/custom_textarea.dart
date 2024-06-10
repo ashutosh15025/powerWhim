@@ -3,15 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomTextarea extends StatefulWidget {
-  const CustomTextarea({super.key, required this.placeholder, required this.setText});
+  const CustomTextarea({super.key, required this.placeholder, required this.setText, this.text});
   final String placeholder;
   final Function(String) setText;
+  final String ? text;
 
   @override
   State<CustomTextarea> createState() => _CustomTextareaState();
 }
 
 class _CustomTextareaState extends State<CustomTextarea> {
+  TextEditingController textEditingController = TextEditingController();
+
+  @override
+  void initState() {
+    if(widget.text!=null)
+    textEditingController.text = widget.text!;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -34,12 +43,13 @@ class _CustomTextareaState extends State<CustomTextarea> {
           height: 120, // <-- TextField height
           padding: EdgeInsets.all(4),
           child: TextField(
+            controller: textEditingController,
             cursorColor: Colors.yellow.shade600,
             maxLines: null,
             expands: true,
-            style: GoogleFonts.baloo2(
+            style: GoogleFonts.poppins(
               textStyle:TextStyle(
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w400,
                   fontSize: 12,
                   color: Colors.white
               ),),

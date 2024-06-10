@@ -7,20 +7,22 @@ import 'package:powerwhim/data/repository/chats_friends_repo.dart';
 import 'package:powerwhim/domain/service/chatsfriendsservice/chats_friends_service.dart';
 import 'package:retrofit/dio.dart';
 
+import '../../constant/service_api_constant.dart';
+
 class ChatsFriendsRepoImp extends ChatsFriendsRepo {
   ChatsFriendsService _chatsFriendsService;
 
   ChatsFriendsRepoImp(this._chatsFriendsService);
 
   @override
-  Future<HttpResponse<ChatsDetailsModel>> getChats(String userId) {
+  Future<HttpResponse<ChatsDetailsModel>> getChats(String userId,int activeChatStatus) {
     print(userId);
-    return _chatsFriendsService.getChats(userId);
+    return _chatsFriendsService.getChats(userId,activeChatStatus);
   }
 
   @override
-  Future<HttpResponse<PersonalChatModel>> getPersonalChat(String chatId,int page) {
-    return _chatsFriendsService.getPersonalChat(chatId,page);
+  Future<HttpResponse<PersonalChatModel>> getPersonalChat(String chatId,int page,String userId) {
+    return _chatsFriendsService.getPersonalChat(chatId,page,userId);
   }
 
   @override
@@ -37,6 +39,14 @@ class ChatsFriendsRepoImp extends ChatsFriendsRepo {
   Future<HttpResponse<AddChatModel>> setChats(String fromUserId, String toUserId) {
     return _chatsFriendsService.setChats(fromUserId,toUserId);
   }
+
+  @override
+  Future<HttpResponse<AccountManagementModel>> startEndChats(String userId, String chatId, int ? deactivate_on) {
+    var requestBody = {"user_id": userId,"chat_id":chatId,"deactivate_on":deactivate_on};
+    print(requestBody);
+    return _chatsFriendsService.startEndChats(requestBody);
+  }
+
 
 
 }

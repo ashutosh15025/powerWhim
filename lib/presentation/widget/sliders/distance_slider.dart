@@ -6,8 +6,9 @@ import '../../../constant/service_api_constant.dart';
 import '../custom/custom_slider_thumb.dart';
 
 class DistanceSlider extends StatefulWidget {
-  const DistanceSlider({super.key, required this.setDistance});
+  const DistanceSlider({super.key, required this.setDistance, this.distance});
   final Function(int) setDistance;
+  final int ? distance ;
 
   @override
   State<DistanceSlider> createState() => _DistanceSliderState();
@@ -15,6 +16,13 @@ class DistanceSlider extends StatefulWidget {
 
 class _DistanceSliderState extends State<DistanceSlider> {
   int distance = 10;
+
+  @override
+  void initState() {
+    if(widget.distance!=null)
+    distance = widget.distance!;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
