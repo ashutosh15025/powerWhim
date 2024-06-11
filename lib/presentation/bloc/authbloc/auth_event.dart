@@ -8,7 +8,7 @@ class RegisterEvent extends AuthEvent {
   String email;
   String forget;
 
-  RegisterEvent(this.email,this.forget);
+  RegisterEvent(this.email, this.forget);
 }
 
 class RegisterFailedEvent extends AuthEvent {}
@@ -75,6 +75,3 @@ class GetCheckProfileEvent extends AuthEvent {
 class GetLoadingEvent extends AuthEvent {
   GetLoadingEvent();
 }
-
-
-

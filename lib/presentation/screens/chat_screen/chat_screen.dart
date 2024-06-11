@@ -2,9 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:powerwhim/constant/service_api_constant.dart';
+import 'package:powerwhim/constant/string_constant.dart';
 import 'package:powerwhim/data/model/chats/chats_details_model.dart';
 import 'package:powerwhim/presentation/bloc/chatbloc/chat_bloc.dart';
-import 'package:powerwhim/presentation/screens/chat_screen/all_chat_screen.dart';
+import 'package:powerwhim/presentation/screens/chat_screen/all_ended_chat_screen.dart';
 import 'package:powerwhim/presentation/screens/chat_screen/personal_chat_screen.dart';
 import 'package:powerwhim/presentation/screens/chat_screen/start_chat_end_chat_widget.dart';
 import 'package:powerwhim/presentation/widget/custom/custom_circular_loading_bar.dart';
@@ -88,7 +89,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (_) =>
-                                  AllChatScreen(
+                                  AllEndedChatScreen(
                                   )));
                           BlocProvider.of<ChatBloc>(context).add(
                               GetChatsEvent(0));
@@ -145,7 +146,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   child: ChatDmWidget(
                                     name: chatsDetailsModel!.data!.chats![index]
                                         .userName == null
-                                        ? "ashes"
+                                        ? StringConstant.name
                                         : chatsDetailsModel!.data!.chats![index]
                                         .userName!,
                                     lastMessage:
@@ -179,7 +180,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       widget.switchAddProfile();
                     },
                     child: Center(
-                      child: Text("+Add Friends and Start chat",
+                      child: Text(StringConstant.addChats,
                         style: TextStyle(
                             fontSize: 20,
                             color: Colors.white,
@@ -192,7 +193,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (_) =>
-                            AllChatScreen(
+                            AllEndedChatScreen(
                             )));
                     BlocProvider.of<ChatBloc>(context).add(
                         GetChatsEvent(0));

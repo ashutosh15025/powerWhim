@@ -65,7 +65,6 @@ class _StartChatEndChatWidgetState extends State<StartChatEndChatWidget> {
                 ),
                 InkWell(
                   onTap: (){
-                    print("Add clicked");
                    BlocProvider.of<ChatBloc>(context).add(GetStartEndChatsEvent(USER_ID!, widget.chatId!, 0));
                   },
                   child: true==true?Padding(
@@ -129,7 +128,6 @@ class _StartChatEndChatWidgetState extends State<StartChatEndChatWidget> {
     );
   }
   String getHours(DateTime datetime){
-    print(datetime);
     var localTIme = datetime.toLocal();
     String formattedTime = localTIme.toString();
     List<String> parts = formattedTime.split(' ');

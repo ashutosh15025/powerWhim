@@ -58,7 +58,6 @@ class _CreatePasswordWidgetState extends State<CreatePasswordWidget> {
                 padding: EdgeInsets.all(34),
                 child: InkWell(
                   onTap: (){
-                    print("verify clicked $password /+ $confPassword");
                     if(confPassword == password && password!=null)
                     bloc.add(CreatePasswordEvent(password!));
                     else{

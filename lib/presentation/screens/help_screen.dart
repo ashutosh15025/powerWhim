@@ -45,10 +45,6 @@ class _HelpScreenState extends State<HelpScreen> {
    else if( state is getHelpSuccessState)
      successmsg = state.mssg;
   errorWidget =!errorWidget;
-   print("sucess $successmsg");
-   print("error $errormsg");
-
-
   },
   builder: (context, state) {
     return Stack(
@@ -218,7 +214,6 @@ class _HelpScreenState extends State<HelpScreen> {
                         .width / 2,
                     child: InkWell(
                       onTap: () {
-                        print ("$name $email $phone $message");
                         if (name!=null && name!.isNotEmpty && message!=null && message!.isNotEmpty && phone!=null && phone!.isNotEmpty && email!=null && email!.isNotEmpty){
                           HelpModel helpModel = HelpModel(name: name,emailId: email,mobileNumber: phone,message: message);
                           BlocProvider.of<ProfileblocBloc>(context).add(getHelpEvent(helpModel));
@@ -227,7 +222,6 @@ class _HelpScreenState extends State<HelpScreen> {
                           setState(() {
                             error = "fill required fields";
                           });
-                                print("error +$error");
                         }
                       },
                       child: GradientButtonGreenYellow(

@@ -51,18 +51,11 @@ final class GetHobbiesSuccessState extends AuthState {
   GetHobbiesSuccessState(this.hobbies);
 }
 
-
- class PendingProfileState extends AuthState {
-
-}
+class PendingProfileState extends AuthState {}
 
 final class CompleteProfileState extends AuthState {
-CompleteProfileState(){
-  print("emitted");
+  CompleteProfileState() {}
 }
-}
-
-
 
 final class ApiFailedState extends AuthState {
   String mssg;
@@ -71,8 +64,5 @@ final class ApiFailedState extends AuthState {
 }
 
 final class LoadingState extends AuthState {
-
-  LoadingState(){
-    print("loading");
-  }
+  LoadingState() {}
 }

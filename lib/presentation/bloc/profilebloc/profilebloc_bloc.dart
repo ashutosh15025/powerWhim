@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:powerwhim/constant/service_api_constant.dart';
+import 'package:powerwhim/constant/string_constant.dart';
 import 'package:powerwhim/data/model/friends_model.dart';
 import 'package:powerwhim/data/model/help_model.dart';
 import 'package:powerwhim/data/model/profilemodel/full_profile.dart';
@@ -14,9 +15,6 @@ part 'profilebloc_state.dart';
 
 class ProfileblocBloc extends Bloc<ProfileblocEvent, ProfileblocState> {
   ProfileblocBloc() : super(ProfileblocInitial()) {
-    on<ProfileblocEvent>((event, emit) {
-      print("asheses");
-    });
     on<getProfilesEvent>(ongetProfilesEvent);
     on<getHelpEvent>(ongetHelpEvent);
     on<getFullProfileEvent>(ongetFullProfileEvent);
@@ -30,67 +28,56 @@ class ProfileblocBloc extends Bloc<ProfileblocEvent, ProfileblocState> {
       emit(getProfilesSuccessState(response.data));
     }
     else{
-      print(response.data.data);
-
-      print("can fetch profiles");
     }
   }
 
   void ongetFullProfileEvent(getFullProfileEvent event,Emitter<ProfileblocState>emit)async{
-    print("view full profile");
-
     var response = await locator.get<UserProfileUsecase>().getFullProfiles(event.userId,USER_ID!);
-    print("view full profile");
-    print("user Id ${event.userId}");
     if(response.data!=null){
       if(response.data!.data!=null)
       emit(getFullProfileSuccessState(response.data));
     }
     else{
-      print("can fetch profiles");
     }
   }
 
   void ongetHelpEvent(getHelpEvent event,Emitter<ProfileblocState>emit)async{
     var response = await locator.get<UserProfileUsecase>().getHelp(event.helpModel);
-    print("response");
     if(response.data!=null){
-      if(response.data.data!=null && response.data.data!.status=="success")
+      if(response.data.data!=null && response.data.data!.status == StringConstant.successState)
       emit(getHelpSuccessState(response.data.data!.mssg!));
       else
         emit(getHelpFailedState(response.data.data!.mssg!));
     }
     else{
-      emit(getHelpFailedState("Something went Wrong"));
+      emit(getHelpFailedState(StringConstant.somethingWentWrong));
     }
   }
 
 
   void ongetFriends(getFriendsEvent event,Emitter<ProfileblocState>emit)async{
     var response = await locator.get<UserProfileUsecase>().getFriend(event.userId);
-    print("response");
     if(response.data!=null){
-      if(response.data.data!=null && response.data.data!.status=="success")
+      if(response.data.data!=null && response.data.data!.status==StringConstant.successState)
         emit(getFriendSuccessState(response.data));
       else
         emit(getFriendsFailedState(response.data.data!.mssg!));
     }
     else{
-      emit(getFriendsFailedState("Something went Wrong"));
+      emit(getHelpFailedState(StringConstant.somethingWentWrong));
     }
   }
 
   void ongetMyFullProfileEvent(getMyFullProfileEvent event,Emitter<ProfileblocState>emit)async{
     var response = await locator.get<UserProfileUsecase>().getMyFullProfile(event.userId);
-    print("response");
     if(response.data!=null){
-      if(response.data.data!=null && response.data.data!.status=="success")
+      if(response.data.data!=null && response.data.data!.status==StringConstant.successState)
         emit(getMyFullProfileSuccessState(response.data));
       else
         emit(getMyFullProfileFailedState(response.data.data!.mssg!));
     }
     else{
-      emit(getMyFullProfileFailedState("Something went Wrong"));
+      emit(getHelpFailedState(StringConstant.somethingWentWrong));
     }
   }
 

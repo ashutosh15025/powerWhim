@@ -45,7 +45,6 @@ class _OnBoardPageState extends State<OnBoardPage> {
               )
             ],
             onPageChanged: (int page) {
-              print(page.toString());
               currentPage = page + 1;
             },
           ),

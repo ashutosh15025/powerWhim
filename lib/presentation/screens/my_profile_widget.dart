@@ -43,29 +43,13 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
      });}
    else if(state is getMyFullProfileSuccessState){
     MyProfile myprofile = state.myFullProfileModel.data!.myProfile!;
-    print("my profile"+myprofile.photos!.length.toString());
      return Container(
-       height: MediaQuery.of(context).size.height,
        padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
        color: Color.fromRGBO(0, 0, 0, 0.95),
        child: SingleChildScrollView(
          child: Column(
            crossAxisAlignment: CrossAxisAlignment.start,
            children: [
-             Row(
-               children: [
-                 Text("My Profile2",
-                   style: GoogleFonts.poppins(
-                       textStyle: TextStyle(
-                         fontSize: 20,
-                         fontWeight: FontWeight.bold,
-                         color: Colors.white,
-                       )
-                   ),),
-                 Spacer(),
-                 Icon(Icons.edit,color: themeColor,)
-               ],
-             ),
              Row(children:[Container(
                padding: EdgeInsets.fromLTRB(0, 16, 0, 16),
                child: Container(
@@ -101,7 +85,7 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
                child: Container(
                  width: MediaQuery.sizeOf(context).width,
                  padding: EdgeInsets.all(8),
-                 margin: EdgeInsets.fromLTRB(MediaQuery.sizeOf(context).width/5, 0, MediaQuery.sizeOf(context).width/5, 0),
+                 margin: EdgeInsets.fromLTRB(MediaQuery.sizeOf(context).width/5, 0, MediaQuery.sizeOf(context).width/5, 70),
                  decoration: BoxDecoration(
                      border: Border.all(color: themeColor,width: 1),
                      borderRadius: BorderRadius.circular(16)
@@ -130,75 +114,63 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
        padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
        color: Color.fromRGBO(0, 0, 0, 0.95),
        child: SingleChildScrollView(
-         child: Column(
-           crossAxisAlignment: CrossAxisAlignment.start,
-           children: [
-             Row(
-               children: [
-                 Text("My Profile",
-                   style: GoogleFonts.poppins(
-                       textStyle: TextStyle(
-                         fontSize: 20,
-                         fontWeight: FontWeight.bold,
-                         color: Colors.white,
-                       )
-                   ),),
-                 Spacer(),
-                 Icon(Icons.edit,color: themeColor,)
-               ],
-             ),
-             Row(children:[Container(
-               padding: EdgeInsets.fromLTRB(0, 16, 0, 16),
-               child: Container(
-                 width: MediaQuery.of(context).size.width - MediaQuery.of(context).size.width/4 ,
-                 child: Text(myprofile!.name!=null?myprofile!.name!:"Name",
-                     maxLines: 1,
-                     overflow: TextOverflow.ellipsis,
-                     style: GoogleFonts.poppins(
-                       textStyle:TextStyle(
-                           fontSize: 20,
-                           fontWeight: FontWeight.bold,
-                           color: green),)
+         child: Container(
+           child: Column(
+             crossAxisAlignment: CrossAxisAlignment.start,
+             children: [
+               Row(children:[Container(
+                 padding: EdgeInsets.fromLTRB(0, 16, 0, 16),
+                 child: Container(
+                   width: MediaQuery.of(context).size.width - MediaQuery.of(context).size.width/4 ,
+                   child: Text(myprofile!.name!=null?myprofile!.name!:"Name",
+                       maxLines: 1,
+                       overflow: TextOverflow.ellipsis,
+                       style: GoogleFonts.poppins(
+                         textStyle:TextStyle(
+                             fontSize: 20,
+                             fontWeight: FontWeight.bold,
+                             color: green),)
+                   ),
                  ),
                ),
-             ),
-               Spacer()
-               ,Text(myprofile.age!=null?myprofile.age!.toString()+"Yrs":"age",
-                 style: GoogleFonts.poppins(
-                   textStyle:TextStyle(
-                       fontSize: 22,
-                       fontWeight: FontWeight.w500,
-                       color: green),),)]),
-             myprofile.sports==null?SizedBox.shrink():ContentDescription(title: "Sports:",description: myprofile.sports!=null?myprofile.sports!.toString():"I love every sports"),
-             myprofile.hobbies==null?SizedBox.shrink():ContentDescription(title: "Hobbies:",description: myprofile.hobbies!=null?myprofile.hobbies!.toString():"I love every doing everything"),
-             myprofile.ambition==null?SizedBox.shrink():ContentDescription(title: "Ambition:",description:  myprofile.ambition!=null?myprofile.ambition!.toString():"I have big ambitions"),
-             myprofile.accomplishment==null?SizedBox.shrink():ContentDescription(title: "Accomplishment:",description:  myprofile.accomplishment!=null?myprofile.accomplishment!.toString():"I have manny accomplishment"),
-             ProfileImage(visibility: true, profiles: myprofile.photos,),
+                 Spacer()
+                 ,Text(myprofile.age!=null?myprofile.age!.toString()+"Yrs":"age",
+                   style: GoogleFonts.poppins(
+                     textStyle:TextStyle(
+                         fontSize: 22,
+                         fontWeight: FontWeight.w500,
+                         color: green),),)]),
+               myprofile.sports==null?SizedBox.shrink():ContentDescription(title: "Sports:",description: myprofile.sports!=null?myprofile.sports!.toString():"I love every sports"),
+               myprofile.hobbies==null?SizedBox.shrink():ContentDescription(title: "Hobbies:",description: myprofile.hobbies!=null?myprofile.hobbies!.toString():"I love every doing everything"),
+               myprofile.ambition==null?SizedBox.shrink():ContentDescription(title: "Ambition:",description:  myprofile.ambition!=null?myprofile.ambition!.toString():"I have big ambitions"),
+               myprofile.accomplishment==null?SizedBox.shrink():ContentDescription(title: "Accomplishment:",description:  myprofile.accomplishment!=null?myprofile.accomplishment!.toString():"I have manny accomplishment"),
+               ProfileImage(visibility: true, profiles: myprofile.photos,),
 
-             InkWell(
-               onTap: (){
-               },
-               child: Container(
-                 width: MediaQuery.sizeOf(context).width,
-                 padding: EdgeInsets.all(8),
-                 margin: EdgeInsets.fromLTRB(MediaQuery.sizeOf(context).width/5, 0, MediaQuery.sizeOf(context).width/5, 0),
-                 decoration: BoxDecoration(
-                   border: Border.all(color: themeColor,width: 1),
-                   borderRadius: BorderRadius.circular(16)
+               InkWell(
+                 onTap: (){
+                 },
+                 child: Container(
+                   width: MediaQuery.sizeOf(context).width,
+                   padding: EdgeInsets.all(8),
+                   margin: EdgeInsets.fromLTRB(MediaQuery.sizeOf(context).width/5, 0, MediaQuery.sizeOf(context).width/5, 0),
+                   decoration: BoxDecoration(
+                     border: Border.all(color: themeColor,width: 1),
+                     borderRadius: BorderRadius.circular(16)
+                   ),
+                   child: Center(
+                     child: Text("Edit Profile",
+                     style: GoogleFonts.poppins(
+                       textStyle: TextStyle(
+                         fontSize: 16,
+                         fontWeight: FontWeight.w400,
+                         color: themeColor,
+                       )
+                     ),),
+                   ),
                  ),
-                 child: Center(
-                   child: Text("Edit Profile",
-                   style: GoogleFonts.poppins(
-                     textStyle: TextStyle(
-                       fontSize: 16,
-                       fontWeight: FontWeight.w400,
-                       color: themeColor,
-                     )
-                   ),),
-                 ),
-               ),
-             )
-           ],
+               )
+             ],
+           ),
          ),
        ),
      );
@@ -235,7 +207,6 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
         end: model.ageRange!.end) ,distance: model.meetingDistance ,goals:model.ambition,accomplishment:model.accomplishment,sports: model.sports,hobbies: model.hobbies,profile: [...model.photos!],
           weeklyAvailability:[...model.weekAvailability!]
         ))).then((value){
-      print(model.photos!.length.toString()+"model photo length");
     },
     );
   }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:powerwhim/constant/service_api_constant.dart';
+import 'package:powerwhim/constant/string_constant.dart';
 import 'package:powerwhim/presentation/bloc/authbloc/auth_bloc.dart';
 import 'package:powerwhim/presentation/bloc/profilebloc/profilebloc_bloc.dart';
 import 'package:powerwhim/presentation/home.dart';
@@ -29,7 +30,7 @@ class _LoginScreenState extends State<AuthScreen> {
   String? authMessage;
 
   bool login = false;
-  String  errormsg = "some error occured";
+  String  errormsg = StringConstant.somethingWentWrong;
   bool errorbool = false;
 
   bool showErrorWidget = false;
@@ -44,12 +45,9 @@ class _LoginScreenState extends State<AuthScreen> {
   Widget build(BuildContext context) {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
-        print("run");
-        print(state);
         if (state is AuthRegistorSuccessState) {
           authMessage = state.mssg;
           USER_ID = state.user_id.toString();
-          print(state.user_id);
           showOTPPanel = true;
         } else if (state is VerifyOTPSuccessState) {
           showOTPPanel = !showOTPPanel;
@@ -73,13 +71,11 @@ class _LoginScreenState extends State<AuthScreen> {
               MaterialPageRoute(builder: (_) => const AddProfileScreen()));
         }
         else if( state is CompleteProfileState){
-          print("ashese");
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (_) => const Home()));
         }
         if(state is LoadingState){
           loaderVisibility = true;
-          print("loadingstate");
         }
         else
           {
@@ -179,7 +175,6 @@ class _LoginScreenState extends State<AuthScreen> {
 
   void onPressVerifyOTP() {
     setState(() {
-      print("otppannel");
       showConfirmPasswordPanel = !showConfirmPasswordPanel;
       showOTPPanel = !showOTPPanel;
     });
@@ -187,7 +182,6 @@ class _LoginScreenState extends State<AuthScreen> {
 
   void onPressVerifyPassword() {
     setState(() {
-      print("showConfirmPasswordPanel");
       showConfirmPasswordPanel = !showConfirmPasswordPanel;
       navigateToHomePage();
     });

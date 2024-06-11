@@ -6,21 +6,22 @@ import 'package:powerwhim/presentation/screens/chat_screen/personal_chat_screen.
 import 'package:powerwhim/presentation/screens/chat_screen/start_chat_end_chat_widget.dart';
 
 import '../../../constant/service_api_constant.dart';
+import '../../../constant/string_constant.dart';
 import '../../../data/model/chats/chats_details_model.dart';
 import '../../bloc/chatbloc/chat_bloc.dart';
 import '../../widget/custom/custom_circular_loading_bar.dart';
 import '../../widget/error/custom_error_widget.dart';
 import 'chat_dm_widget.dart';
 
-class AllChatScreen extends StatefulWidget {
-  const AllChatScreen({super.key});
+class AllEndedChatScreen extends StatefulWidget {
+  const AllEndedChatScreen({super.key});
 
   @override
-  State<AllChatScreen> createState() => _AllChatScreenState();
+  State<AllEndedChatScreen> createState() => _AllEndedChatScreenState();
 
 }
 
-class _AllChatScreenState extends State<AllChatScreen> {
+class _AllEndedChatScreenState extends State<AllEndedChatScreen> {
   ChatsDetailsModel? chatsDetailsModel;
 
   @override
@@ -42,7 +43,7 @@ class _AllChatScreenState extends State<AllChatScreen> {
           chatsDetailsModel = state.chatsDetailsModel;
           if (chatsDetailsModel != null &&
               chatsDetailsModel!.data != null &&
-              chatsDetailsModel!.data!.chats!.length > 0)
+              chatsDetailsModel!.data!.chats!.length >= 0)
             return PopScope(
               canPop: true,
               onPopInvoked: (bool didPop) async {
@@ -64,7 +65,7 @@ class _AllChatScreenState extends State<AllChatScreen> {
                       )),
                   backgroundColor: Colors.black,
                 ),
-                body: Container(
+                body: chatsDetailsModel!.data!.chats!.length > 0?Container(
                   height: MediaQuery.of(context).size.height,
                   color: Color.fromRGBO(0, 0, 0, .95),
                   child: ListView.builder(
@@ -82,10 +83,10 @@ class _AllChatScreenState extends State<AllChatScreen> {
                                               name: chatsDetailsModel!
                                                   .data!.chats![index]!
                                                   .userName!,
-                                              previousScreen: "AllChatScreen",
+                                              previousScreen: "AllEndedChatScreen",
                                               deactivate_on: chatsDetailsModel!
                                                   .data!.chats![index]!
-                                                  .deactivateOn!,
+                                                  .deactivateOn,
                                           )));
                               BlocProvider.of<ChatBloc>(context).add(
                                   GetPersonalChatEvent(
@@ -108,6 +109,56 @@ class _AllChatScreenState extends State<AllChatScreen> {
                                   .updatedOn,
                             ));;
                       }),
+                ): Stack(
+                  alignment: Alignment.topCenter,
+                  children: [
+                    Container(
+                      height: MediaQuery
+                          .of(context)
+                          .size
+                          .height,
+                      color: Colors.black,
+                      child: InkWell(
+                        onTap: () {
+                        },
+                        child: Center(
+                          child: Text(StringConstant.noInactiveChats,
+                            style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500
+                            ),),
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) =>
+                                AllEndedChatScreen(
+                                )));
+                        BlocProvider.of<ChatBloc>(context).add(
+                            GetChatsEvent(0));
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: MediaQuery
+                            .of(context)
+                            .size
+                            .width,
+                        height: 50,
+                        color: Color.fromRGBO(255, 255, 17, .2),
+                        child: Text(
+                          "You Might have ${chatsDetailsModel!.data!
+                              .inactiveChats!} Unread Chat please check",
+                          style: TextStyle(
+                              color: Colors.white
+                          ),
+                        ),
+
+                      ),
+                    ),
+                  ],
                 ),
               ),
             );

@@ -6,15 +6,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:powerwhim/constant/color_constant.dart';
-
-
-import '../../../constant/service_api_constant.dart';
+import '../../../constant/string_constant.dart';
 
 class AddPhotosProfile extends StatefulWidget {
-  const AddPhotosProfile({super.key, required this.getProfile, this.imagesCurrent, this.previousImages});
+  const AddPhotosProfile({super.key, required this.getProfile, this.imagesCurrent, this.previousImages, this.oldProfile});
   final Function(List<File>,List<String>) getProfile;
   final List<String> ? imagesCurrent;
   final List<String> ? previousImages;
+  final bool ? oldProfile;
 
 
   @override
@@ -28,14 +27,18 @@ class _AddPhotosProfileState extends State<AddPhotosProfile> {
   List<String> previousImageList =[];
   @override
   void initState() {
-    if(widget.previousImages!=null)
-      previousImageList = widget.previousImages!;
+    if(widget.previousImages!=null&&widget.oldProfile==true) {
+      previousImageList =[...widget.previousImages!];
+      print("size is this" + widget.previousImages!.length.toString());
+    }
     super.initState();
   }
 
 
   @override
   Widget build(BuildContext context) {
+    print("size is thisww" + previousImageList.length.toString());
+
     return Column(
       children: [
         Container(
@@ -43,7 +46,7 @@ class _AddPhotosProfileState extends State<AddPhotosProfile> {
           child: Row(
             children: [
               Text(
-                "Upload Photos",
+                StringConstant.uploadPhotos,
                 style: GoogleFonts.poppins(
                     textStyle: TextStyle(
                   color: Colors.white,
@@ -57,7 +60,7 @@ class _AddPhotosProfileState extends State<AddPhotosProfile> {
                   openImagePicker();
                 },
                 child: Text(
-                  "+Add Photos",
+                  StringConstant.addPhotos,
                   style: GoogleFonts.poppins(
                       textStyle: TextStyle(
                     color: themeColorLight,
@@ -92,7 +95,7 @@ class _AddPhotosProfileState extends State<AddPhotosProfile> {
                         else{
                           previousImageList.removeAt(index);
                         }
-                        widget.getProfile(imagesCurrent,previousImageList);
+                        widget.getProfile([...imagesCurrent],[...previousImageList]);
                       });
                   },
                     child: Container(
@@ -141,7 +144,7 @@ class _AddPhotosProfileState extends State<AddPhotosProfile> {
         file = File(result.files.single.path!);
         setState(() {
           imagesCurrent.add(file!);
-          widget.getProfile(imagesCurrent,previousImageList);
+          widget.getProfile([...imagesCurrent],[...previousImageList]);
         });
       });
     } else {}

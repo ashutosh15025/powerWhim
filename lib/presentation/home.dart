@@ -7,13 +7,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:molten_navigationbar_flutter/molten_navigationbar_flutter.dart';
 import 'package:powerwhim/constant/service_api_constant.dart';
 import 'package:powerwhim/presentation/bloc/chatbloc/chat_bloc.dart';
-import 'package:powerwhim/presentation/bloc/profilebloc/profilebloc_bloc.dart';
 import 'package:powerwhim/presentation/screens/chat_screen/chat_screen.dart';
 import 'package:powerwhim/presentation/screens/friend_screen.dart';
 import 'package:powerwhim/presentation/screens/help_screen.dart';
 import 'package:powerwhim/presentation/screens/my_profile_widget.dart';
 import 'package:powerwhim/presentation/screens/view_profile_screen.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../data/model/chats/chats_details_model.dart';
 
@@ -64,6 +62,7 @@ class _HomeState extends State<Home> {
     return  Scaffold(
           resizeToAvoidBottomInset : false,
           extendBody: true,
+          backgroundColor: Colors.black,
           appBar: AppBar(
             backgroundColor: Colors.black,
             title: Center(

@@ -10,7 +10,7 @@ class SelectedDropItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Text(
-        "${title} ashes",
+        "${title}",
         style: GoogleFonts.baloo2(
           textStyle: TextStyle(
             fontWeight: FontWeight.w200,

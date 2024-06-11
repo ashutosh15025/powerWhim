@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:powerwhim/constant/service_api_constant.dart';
+import 'package:powerwhim/constant/string_constant.dart';
 import 'package:powerwhim/data/model/chats/chats_details_model.dart';
 import 'package:powerwhim/data/model/chats/friends_model.dart';
 import 'package:powerwhim/data/model/chats/personal_chat_model.dart';
@@ -17,8 +18,8 @@ part 'chat_event.dart';
 part 'chat_state.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
-
   List<Message> personalChatList = [];
+
   ChatBloc() : super(ChatInitial()) {
     on<ChatEvent>((event, emit) {});
     on<GetChatsEvent>(onGetChatsSuccessEvent);
@@ -34,164 +35,128 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       GetChatsEvent event, Emitter<ChatState> emit) async {
     emit(LoadingState());
 
-    var apiResult = await locator.get<ChatsFriendsUsecase>().getChats(USER_ID!,event.activeStatus);
-    print(apiResult);
-    print("hit chat api");
+    var apiResult = await locator
+        .get<ChatsFriendsUsecase>()
+        .getChats(USER_ID!, event.activeStatus);
     try {
       if (apiResult.response.statusCode == HttpStatus.ok) {
         if (apiResult.data != null &&
             apiResult.data.data != null &&
-            apiResult.data.data!.status=="success") {
-          print("success chat sucess");
-            emit(GetChatsSuccessState(apiResult.data!));
-        } else{
-          print("not ok");
-          emit(ErrorState(ERROR));}
+            apiResult.data.data!.status == StringConstant.successState) {
+          emit(GetChatsSuccessState(apiResult.data!));
+        } else {
+          emit(ErrorState(ERROR));
+        }
       }
     } catch (e) {
-      print("not ok");
       emit(ErrorState(ERROR));
     }
   }
 
   void onGetPersonalChatEvent(
       GetPersonalChatEvent event, Emitter<ChatState> emit) async {
+    if (event.scroll != null) emit(LoadingState());
 
-    if(event.scroll!=null)
-    emit(LoadingState());
-    print(event.page);
-    var apiResult = await locator.get<ChatsFriendsUsecase>().getPersonalChat(event.chatId,event.page,USER_ID!);
-    print(apiResult);
-    print("get personal chat event");
+    var apiResult = await locator
+        .get<ChatsFriendsUsecase>()
+        .getPersonalChat(event.chatId, event.page, USER_ID!);
     try {
       if (apiResult.response.statusCode == HttpStatus.ok) {
-        if (apiResult.data != null &&
-            apiResult.data.data != null) {
-          for(int i=0 ;i<apiResult.data.data!.messages!.length;i++ ){
-            print(apiResult.data.data!.messages![i].createdOn);
-          }
-          print("--------------------------------------------------------------------------------------");
+        if (apiResult.data != null && apiResult.data.data != null) {
           emit(GetPersonalChatSuccessState(apiResult.data));
-        } else{
-          print("not ok");
-          emit(ErrorState(ERROR));}
+        } else {
+          emit(ErrorState(ERROR));
+        }
       }
     } catch (e) {
-      print("not ok");
       emit(ErrorState(ERROR));
     }
   }
 
-
-
-  void onSetSocketEvent(SetSocketEvent event , Emitter<ChatState> emit) async{
-    print("set sockrt");
-
-    print(USER_ID.toString());
-    var apiResult = await locator.get<ChatsFriendsUsecase>().setSocketId(event.socketId,USER_ID!);
-    print(apiResult);
-    print("hit socket");
+  void onSetSocketEvent(SetSocketEvent event, Emitter<ChatState> emit) async {
+    var apiResult = await locator
+        .get<ChatsFriendsUsecase>()
+        .setSocketId(event.socketId, USER_ID!);
     print(event.socketId);
     try {
       if (apiResult.response.statusCode == HttpStatus.ok) {
         if (apiResult.data != null &&
             apiResult.data.data != null &&
-            apiResult.data.data!.status=="success") {
+            apiResult.data.data!.status == StringConstant.successState) {
           print("set sockrt sucesssss");
-
-
-        } else{
-          print("kuch or error"+apiResult.data!.data!.mssg.toString());
-          emit(ErrorState(ERROR));}
-      }
-    } catch (e) {
-      print("not ok");
-      emit(ErrorState(ERROR));
-    }
-  }
-  
-  
-  void onSetChatEvent(SetChatEvent event, Emitter<ChatState> emit) async{
-    var apiResult = await locator.get<ChatsFriendsUsecase>().setChats(event.fromUserId, event.toUserId);
-    print(apiResult);
-    print("hit socket");
-    try {
-      if (apiResult.response.statusCode == HttpStatus.ok) {
-        if (apiResult.data != null &&
-            apiResult.data.data != null &&
-            apiResult.data.data!.status=="success") {
-          print(apiResult.data.data!.chatId);
-          emit(SetChatsSuccessState(apiResult.data.data!.mssg!, apiResult.data.data!.chatId!,apiResult.data.data!.deactivateOn));
+        } else {
+          emit(ErrorState(ERROR));
         }
-      else{
-          print("kuch or error"+apiResult.data!.data!.mssg.toString());
-          emit(ErrorState(ERROR));}
       }
     } catch (e) {
-      print("not ok");
       emit(ErrorState(ERROR));
     }
   }
 
-
-  void onGetFriendsEvent(GetFriendsEvent event, Emitter<ChatState> emit) async{
-    var apiResult = await locator.get<ChatsFriendsUsecase>().getConnection(event.userId);
-    print(apiResult);
-    print("hit socket");
+  void onSetChatEvent(SetChatEvent event, Emitter<ChatState> emit) async {
+    var apiResult = await locator
+        .get<ChatsFriendsUsecase>()
+        .setChats(event.fromUserId, event.toUserId);
     try {
       if (apiResult.response.statusCode == HttpStatus.ok) {
         if (apiResult.data != null &&
             apiResult.data.data != null &&
-            apiResult.data.data!.status=="success") {
-          if(apiResult!.data!.data!.friends==null)
+            apiResult.data.data!.status == StringConstant.successState) {
+          emit(SetChatsSuccessState(apiResult.data.data!.mssg!,
+              apiResult.data.data!.chatId!, apiResult.data.data!.deactivateOn));
+        } else {
+          emit(ErrorState(ERROR));
+        }
+      }
+    } catch (e) {
+      emit(ErrorState(ERROR));
+    }
+  }
+
+  void onGetFriendsEvent(GetFriendsEvent event, Emitter<ChatState> emit) async {
+    var apiResult =
+        await locator.get<ChatsFriendsUsecase>().getConnection(event.userId);
+    try {
+      if (apiResult.response.statusCode == HttpStatus.ok) {
+        if (apiResult.data != null &&
+            apiResult.data.data != null &&
+            apiResult.data.data!.status == StringConstant.successState) {
+          if (apiResult!.data!.data!.friends == null)
             apiResult!.data!.data!.friends = [];
 
           emit(GetFriendsSuccessState(apiResult!.data!));
+        } else {
+          emit(ErrorState(ERROR));
         }
-        else{
-          print("kuch or error"+apiResult.data!.data!.mssg.toString());
-          emit(ErrorState(ERROR));}
       }
     } catch (e) {
-      print("not ok");
       emit(ErrorState(ERROR));
     }
   }
 
-
-  void onGetFullProfileEvent(GetFullProfileEvent event, Emitter<ChatState> emit) async{
-    print("view full profile");
-
-    var response = await locator.get<UserProfileUsecase>().getFullProfiles(event.userId,USER_ID!);
-    if(response.data!=null){
+  void onGetFullProfileEvent(
+      GetFullProfileEvent event, Emitter<ChatState> emit) async {
+    var response = await locator
+        .get<UserProfileUsecase>()
+        .getFullProfiles(event.userId, USER_ID!);
+    if (response.data != null) {
       emit(GetFullProfileSuccessState(response.data));
-    }
-    else{
-      print("can fetch profiles");
-    }
-  }
-
-
-
-
-  void onGetStartEndChat(GetStartEndChatsEvent event, Emitter<ChatState> emit) async{
-    print(event.chatId.toString() + "chatId");
-    var response = await locator.get<ChatsFriendsUsecase>().startEndChats(USER_ID!, event.chatId, event.deactivate_on);
-
-    if(response.data!.data!=null){
-      if(response.data.data!.status=="success"){
-        print(response.data.data!.mssg!+"this is the message success");
-      // emit(GetStartEndChatsState(response.data.data!.mssg!));
-      }
-      else{
-        print(response.data!.data!.mssg!);
-        // emit(ErrorState(response.data!.data!.mssg!+"this is the message"));
-      }
-
-    }
-    else{
-      print("can fetch profiles");
+    } else {
+      emit(ErrorState(StringConstant.errorProfile));
     }
   }
 
+  void onGetStartEndChat(
+      GetStartEndChatsEvent event, Emitter<ChatState> emit) async {
+    var response = await locator
+        .get<ChatsFriendsUsecase>()
+        .startEndChats(USER_ID!, event.chatId, event.deactivate_on);
+    if (response.data!.data != null) {
+      if (response.data.data!.status == StringConstant.successState) {
+        emit(GetStartEndChatsState(response.data.data!.mssg!));
+      } else {
+        emit(ErrorState(response.data!.data!.mssg!));
+      }
+    } else {}
+  }
 }

@@ -9,6 +9,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:powerwhim/constant/color_constant.dart';
 import 'package:powerwhim/constant/service_api_constant.dart';
+import 'package:powerwhim/constant/string_constant.dart';
 import 'package:powerwhim/data/model/chats/chats_details_model.dart';
 import 'package:powerwhim/data/model/chats/personal_chat_model.dart';
 import 'package:powerwhim/presentation/bloc/chatbloc/chat_bloc.dart';
@@ -25,11 +26,11 @@ import 'package:path/path.dart' as p;
 class PersonalChatScreen extends StatefulWidget {
   const PersonalChatScreen(
       {super.key,
-      required this.chatId,
-      required this.name,
-      this.previousScreen,
-      this.socketId,
-      this.deactivate_on});
+        required this.chatId,
+        required this.name,
+        this.previousScreen,
+        this.socketId,
+        this.deactivate_on});
 
   final String chatId;
   final String name;
@@ -51,6 +52,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
   String? image = "https://whim.ams3.digitaloceanspaces.com/whim/Testimage.jpg";
   String? uploaded_file_url;
   final TextEditingController _controller = new TextEditingController();
+  final focusInput = FocusNode();
 
   int pageCount = 0;
 
@@ -61,8 +63,6 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
   bool imageLoader = false;
 
   DateTime? deactivate_on;
-
-  bool textFeildEnable = false;
 
   bool errorWidgetVisibility = false;
 
@@ -85,14 +85,15 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
   }
 
   initSocket() {
-    print("in init ");
     socketP = IO.io(BASE_URL, <String, dynamic>{
       'autoConnect': false,
       'transports': ['websocket'],
     });
     socketP?.connect();
     socketP?.onConnect((_) {
-      setState(() {});
+      setState(() {
+        print("connection");
+      });
     });
     socketP!.on('message', (data) {
       // Listen for the 'message' event
@@ -126,11 +127,6 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (socketP != null && socketP!.id != null) {
-      BlocProvider.of<ChatBloc>(context).add(SetSocketEvent(socketP!.id!));
-    }
-    FocusScope.of(context).unfocus();
-
 
     return BlocConsumer<ChatBloc, ChatState>(
       listener: (context, state) {},
@@ -148,20 +144,20 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
               },
             ),
           );
-        }
-        else if (state is GetStartEndChatsState){
-          if(state.mssg == "Chat Activated"){
-            print("activated Chat");
-            deactivate_on = null;}
-          else if(state.mssg == "Chat Deactivated"){
+        } else if (state is GetStartEndChatsState) {
+          if (state.mssg == "Chat Activated") {
+            deactivate_on = null;
+          } else if (state.mssg == "Chat Deactivated") {
             deactivate_on = DateTime.now();
           }
-          BlocProvider.of<ChatBloc>(context).add(
-              GetPersonalChatEvent(chatId: widget.chatId, page: 0));
-          return  CustomCircularLoadingBar();
-        }
-        else if (state is GetPersonalChatSuccessState) {
+          BlocProvider.of<ChatBloc>(context)
+              .add(GetPersonalChatEvent(chatId: widget.chatId, page: 0));
+          return CustomCircularLoadingBar();
+        } else if (state is GetPersonalChatSuccessState) {
+          print("GetPersonalChatSuccessState");
           scrollLoaderVisibility = false;
+          if(socketP!.id!=null)
+          BlocProvider.of<ChatBloc>(context).add(SetSocketEvent(socketP!.id!));
           listItem = state.personalChatModel.data!.messages!;
           return PopScope(
             canPop: true,
@@ -169,95 +165,94 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
               if (widget.socketId != null)
                 BlocProvider.of<ChatBloc>(context)
                     .add(SetSocketEvent(widget.socketId!));
-
               emitActiveTime(widget.chatId);
               if (widget.previousScreen == "FriendsScreen") {
                 BlocProvider.of<ChatBloc>(context)
                     .add(GetFriendsEvent(USER_ID!));
               } else if (widget.previousScreen == "ChatScreen")
                 BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(1));
-              else if(widget.previousScreen == "AllChatScreen")
+              else if (widget.previousScreen == "AllEndedChatScreen")
                 BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(0));
-              print("popscope  wala");
-
             },
-            child: Scaffold(
-              key: _key,
-              drawer: Drawer(),
-              appBar: AppBar(
-                leading: new IconButton(
-                    icon: new Icon(Icons.arrow_back),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    }),
-                iconTheme: IconThemeData(
-                  color: Colors.white, //change your color here
-                ),
-                actions: [
-                  PopupMenuButton(
-                      itemBuilder: (context) => [
-                            PopupMenuItem(
-                              onTap: () {
-                                if (deactivate_on == null) {
-                                  setState(() {
-                                    endReasonWidget = !endReasonWidget;
-                                  });
+            child: GestureDetector(
+              onTap: (){
+                FocusScope.of(context).unfocus();
+              },
+              child: Scaffold(
+                key: _key,
+                drawer: Drawer(),
+                appBar: AppBar(
+                  leading: new IconButton(
+                      icon: new Icon(Icons.arrow_back),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      }),
+                  iconTheme: IconThemeData(
+                    color: Colors.white, //change your color here
+                  ),
+                  actions: [
+                    PopupMenuButton(
+                        itemBuilder: (context) => [
+                          PopupMenuItem(
+                            onTap: () {
+                              focusInput.unfocus();
+                              if (deactivate_on == null) {
+                                setState(() {
+                                  onPressChatEndCancelWidget();
+                                });
+
+                              } else {
+                                if (state.personalChatModel.data
+                                    ?.activeChats ==
+                                    true) {
+                                  deactivate_on = null;
+                                  BlocProvider.of<ChatBloc>(context).add(
+                                      GetStartEndChatsEvent(
+                                          USER_ID!, widget.chatId, 0));
                                 } else {
-                                  print("activate");
-                                  if(state.personalChatModel.data?.activeChats == true) {
-                                    deactivate_on = null;
-                                    BlocProvider.of<ChatBloc>(context).add(
-                                        GetStartEndChatsEvent(
-                                            USER_ID!, widget.chatId, 0));
-                                  }
-                                  else{
-                                    setState(() {
-                                      errorWidgetVisibility = !errorWidgetVisibility;
-                                    });
-                                  }
+                                  setState(() {
+                                    errorWidgetVisibility =
+                                    !errorWidgetVisibility;
+                                  });
                                 }
-                              },
-                              child: deactivate_on == null
-                                  ? Center(
-                                      child: Text(
-                                      "End Chat",
-                                      style: GoogleFonts.poppins(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 16),
-                                    ))
-                                  : Center(
-                                      child: Text(
-                                      "Start Chat",
-                                      style: GoogleFonts.poppins(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 16),
-                                    )),
-                            )
-                          ])
-                ],
-                centerTitle: true,
-                title: Text(
-                  widget.name,
-                  style: GoogleFonts.baloo2(
-                      textStyle: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 20,
-                          color: Colors.white)),
+                              }
+                            },
+                            child: deactivate_on == null
+                                ? Center(
+                                child: Text(
+                                  "End Chat",
+                                  style: GoogleFonts.poppins(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 16),
+                                ))
+                                : Center(
+                                child: Text(
+                                  "Start Chat",
+                                  style: GoogleFonts.poppins(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 16),
+                                )),
+                          )
+                        ])
+                  ],
+                  centerTitle: true,
+                  title: Text(
+                    widget.name,
+                    style: GoogleFonts.baloo2(
+                        textStyle: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 20,
+                            color: Colors.white)),
+                  ),
+                  backgroundColor: Colors.black,
                 ),
-                backgroundColor: Colors.black,
-              ),
-              body: GestureDetector(
-                onTap: () {
-                  FocusScope.of(context).unfocus();
-                },
-                child: Container(
+                body: Container(
                   height: MediaQuery.of(context).size.height,
                   color: Color.fromRGBO(0, 0, 0, .9),
-                  child: Stack(
-                    children: [
-                      Expanded(
+                  child: Column(children: [
+                    Expanded(
                       child: SingleChildScrollView(
                         reverse: true,
                         child: Stack(children: [
@@ -311,7 +306,8 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                         );
                                       } else {
                                         return Container(
-                                          margin: EdgeInsets.fromLTRB(16, 16, 16, 0),
+                                          margin: EdgeInsets.fromLTRB(
+                                              16, 16, 16, 0),
                                           padding: EdgeInsets.all(8),
                                           constraints: BoxConstraints(
                                             maxWidth: 500,
@@ -320,7 +316,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                               color: Color.fromRGBO(
                                                   218, 202, 58, .1),
                                               borderRadius:
-                                                  BorderRadius.circular(16)),
+                                              BorderRadius.circular(16)),
                                           alignment: Alignment.center,
                                           child: Text(
                                             listItem[index]!
@@ -343,31 +339,31 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                     file == null
                                         ? SizedBox.shrink()
                                         : InkWell(
-                                            child: Icon(Icons.cancel_outlined,
-                                                color: Colors.white),
-                                            onTap: () async {
-                                              setState(() {
-                                                file!.delete();
-                                                file = null;
-                                              });
-                                            },
-                                          ),
+                                      child: Icon(Icons.cancel_outlined,
+                                          color: Colors.white),
+                                      onTap: () async {
+                                        setState(() {
+                                          file!.delete();
+                                          file = null;
+                                        });
+                                      },
+                                    ),
                                     file == null
                                         ? SizedBox.shrink()
                                         : Container(
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            child: Image.file(
-                                              file!,
-                                              height: 200,
-                                            ),
-                                          ),
+                                      width: MediaQuery.of(context)
+                                          .size
+                                          .width,
+                                      child: Image.file(
+                                        file!,
+                                        height: 200,
+                                      ),
+                                    ),
                                     Visibility(
                                       visible: imageLoader,
                                       child: Container(
                                         width:
-                                            MediaQuery.of(context).size.width,
+                                        MediaQuery.of(context).size.width,
                                         alignment: Alignment.center,
                                         child: Text(
                                           "sending...",
@@ -378,6 +374,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                       ),
                                     ),
                                     TextField(
+                                      focusNode: focusInput,
                                       controller: _controller,
                                       minLines: 1,
                                       maxLines: 3,
@@ -399,7 +396,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                         suffixIcon: InkWell(
                                           child: Icon(Icons.send),
                                           onTap: () async {
-                                            FocusScope.of(context).unfocus();
+
                                             if (disableSendbutton == false &&
                                                 deactivate_on == null) {
                                               disableSendbutton = true;
@@ -409,9 +406,9 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                                   imageLoader = true;
                                                   socketP?.emit("message", {
                                                     "message_text":
-                                                        "$inputValue",
+                                                    "$inputValue",
                                                     "chat_id":
-                                                        "${widget.chatId}",
+                                                    "${widget.chatId}",
                                                     "user_id": "$USER_ID"
                                                   });
                                                 } else {
@@ -421,12 +418,12 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                                   await uploadfile();
                                                   socketP?.emit("message", {
                                                     "message_text":
-                                                        "$inputValue",
+                                                    "$inputValue",
                                                     "chat_id":
-                                                        "${widget.chatId}",
+                                                    "${widget.chatId}",
                                                     "user_id": "$USER_ID",
                                                     "image":
-                                                        "$uploaded_file_url"
+                                                    "$uploaded_file_url"
                                                   });
                                                   await file!.delete();
                                                   file = null;
@@ -437,24 +434,21 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                                 });
                                                 await uploadfile();
                                                 socketP?.emit("message", {
-                                                  "chat_id":
-                                                      "${widget.chatId}",
+                                                  "chat_id": "${widget.chatId}",
                                                   "user_id": "$USER_ID",
-                                                  "image":
-                                                      "$uploaded_file_url"
+                                                  "image": "$uploaded_file_url"
                                                 });
                                                 inputValue = null;
                                                 await file!.delete();
                                                 file = null;
                                               }
                                               disableSendbutton = false;
-                                            } else if (deactivate_on !=
-                                                null) {
+                                            } else if (deactivate_on != null) {
                                               setState(() {
                                                 errorWidgetVisibility =
-                                                    !errorWidgetVisibility;
-                                                FocusScope.of(context).unfocus();
-
+                                                !errorWidgetVisibility;
+                                                FocusScope.of(context)
+                                                    .unfocus();
                                               });
                                             }
                                             _controller.clear();
@@ -465,13 +459,13 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                         fillColor: Colors.white,
                                         enabledBorder: OutlineInputBorder(
                                             borderRadius:
-                                                BorderRadius.circular(30),
+                                            BorderRadius.circular(30),
                                             borderSide: BorderSide(
                                                 color: Colors.yellow,
                                                 width: 1)),
                                         focusedBorder: OutlineInputBorder(
                                             borderRadius:
-                                                BorderRadius.circular(30),
+                                            BorderRadius.circular(30),
                                             borderSide: BorderSide(
                                                 color: Colors.yellow,
                                                 width: 1)),
@@ -501,102 +495,103 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                             ),
                             visible: scrollLoaderVisibility,
                           ),
+                          Visibility(
+                              visible: errorWidgetVisibility,
+                              child: Container(
+                                height: MediaQuery.of(context).size.height -
+                                    MediaQuery.of(context).size.height / 4,
+                                child: CustomErrorWidget(
+                                  error: true,
+                                  mssg:StringConstant.chatIsdiable,
+                                  closeErrorWidget: closeErrorWidget,
+                                ),
+                              )),
+                          Visibility(
+                              visible: endReasonWidget,
+                              child: Container(
+                                color: Color.fromRGBO(255, 255, 255, .3),
+                                height: MediaQuery.of(context).size.height -
+                                    MediaQuery.of(context).size.height / 5,
+                                child: Center(
+                                  child: Container(
+                                    padding: EdgeInsets.all(8),
+                                    constraints: BoxConstraints(
+                                      maxHeight: MediaQuery.of(context)
+                                          .size
+                                          .height/2
+                                    ),
+                                    width: MediaQuery.of(context).size.width -
+                                        MediaQuery.of(context).size.width / 4,
+                                    decoration: BoxDecoration(
+                                      color: Color.fromRGBO(0, 0, 0, 1),
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    child: ListView.builder(
+                                      itemBuilder: (context, i) {
+                                        if (i == 0)
+                                          return Container(
+                                            padding: EdgeInsets.all(8),
+                                            alignment: Alignment.centerRight,
+                                            child: IconButton(
+                                              icon:
+                                              Icon(Icons.cancel_rounded),
+                                              color: Colors.white,
+                                              onPressed: () {
+                                                onPressChatEndCancelWidget();
+                                              },
+                                            ),
+                                          );
+                                        else
+                                          return Container(
+                                            alignment: Alignment.center,
+                                            child: InkWell(
+                                              onTap: () {
+                                                socketP?.emit("message", {
+                                                  "chat_id":
+                                                  "${widget.chatId}",
+                                                  "message_text":
+                                                  "${CHATENDREASON[i-1]}"
+                                                });
+                                                print(widget.chatId!+"chat id to deactivate");
+                                                BlocProvider.of<ChatBloc>(
+                                                    context)
+                                                    .add(
+                                                    GetStartEndChatsEvent(
+                                                        USER_ID!,
+                                                        widget.chatId,
+                                                        1));
+                                                deactivate_on = DateTime.now();
+                                                onPressChatEndCancelWidget();
+                                              },
+                                              child: Container(
+                                                margin: EdgeInsets.fromLTRB(
+                                                    2, 2, 2, 2),
+                                                alignment: Alignment.center,
+                                                padding: EdgeInsets.all(16),
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                color: Color.fromRGBO(
+                                                    218, 202, 58, .2),
+                                                child: Text(
+                                                  CHATENDREASON[i - 1],
+                                                  style: GoogleFonts.poppins(
+                                                      fontSize: 12,
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                      },
+                                      itemCount: CHATENDREASON.length + 1,
+                                    ),
+                                  ),
+                                ),
+                              ))
                         ]),
                       ),
-                    ), Visibility(
-                          visible: errorWidgetVisibility,
-                          child: Container(
-                            height: MediaQuery.of(context).size.height -
-                                MediaQuery.of(context).size.height / 4,
-                            child: CustomErrorWidget(
-                              error: true,
-                              mssg:
-                              "This chat is diable to chat first activate this chat",
-                              closeErrorWidget: closeErrorWidget,
-                            ),
-                          )),
-                      Visibility(
-                          visible: endReasonWidget,
-                          child: Container(
-                            color: Color.fromRGBO(0, 0, 0, .4),
-                            height: MediaQuery.of(context).size.height -
-                                MediaQuery.of(context).size.height / 5,
-                            child: Center(
-                              child: Container(
-                                height: MediaQuery.of(context)
-                                    .size
-                                    .height -
-                                    MediaQuery.of(context).size.height /
-                                        3,
-                                width: MediaQuery.of(context).size.width -
-                                    MediaQuery.of(context).size.width / 3,
-                                decoration: BoxDecoration(
-                                  color: Color.fromRGBO(0, 0, 0, 1),
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                child: ListView.builder(
-                                  itemBuilder: (context, i) {
-                                    if (i == 0)
-                                      return Container(
-                                        padding: EdgeInsets.all(8),
-                                        alignment: Alignment.centerRight,
-                                        child: IconButton(
-                                          icon:
-                                          Icon(Icons.cancel_rounded),
-                                          color: Colors.white,
-                                          onPressed: () {
-                                            onPressChatEndCancelWidget();
-                                          },
-                                        ),
-                                      );
-                                    else
-                                      return Container(
-                                        alignment: Alignment.center,
-                                        child: InkWell(
-                                          onTap: () {
-                                            socketP?.emit("message", {
-                                              "chat_id":
-                                              "${widget.chatId}",
-                                              "message_text":
-                                              "${CHATENDREASON[i-1]} ${USER_ID!}"
-                                            });
-                                            print(widget.chatId!+"chat id to deactivate");
-                                            BlocProvider.of<ChatBloc>(
-                                                context)
-                                                .add(
-                                                GetStartEndChatsEvent(
-                                                    USER_ID!,
-                                                    widget.chatId,
-                                                    1));
-                                            deactivate_on = DateTime.now();
-                                            endReasonWidget = !endReasonWidget;
-                                          },
-                                          child: Container(
-                                            margin: EdgeInsets.fromLTRB(
-                                                2, 2, 2, 2),
-                                            alignment: Alignment.center,
-                                            padding: EdgeInsets.all(16),
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            color: Color.fromRGBO(
-                                                218, 202, 58, .2),
-                                            child: Text(
-                                              CHATENDREASON[i - 1],
-                                              style: GoogleFonts.poppins(
-                                                  fontSize: 12,
-                                                  color: Colors.white),
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                  },
-                                  itemCount: CHATENDREASON.length + 1,
-                                ),
-                              ),
-                            ),
-                          ))]
-                  ),
+                    ),
+                  ]),
                 ),
               ),
             ),
@@ -691,6 +686,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
   void onPressChatEndCancelWidget() {
     setState(() {
       endReasonWidget = !endReasonWidget;
+      FocusScope.of(context).unfocus();
     });
   }
 }

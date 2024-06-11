@@ -8,6 +8,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:powerwhim/data/model/add_profile_model.dart';
 import 'package:powerwhim/presentation/bloc/authbloc/auth_bloc.dart';
+import 'package:powerwhim/presentation/bloc/profilebloc/profilebloc_bloc.dart';
 import 'package:powerwhim/presentation/screens/custom_profile/add_photos_profile.dart';
 import 'package:powerwhim/presentation/widget/custom_textarea/custom_textarea.dart';
 import 'package:powerwhim/presentation/widget/sliders/distance_slider.dart';
@@ -57,9 +58,12 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
   String? sports = null;
   bool loadingState = false;
   List<String> profiles = [];
+  List<String> oldprofiles = [];
+
+  bool oldProfile = true;
 
 
-  String start = "10";
+  String start = "18";
   String end = "28";
 
   List<File> imagesCurrent = [];
@@ -91,13 +95,13 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
     if(widget.ageRange!=null){
       start = widget.ageRange!.start.toString();
       end =  widget.ageRange!.end.toString();
-      print(start+end);
     }
     if(widget.distance!=null)
    distance = int.parse(widget.distance!);
     super.initState();
-    if(widget.profile!=null)
-    profiles = widget.profile!;
+    if(widget.profile!=null){
+      oldprofiles = widget.profile!;
+    profiles = widget.profile!;}
     if(widget.weeklyAvailability!=null){
       for(var i=0;i<widget.weeklyAvailability!.length;i++){
         if(widget.weeklyAvailability![i])
@@ -106,8 +110,6 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
           weekelyAvailability[i] = "0";
       }
      }
-
-    print("photsos length"+profiles.length.toString());
   }
 
 
@@ -118,31 +120,37 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
       listener: (context, state) {
         if(state is AddProfileSuccessState)
           {
-            print("add profile Sucess");
             loadingState = !loadingState;
             if(widget.name==null)
             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const Home()));
-            else
-              Navigator.of(context).pop();
+            else{
+              BlocProvider.of<ProfileblocBloc>(context).add(getMyFullProfileEvent(USER_ID!));
+              Navigator.of(context).pop();}
           }
         else{
           loadingState = !loadingState;
         }
       },
       builder: (context, state) {
+        if(state is AddProfileSuccessState){
+          return CircularProgressIndicator();
+        }
+        else{
         return Scaffold(
           resizeToAvoidBottomInset: false,
           extendBody: false,
           appBar: AppBar(
-            title: Center(
-              child: Text("Add Profile",
-                  style: GoogleFonts.baloo2(
-                    textStyle: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700),
-                  )),
+            iconTheme: IconThemeData(
+              color: Colors.white,
             ),
+            title: Text("Add Profile",
+                style: GoogleFonts.baloo2(
+                  textStyle: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700),
+                )),
+            centerTitle: true,
             backgroundColor: Colors.black,
           ),
           body: GestureDetector(
@@ -154,6 +162,9 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
                 Container(
                 padding: EdgeInsets.all(16),
                 height: MediaQuery.of(context).size.height - 0,
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                ),
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -215,15 +226,12 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
                         setText: setAccomplishment,
                         text: accomplishment,
                       ),
-                      AddPhotosProfile(getProfile:getProfileImage,previousImages: profiles,),
+                      AddPhotosProfile(getProfile:getProfileImage,previousImages: [...oldprofiles],oldProfile: oldProfile,),
                       Center(
                         child: InkWell(
                           onTap: () async{
                             sports = getListConcatElement(sportsList);
                             hobbies = getListConcatElement(hobbiesList);
-                            print(sports);
-                            print(hobbies);
-
                             if (name != null && DOB!=null && name!.isNotEmpty&& DOB!.isNotEmpty) {
                                     onSubmitAllFieldSuccess(context);
                             }
@@ -253,9 +261,6 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
                     ],
                   ),
                 ),
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                ),
               ),
                 Visibility(
                   visible: loadingState,
@@ -270,13 +275,13 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
             ),
           ),
         );
+        };
       },
     );
   }
 
   void setName(String value) {
     name = value;
-    print(name.toString()+"value");
     setState(() {
       errorName = null;
     });
@@ -318,18 +323,15 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
     for(int i=0;i<list.length;i++)
       {
         weekelyAvailability[i]=list[i].toString();
-        print(list[i].toString());
       }
   }
 
   void setSports(List<String> list) {
     sportsList = list;
-    print(sportsList.length);
   }
 
   void sethobbies(List<String> list) {
     hobbiesList = list;
-    print(hobbiesList.length);
   }
 
   String? getListConcatElement(List<String> list) {
@@ -347,9 +349,9 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
 
 
   void onSubmitAllFieldSuccess(BuildContext context)async{
-    print("submitcalled");
     BlocProvider.of<AuthBloc>(context).add(GetLoadingEvent());
     await uploadfile();
+    print("file uploaded");
     BlocProvider.of<AuthBloc>(context).add(
         AddProfileEvent(AddProfileModel(
             name: name,
@@ -364,9 +366,6 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
             USER_ID,
             profileImage: profiles,
             age: Age(start: start, end: end))));
-
-    print(profiles.length);
-
   }
 
 
@@ -377,6 +376,10 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
 
 
   Future<void> uploadfile() async {
+    setState(() {
+      oldProfile = false;
+    });
+    print("upload file");
     dospace.Spaces spaces = new dospace.Spaces(
       region: dotenv.env['REGION'],
       accessKey: dotenv.env['ACCESS_KEY'],
@@ -400,12 +403,9 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
             dospace.Permissions.public);
         var uploaded_file_url = USER_ID! + '/' + result1 + '/' + file_name;
         profiles.add(uploaded_file_url);
-        print(profiles.length.toString()+"this is final length");
       } catch (error) {
-        print(error);
       }
     }
-    print("uploadfile");
     await spaces.close();
 
   }

@@ -34,6 +34,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
   void initState() {
     if(widget.selectedItemString!=null){
       selectedItem = widget.selectedItemString!.split(',');
+      widget.selectedItemFun(selectedItem);
     }
     super.initState();
   }

@@ -39,10 +39,10 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    print(widget.fullProfilePScreenModel.fullProfileModel!.data!.visibility!.toString()+"visibility");
     return BlocListener<ChatBloc, ChatState>(
       listener: (context, state) {
         if (state is SetChatsSuccessState) {
+          print("yaha arrah h baar baar");
           Navigator.of(context).push(MaterialPageRoute(
               builder: (_) => PersonalChatScreen(
                     chatId: state.chatId,
@@ -51,9 +51,7 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
                 deactivate_on: state.deactivate_on,
                   )));
           BlocProvider.of<ChatBloc>(context)
-              .add(GetPersonalChatEvent(chatId:state.chatId,page: pageCount));
-          print(state.chatId);
-          print("message clicked");
+              .add(GetPersonalChatEvent(chatId:state.chatId,page: 0));
         }
         else if(state is ErrorState){
           setState(() {
@@ -61,11 +59,6 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
             errorMssg = state.mssg;
           });
       }
-        else if( state is GetStartEndChatsState){
-          BlocProvider.of<ChatBloc>(context).add(SetChatEvent(
-              USER_ID!,
-              fullprofile!.userId!));
-        }
       },
       child: PopScope(
         canPop: true,

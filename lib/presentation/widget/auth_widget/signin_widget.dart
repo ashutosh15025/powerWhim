@@ -51,7 +51,6 @@ class _SignInScreenState extends State<SignInScreen> {
               style: TextStyle(color: Colors.white),
               onChanged: (value){
                 userEmail = value;
-                print(userEmail);
               },
               decoration: InputDecoration(
                 fillColor: Colors.white,
@@ -74,7 +73,6 @@ class _SignInScreenState extends State<SignInScreen> {
               padding: const EdgeInsets.fromLTRB(0, 24, 0, 24),
               child: InkWell(
                  onTap: (){
-                   print(userEmail.toString());
                    if(userEmail!=null){
                    bloc.add(RegisterEvent(userEmail!,widget.forget));}
                  },

@@ -61,7 +61,7 @@ class _SetAgeRangeSliderState extends State<SetAgeRangeSlider> {
                       value.start.toInt();
                   indicatorRangeSliderThumbShape.end = value.end.toInt();
                   end = value.end;
-                  widget.setageRange(start.toString(),end.toString());
+                  widget.setageRange(start.toInt().toString(),end.toInt().toString());
                 }
               });
             },

@@ -4,7 +4,7 @@ import 'package:bloc/bloc.dart';
 
 import 'package:meta/meta.dart';
 import 'package:powerwhim/constant/service_api_constant.dart';
-import 'package:powerwhim/data/model/sport_hobbies_model.dart';
+import 'package:powerwhim/constant/string_constant.dart';
 
 import '../../../data/model/add_profile_model.dart';
 import '../../../data/usecase/account_managment_usecase.dart';
@@ -45,12 +45,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     var response = await locator
         .get<AccountManagmentUsecase>()
         .registerUser(email: event.email,forget: event.forget);
+
+
+    print(response.data.data!.status.toString() +"response");
+
     if (response.response.statusCode == HttpStatus.ok &&
         response.data.data != null &&
         response.data.data?.status != null) {
-      print(response.data.data!.status.toString() +
-          " " +
-          STATUS.success.toString());
 
       switch (response.data.data!.status) {
         case "success":
@@ -63,7 +64,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           emit(ApiFailedState(response.data.data!.mssg!));
       }
     } else {
-      print("ashes");
       emit(ApiFailedState(ERROR));
     }
   }
@@ -80,7 +80,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       switch (response.data.data!.status) {
         case "success":
           {
-            print(response.data.data!.mssg! + "success");
             emit(VerifyOTPSuccessState(response.data.data!.mssg!));
           }
         default:
@@ -98,42 +97,32 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           .get<AccountManagmentUsecase>()
           .loginUser(email: event.email, password: event.password);
 
-      print("login api respose");
       if (response.response.statusCode == HttpStatus.ok &&
           response.data.data != null &&
           response.data.data?.status != null) {
         switch (response.data.data!.status) {
           case "Success":
             {
-              print(response.data.data!.mssg!);
               USER_ID = response.data.data!.userId!;
-              print(response.data.data!.userId!+" user id");
-              print(USER_ID);
-
               emit(LoginSuccessState(response.data.data!.mssg!));
             }
           default:
-            emit(ApiFailedState(response.data.data!.mssg!));
+            emit(ApiFailedState(StringConstant.emailPassNotMatch));
         }
       } else {
-        emit(ApiFailedState("email password not match"));
+        emit(ApiFailedState(StringConstant.emailPassNotMatch));
       }
     } catch (e) {
-      emit(ApiFailedState(ERROR));
+      emit(ApiFailedState(StringConstant.emailPassNotMatch));
     }
   }
 
   void onCreatePasswordEvent(
       CreatePasswordEvent event, Emitter<AuthState> emit) async {
     emit(LoadingState());
-
-    print("create password clicked");
     var response = await locator
         .get<AccountManagmentUsecase>()
         .createPassword(userId: USER_ID!, password: event.password);
-    print(
-        "create password clicked + ${response.data.data!.status!.toString()}");
-
     if (response.response.statusCode == HttpStatus.ok &&
         response.data.data != null &&
         response.data.data?.status != null) {
@@ -183,11 +172,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       switch (response.data.data!.status) {
         case "success":
           {
-            print("sports");
             sportsList = response.data!.data!.list!;
             emit(GetSportsSuccessState(response.data!.data!.list!));
-            print(sportsList);
-
           }
         default:
           {
@@ -197,7 +183,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } else {
       emit(ApiFailedState(ERROR));
     }}catch(error){
-      print(error);
+      emit(ApiFailedState(ERROR));
     }
   }
 
@@ -212,9 +198,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           {
             hobbiesList = response.data!.data!.list!;
             emit(GetHobbiesSuccessState(response.data!.data!.list!));
-
-            print(hobbiesList);
-
           }
         default:
           {
@@ -236,15 +219,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         response.data.data?.status != null) {
       switch (response.data.data!.status) {
         case "success":
-          {   print(response.data.data!.mssg);
-              print("complet + run");
-              // emit(ApiFailedState("mssg"));
+          {
               emit(CompleteProfileState());
           }
         case "pending":
           {
-            print("pending");
-
+            print(StringConstant.successState);
             emit(PendingProfileState());
           }
         default:
