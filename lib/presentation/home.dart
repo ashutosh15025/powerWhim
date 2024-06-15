@@ -115,7 +115,7 @@ class _HomeState extends State<Home> {
                 MoltenTab(
                   icon: Icon(Icons.dashboard_rounded,
                     color:  _selectedIndex==1?Colors.white:Colors.blueGrey,),
-                    title: Text("Friends",
+                    title: Text("Networks",
                       style: GoogleFonts.poppins(
                           color: Colors.white,
                           fontSize: 16,
