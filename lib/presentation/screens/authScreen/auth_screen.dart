@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:powerwhim/constant/service_api_constant.dart';
@@ -9,6 +10,7 @@ import 'package:powerwhim/presentation/bloc/profilebloc/profilebloc_bloc.dart';
 import 'package:powerwhim/presentation/home.dart';
 import 'package:powerwhim/presentation/widget/error/custom_error_widget.dart';
 
+import '../../../domain/service/database/database_service.dart';
 import '../../widget/auth_widget/create_password_widget.dart';
 import '../../widget/auth_widget/login_widget.dart';
 import '../../widget/auth_widget/signin_widget.dart';
@@ -27,6 +29,7 @@ class _LoginScreenState extends State<AuthScreen> {
   bool showOTPPanel = false;
   bool showConfirmPasswordPanel = false;
 
+  final DatabaseService databaseService = DatabaseService.instance;
   String? authMessage;
 
   bool login = false;
@@ -56,7 +59,8 @@ class _LoginScreenState extends State<AuthScreen> {
           onPressVerifyPassword();
         }
         else if(state is LoginSuccessState){
-              navigateToHomePage();
+          databaseService.addDetails(USER_ID!);
+          navigateToHomePage();
         }
         else if (state is ApiFailedState ){
           errormsg = state.mssg;
@@ -87,82 +91,88 @@ class _LoginScreenState extends State<AuthScreen> {
           onTap: () {
             FocusScope.of(context).requestFocus(FocusNode());
           },
-          child: Scaffold(
-              backgroundColor: Colors.black,
-              body: Stack(children: [
-                SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Container(
-                        height:180,
-                        margin: EdgeInsets.fromLTRB(0, 120, 0, 10),
-                        child: CircleAvatar(
-                          backgroundImage: AssetImage('assets/icon/logo.png'),
-                          // Replace with your asset path
-                          radius: 90,
-                          backgroundColor: Colors.black,
+          child: PopScope(
+            canPop: false,
+            onPopInvoked: (pop){
+              SystemNavigator.pop();
+            },
+            child: Scaffold(
+                backgroundColor: Colors.black,
+                body: Stack(children: [
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Container(
+                          height:180,
+                          margin: EdgeInsets.fromLTRB(0, 120, 0, 10),
+                          child: CircleAvatar(
+                            backgroundImage: AssetImage('assets/icon/logo.png'),
+                            // Replace with your asset path
+                            radius: 90,
+                            backgroundColor: Colors.black,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            color: Colors.black,
+                          ),
                         ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          color: Colors.black,
+                        login?LoginWidget(signInLogin: onSignInLogIn):
+                        SignInScreen(
+                          onSignInLogIN: onSignInLogIn,
+                          forget: forgetPassword,
                         ),
-                      ),
-                      login?LoginWidget(signInLogin: onSignInLogIn):
-                      SignInScreen(
-                        onSignInLogIN: onSignInLogIn,
-                        forget: forgetPassword,
-                      ),
-                    ],
-                  ),
-                ),
-                Visibility(
-                  visible: showConfirmPasswordPanel,
-                  child: Container(
-                    color: Colors.black.withOpacity(0.5),
-                    child: CreatePasswordWidget(
-                      onPressCrossButton: onPressCrossPassword,
-                      onPressVerifyButton: onPressVerifyPassword,
+                      ],
                     ),
                   ),
-                ),
-                Visibility(
-                  visible: showOTPPanel,
-                  child: Container(
-                    color: Colors.black.withOpacity(0.5),
-                    child: VerifyOptWidget(
-                      onPressCrossButton: onPressCrossOTP,
-                      onPressVerifyButton: onPressVerifyOTP,
-                    ),
-                  ),
-                ),
-                Visibility(
-                    visible: false,
+                  Visibility(
+                    visible: showConfirmPasswordPanel,
                     child: Container(
-                      height: MediaQuery.of(context).size.height,
-                      color: Color.fromRGBO(1, 1, 1, 0.4),
-                      child: Center(child: CircularProgressIndicator(
-                        color: Colors.yellow,
+                      color: Colors.black.withOpacity(0.5),
+                      child: CreatePasswordWidget(
+                        onPressCrossButton: onPressCrossPassword,
+                        onPressVerifyButton: onPressVerifyPassword,
+                      ),
+                    ),
+                  ),
+                  Visibility(
+                    visible: showOTPPanel,
+                    child: Container(
+                      color: Colors.black.withOpacity(0.5),
+                      child: VerifyOptWidget(
+                        onPressCrossButton: onPressCrossOTP,
+                        onPressVerifyButton: onPressVerifyOTP,
+                      ),
+                    ),
+                  ),
+                  Visibility(
+                      visible: false,
+                      child: Container(
+                        height: MediaQuery.of(context).size.height,
+                        color: Color.fromRGBO(1, 1, 1, 0.4),
+                        child: Center(child: CircularProgressIndicator(
+                          color: Colors.yellow,
+                        )),
                       )),
-                    )),
-                Visibility(
-                    visible: showErrorWidget,
-                    child: CustomErrorWidget(mssg: errormsg,error: true, closeErrorWidget: () {
-                      setState(() {
-                        showErrorWidget = !showErrorWidget;
-                      });
-                    },)),
-                Visibility(
-                    visible: loaderVisibility,
-                    child: Container(
-                      height: MediaQuery.of(context).size.height,
-                      color: Color.fromRGBO(0,0,0,.4),
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.yellowAccent,
+                  Visibility(
+                      visible: showErrorWidget,
+                      child: CustomErrorWidget(mssg: errormsg,error: true, closeErrorWidget: () {
+                        setState(() {
+                          showErrorWidget = !showErrorWidget;
+                        });
+                      },)),
+                  Visibility(
+                      visible: loaderVisibility,
+                      child: Container(
+                        height: MediaQuery.of(context).size.height,
+                        color: Color.fromRGBO(0,0,0,.4),
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.yellowAccent,
+                          ),
                         ),
-                      ),
-                    ))
-              ])),
+                      ))
+                ])),
+          ),
         );
       },
     );

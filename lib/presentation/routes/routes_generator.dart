@@ -21,7 +21,9 @@ class RouteGenerator {
 
 
       case "/home":
-        return MaterialPageRoute(builder: (_) => const Home());
+        return MaterialPageRoute(
+          builder: (_) => const Home(),
+        );
       case "/profile":
         var data = settings.arguments as FullProfilePriviousScreen;
           return MaterialPageRoute(builder: (_) =>  OtherProfileScreen(fullProfilePScreenModel: data));

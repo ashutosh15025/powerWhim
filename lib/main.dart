@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:powerwhim/constant/service_api_constant.dart';
+import 'package:powerwhim/domain/service/database/database_service.dart';
 import 'package:powerwhim/presentation/bloc/authbloc/auth_bloc.dart';
 import 'package:powerwhim/presentation/bloc/chatbloc/chat_bloc.dart';
 import 'package:powerwhim/presentation/bloc/profilebloc/profilebloc_bloc.dart';
@@ -23,22 +25,22 @@ void main() async {
     DeviceOrientation.portraitDown
   ]);
   injectionDependencies();
+  final DatabaseService databaseService = DatabaseService.instance;
+  USER_ID = await databaseService.getDetail()!=null?await databaseService.getDetail():null;
+  print(USER_ID);
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-
-    return MultiBlocProvider(
+  Widget build(BuildContext context){
+    return MultiBlocProvider (
         providers: [
           BlocProvider<ProfileblocBloc>(create: (context) => ProfileblocBloc()),
           BlocProvider<ChatBloc>(create: (context) => ChatBloc()),
           BlocProvider<AuthBloc>(create: (context) => AuthBloc()),
-
         ],
       child: MaterialApp(
         theme: ThemeData(
@@ -46,7 +48,7 @@ class MyApp extends StatelessWidget {
             selectionHandleColor: Colors.transparent,
           ),
         ),
-      initialRoute: '/',
+      initialRoute: USER_ID==null?'/':'/home',
     onGenerateRoute: RouteGenerator.routeGenerate,
     ));
   }
