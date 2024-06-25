@@ -26,6 +26,7 @@ abstract class UserProfileService{
   @GET("api/user/profiles")
   Future<HttpResponse<ProfilesModel>> getProfiles(
       @Query("user_id")String userId,
+      @Query("search_string")String ? search
       );
 
 

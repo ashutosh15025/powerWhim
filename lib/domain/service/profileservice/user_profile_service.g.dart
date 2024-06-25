@@ -13,7 +13,7 @@ class _UserProfileService implements UserProfileService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'https://whim.cozytech.co.in/';
+    baseUrl ??= 'http://10.0.2.2:3000/';
   }
 
   final Dio _dio;
@@ -21,9 +21,16 @@ class _UserProfileService implements UserProfileService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<ProfilesModel>> getProfiles(String userId) async {
+  Future<HttpResponse<ProfilesModel>> getProfiles(
+    String userId,
+    String? search,
+  ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'user_id': userId};
+    final queryParameters = <String, dynamic>{
+      r'user_id': userId,
+      r'search_string': search,
+    };
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(

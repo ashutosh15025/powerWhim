@@ -172,7 +172,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       switch (response.data.data!.status) {
         case "success":
           {
-            sportsList = response.data!.data!.list!;
+            sportsList = [""]+ response.data!.data!.list!;
             emit(GetSportsSuccessState(response.data!.data!.list!));
           }
         default:
@@ -196,7 +196,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       switch (response.data.data!.status) {
         case "success":
           {
-            hobbiesList = response.data!.data!.list!;
+            hobbiesList = [""]+response.data!.data!.list!;
             emit(GetHobbiesSuccessState(response.data!.data!.list!));
           }
         default:

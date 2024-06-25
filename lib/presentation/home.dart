@@ -80,84 +80,83 @@ class _HomeState extends State<Home> {
           body: tabsArray[_selectedIndex],
           bottomNavigationBar: Container(
             color: Colors.transparent,
-            child: MoltenBottomNavigationBar(
-              selectedIndex: _selectedIndex,
-              onTabChange: (clickedIndex) {
-                setState(() {
-                  _selectedIndex = clickedIndex;
+            child: Container(
+              padding: const EdgeInsets.all(8.0),
+              color: Colors.black,
+              child: MoltenBottomNavigationBar(
+                selectedIndex: _selectedIndex,
+                onTabChange: (clickedIndex) {
+                  setState(() {
+                    _selectedIndex = clickedIndex;
 
-                  if(clickedIndex == 2){
-                  BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(1));
-                  }
-                  if(clickedIndex == 1){
-                    BlocProvider.of<ChatBloc>(context).add(GetFriendsEvent(USER_ID!));
-                  }
-
-
-                });
-              },
-              barColor: Colors.black12,
-              domeCircleColor:Colors.blueGrey,
-              tabs: [
-                MoltenTab(
-                  icon: Icon(Icons.home,
-                    color:  _selectedIndex==0?Colors.white:Colors.blueGrey,),
-                  title: Padding(
-                    padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                    child: Text("Home",
+                    if(clickedIndex == 2){
+                    BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(1));
+                    }
+                    if(clickedIndex == 1){
+                      BlocProvider.of<ChatBloc>(context).add(GetFriendsEvent(USER_ID!));
+                    }
+                  });
+                },
+                barColor: Colors.black12,
+                domeCircleColor:Colors.blueGrey,
+                tabs: [
+                  MoltenTab(
+                    icon: Icon(Icons.home,
+                      color:  _selectedIndex==0?Colors.white:Colors.blueGrey,),
+                    title: Text("Whim-span",
                       style: GoogleFonts.poppins(
                           color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500
-                      ),),
-                  )
-                ),
-                MoltenTab(
-                  icon: Icon(Icons.dashboard_rounded,
-                    color:  _selectedIndex==1?Colors.white:Colors.blueGrey,),
-                    title: Text("Networks",
-                      style: GoogleFonts.poppins(
-                          color: Colors.white,
-                          fontSize: 16,
+                          fontSize: 12,
                           fontWeight: FontWeight.w500
                       ),)
+                  ),
+                  MoltenTab(
+                    icon: Icon(Icons.dashboard_rounded,
+                      color:  _selectedIndex==1?Colors.white:Colors.blueGrey,),
+                      title: Text("Networks",
+                        style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500
+                        ),)
 
-                ),
-                MoltenTab(
-                  icon: Icon(Icons.chat,
-                    color:  _selectedIndex==2?Colors.white:Colors.blueGrey,),
-                    title: Text("Chats",
-                      style: GoogleFonts.poppins(
-                          color:  _selectedIndex==2?Colors.white:Colors.blueGrey,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500
-                      ),)
-                ),
-                MoltenTab(
-                  icon: Icon(Icons.supervised_user_circle_outlined,
-                    color:  _selectedIndex==3?Colors.white:Colors.blueGrey,),
-                    title: Text("Profile",
-                      style: GoogleFonts.poppins(
+                  ),
+                  MoltenTab(
+                    icon: Icon(Icons.chat,
+                      color:  _selectedIndex==2?Colors.white:Colors.blueGrey,),
+                      title: Text("Chats",
+                        style: GoogleFonts.poppins(
+                            color:  _selectedIndex==2?Colors.white:Colors.blueGrey,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500
+                        ),)
+                  ),
+                  MoltenTab(
+                    icon: Icon(Icons.supervised_user_circle_outlined,
+                      color:  _selectedIndex==3?Colors.white:Colors.blueGrey,),
+                      title: Text("Profile",
+                        style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500
+                        ),)
+                  ),
+                  MoltenTab(
+                    icon: Icon(Icons.headphones_rounded,
+                      color:  _selectedIndex==4?Colors.white:Colors.blueGrey,),
+                      title: Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
+                        child: Text("Help",
+                        style: GoogleFonts.poppins(
                           color: Colors.white,
-                          fontSize: 16,
+                          fontSize: 12,
                           fontWeight: FontWeight.w500
-                      ),)
-                ),
-                MoltenTab(
-                  icon: Icon(Icons.headphones_rounded,
-                    color:  _selectedIndex==4?Colors.white:Colors.blueGrey,),
-                    title: Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
-                      child: Text("Help",
-                      style: GoogleFonts.poppins(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500
-                      ),),
-                    )
+                        ),),
+                      )
 
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
           ),
 

@@ -50,32 +50,32 @@ class Data {
 
 class Profile {
   String? name;
-  dynamic sports;
-  dynamic hobbies;
+  DateTime? dateOfBirth;
+  String? sports;
+  String? hobbies;
   String? userId;
-  int? age;
 
   Profile({
     this.name,
+    this.dateOfBirth,
     this.sports,
     this.hobbies,
     this.userId,
-    this.age,
   });
 
   factory Profile.fromJson(Map<String, dynamic> json) => Profile(
     name: json["name"],
+    dateOfBirth: json["date_of_birth"] == null ? null : DateTime.parse(json["date_of_birth"]),
     sports: json["sports"],
     hobbies: json["hobbies"],
     userId: json["user_id"],
-    age: json["age"],
   );
 
   Map<String, dynamic> toJson() => {
     "name": name,
+    "date_of_birth": dateOfBirth?.toIso8601String(),
     "sports": sports,
     "hobbies": hobbies,
     "user_id": userId,
-    "age": age,
   };
 }

@@ -55,7 +55,7 @@ class Data {
 class Profile {
   String? name;
   int? age;
-  dynamic hobbies;
+  String? hobbies;
   String? sports;
   String? ambition;
   String? accomplishment;

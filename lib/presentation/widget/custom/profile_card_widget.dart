@@ -116,34 +116,14 @@ class _ProfileCardWidgetState extends State<ProfileCardWidget> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Container(
-                              margin:  EdgeInsets.fromLTRB(0, 6, 0, 6),
-                              padding:  EdgeInsets.fromLTRB(30, 6, 30, 6),
-                              constraints: BoxConstraints(
-                                minWidth: 100
+                            InkWell(
+                              onTap: (){
+                                print("api clicked");
+                                BlocProvider.of<ProfileblocBloc>(context).add(getFullProfileEvent(widget.userId!));},
+                              child: Icon(Icons.chevron_right_sharp,
+                                color: themeColor,
                               ),
-                              child: InkWell(
-                                onTap: (){
-                                   print("api clicked");
-                                  BlocProvider.of<ProfileblocBloc>(context).add(getFullProfileEvent(widget.userId!));
-                                },
-                                child: Text("View",
-                                style:  GoogleFonts.baloo2(
-                                  textStyle:TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600
-                                  )),),
-                              ),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  gradient: const LinearGradient(colors: [
-                                  themeColorSecond,
-                                  themeColor,
-                                  themeColorLight
-                                  ]),
-                                  )
-                              ),
+                            ),
                           ],
                         ),
 

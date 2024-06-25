@@ -65,12 +65,14 @@ class _VerifyOptWidgetState extends State<VerifyOptWidget> {
                 otp = output;
               },
             ),
+            Text("Resend OTP"),
             Container(
                 padding: EdgeInsets.all(24),
                 child: InkWell(
                    onTap: (){
                       if(otp!=null)
                         bloc.add(VerifyOTPsEvent(otp!));
+                        print(otp);
                    },
                     child: GradientButtonGreenYellow(buttonText: "Verify",)))
           ],

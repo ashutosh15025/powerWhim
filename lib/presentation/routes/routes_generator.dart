@@ -3,22 +3,14 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:powerwhim/constant/full_profile_privious_screen.dart';
-import 'package:powerwhim/data/model/profilemodel/full_profile.dart';
-import 'package:powerwhim/presentation/screens/add_profile_screen.dart';
 import 'package:powerwhim/presentation/screens/authScreen/auth_screen.dart';
-import 'package:powerwhim/presentation/screens/chat_screen/chat_screen.dart';
-import 'package:powerwhim/presentation/screens/chat_screen/personal_chat_screen.dart';
-import 'package:powerwhim/presentation/screens/my_profile_widget.dart';
 import 'package:powerwhim/presentation/screens/onboard_screen.dart';
-import 'package:powerwhim/presentation/screens/view_profile_screen.dart';
-import 'package:powerwhim/presentation/widget/message_widget/my_message_widget.dart';
 
 import '../home.dart';
 import '../screens/OthersProfileScreen.dart';
 
 class RouteGenerator {
   static Route<dynamic> routeGenerate(RouteSettings settings) {
-    // Argument comes to args and you can send it another page with casting
 
     switch (settings.name) {
       case "/":

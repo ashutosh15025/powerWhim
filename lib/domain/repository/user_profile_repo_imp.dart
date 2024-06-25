@@ -20,8 +20,8 @@ class UserProfileRepoImp extends UserProfileRepo{
   }
 
   @override
-  Future<HttpResponse<ProfilesModel>> getProfiles(String userId) {
-    return userProfileService.getProfiles(userId);
+  Future<HttpResponse<ProfilesModel>> getProfiles(String userId,String ? search) {
+    return userProfileService.getProfiles(userId,search);
   }
 
   @override

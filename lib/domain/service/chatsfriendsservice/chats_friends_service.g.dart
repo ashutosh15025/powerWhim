@@ -13,7 +13,7 @@ class _ChatsFriendsService implements ChatsFriendsService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'https://whim.cozytech.co.in/';
+    baseUrl ??= 'http://10.0.2.2:3000/';
   }
 
   final Dio _dio;

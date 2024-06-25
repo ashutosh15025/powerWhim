@@ -4,7 +4,10 @@ part of 'profilebloc_bloc.dart';
 sealed class ProfileblocEvent {}
 
 
-class getProfilesEvent extends ProfileblocEvent{}
+class getProfilesEvent extends ProfileblocEvent{
+  String ? searchValue = null;
+  getProfilesEvent(this.searchValue);
+}
 
 
 class getFullProfileEvent extends ProfileblocEvent{

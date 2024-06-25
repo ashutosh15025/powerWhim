@@ -55,7 +55,7 @@ class _SetAgeRangeSliderState extends State<SetAgeRangeSlider> {
             child: RangeSlider(values: RangeValues(start,end), onChanged: (value){
 
               setState(() {
-                if(value.end - value.start>10){
+                if(value.end - value.start>=0){
                   start = value.start;
                   indicatorRangeSliderThumbShape.start =
                       value.start.toInt();

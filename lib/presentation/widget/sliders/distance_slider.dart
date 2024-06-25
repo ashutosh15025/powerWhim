@@ -16,7 +16,7 @@ class DistanceSlider extends StatefulWidget {
 
 class _DistanceSliderState extends State<DistanceSlider> {
   int distance = 10;
-
+  bool notRelavent = false;
   @override
   void initState() {
     if(widget.distance!=null)
@@ -39,7 +39,16 @@ class _DistanceSliderState extends State<DistanceSlider> {
                     color: Colors.white),
               )),
         ),
-        SliderTheme(
+        notRelavent==true?Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text("Any Distance is Suitable",
+              style: GoogleFonts.baloo2(
+                textStyle: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                    color: Colors.grey),
+              )),
+        ):SliderTheme(
           data: SliderTheme.of(context).copyWith(
               thumbShape: CircleSliderThumbShape(
             radius: 12.0,
@@ -64,6 +73,27 @@ class _DistanceSliderState extends State<DistanceSlider> {
             ),
           ),
         ),
+        Row(
+          children: [
+            Checkbox(value: notRelavent, onChanged: (updateValue) {
+              setState(() {
+                notRelavent = updateValue!;
+              },
+              );
+            },
+              checkColor: Colors.white,
+              activeColor: Colors.green,),
+            Text("Not Relavant to me",
+              style: GoogleFonts.baloo2(
+                  textStyle: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: notRelavent ? Colors.white : Colors.grey
+                  )
+              ),)
+          ],
+        )
+
       ],
     );
   }
