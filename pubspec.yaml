@@ -55,6 +55,9 @@ dependencies:
   flutter_dotenv: ^5.1.0
   sqflite: ^2.3.3+1
   path: ^1.9.0
+  lottie: ^3.0.0
+  geolocator: ^12.0.0
+  geocoding: ^3.0.0
 
 
 dev_dependencies:
@@ -97,6 +100,7 @@ flutter:
     - assets/icon/logo.png
     - assets/icon/androidicon.png
     - .env
+    - animations/location.json
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

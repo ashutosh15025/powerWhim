@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:powerwhim/constant/service_api_constant.dart';
 import 'package:powerwhim/constant/string_constant.dart';
 import 'package:powerwhim/presentation/bloc/authbloc/auth_bloc.dart';
-import 'package:powerwhim/presentation/bloc/profilebloc/profilebloc_bloc.dart';
 import 'package:powerwhim/presentation/home.dart';
 import 'package:powerwhim/presentation/widget/error/custom_error_widget.dart';
 
@@ -46,6 +45,8 @@ class _LoginScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if(USER_ID!=null)
+    BlocProvider.of<AuthBloc>(context).add(GetCheckProfileEvent());
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthRegistorSuccessState) {

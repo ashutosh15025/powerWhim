@@ -19,11 +19,12 @@ class ProfileblocBloc extends Bloc<ProfileblocEvent, ProfileblocState> {
     on<getHelpEvent>(ongetHelpEvent);
     on<getFullProfileEvent>(ongetFullProfileEvent);
     on<getMyFullProfileEvent>(ongetMyFullProfileEvent);
+    on<setUpMyLocationEvent>(onsetUpMyLocationEvent);
 
   }
 
   void ongetProfilesEvent(getProfilesEvent event,Emitter<ProfileblocState>emit)async{
-    var response = await locator.get<UserProfileUsecase>().getProfiles(USER_ID!,event.searchValue);
+    var response = await locator.get<UserProfileUsecase>().getProfiles(USER_ID!,event.searchValue,event.page);
     if(response.data.data!=null && response.data.data!.profiles!=null && response.data.data!.profiles!.length>0 ){
       emit(getProfilesSuccessState(response.data));
     }
@@ -78,6 +79,21 @@ class ProfileblocBloc extends Bloc<ProfileblocEvent, ProfileblocState> {
     }
     else{
       emit(getHelpFailedState(StringConstant.somethingWentWrong));
+    }
+  }
+
+
+  void onsetUpMyLocationEvent(setUpMyLocationEvent event,Emitter<ProfileblocState>emit) async{
+    var response = await locator.get<UserProfileUsecase>().setUpMyLocation(event.longitude,event.latitude);
+    print(response.data.data!.mssg);
+    if(response.data!=null){
+      if(response.data.data!=null && response.data.data!.status==StringConstant.successState)
+        emit(setLocationSucess(response.data.data!.mssg!));
+      else
+        emit(setLocationFailed(response.data.data!.mssg!));
+    }
+    else{
+      emit(setLocationFailed(response.data.data!.mssg!));
     }
   }
 

@@ -5,8 +5,9 @@ sealed class ProfileblocEvent {}
 
 
 class getProfilesEvent extends ProfileblocEvent{
-  String ? searchValue = null;
-  getProfilesEvent(this.searchValue);
+  String  searchValue = "";
+  int page = 0;
+  getProfilesEvent(this.searchValue,this.page);
 }
 
 
@@ -33,6 +34,13 @@ class getFriendsEvent extends ProfileblocEvent{
 class getMyFullProfileEvent extends ProfileblocEvent{
   String userId;
   getMyFullProfileEvent(this.userId);
+}
+
+
+class setUpMyLocationEvent extends ProfileblocEvent{
+  double longitude;
+  double latitude;
+  setUpMyLocationEvent(this.longitude,this.latitude);
 }
 
 

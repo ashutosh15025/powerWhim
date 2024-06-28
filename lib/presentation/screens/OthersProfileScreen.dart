@@ -42,7 +42,6 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
     return BlocListener<ChatBloc, ChatState>(
       listener: (context, state) {
         if (state is SetChatsSuccessState) {
-          print("yaha arrah h baar baar");
           Navigator.of(context).push(MaterialPageRoute(
               builder: (_) => PersonalChatScreen(
                     chatId: state.chatId,

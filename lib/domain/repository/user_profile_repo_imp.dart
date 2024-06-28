@@ -1,3 +1,4 @@
+import 'package:powerwhim/constant/service_api_constant.dart';
 import 'package:powerwhim/data/model/account_managment_model.dart';
 import 'package:powerwhim/data/model/friends_model.dart';
 import 'package:powerwhim/data/model/help_model.dart';
@@ -7,6 +8,8 @@ import 'package:powerwhim/data/model/profilemodel/profiles_model.dart';
 import 'package:powerwhim/data/repository/user_profile_repo.dart';
 import 'package:powerwhim/domain/service/profileservice/user_profile_service.dart';
 import 'package:retrofit/dio.dart';
+
+import '../../data/model/common/common_model_response.dart';
 
 class UserProfileRepoImp extends UserProfileRepo{
 
@@ -20,8 +23,8 @@ class UserProfileRepoImp extends UserProfileRepo{
   }
 
   @override
-  Future<HttpResponse<ProfilesModel>> getProfiles(String userId,String ? search) {
-    return userProfileService.getProfiles(userId,search);
+  Future<HttpResponse<ProfilesModel>> getProfiles(String userId,String ? search,int page) {
+    return userProfileService.getProfiles(userId,search,page);
   }
 
   @override
@@ -43,6 +46,13 @@ class UserProfileRepoImp extends UserProfileRepo{
   @override
   Future<HttpResponse<MyFullProfileModel>> getMyFullProfile(String userId) {
    return userProfileService.getMyProfile(userId);
+  }
+
+
+
+  @override
+  Future<HttpResponse<CommonResponseModel>> setMyLocation(double longitude, double latitude) {
+    return userProfileService.setUpMyLocation(longitude, latitude,USER_ID!);
   }
 
 

@@ -68,3 +68,14 @@ class getMyFullProfileFailedState extends ProfileblocState{
 }
 
 
+class setLocationSucess extends ProfileblocState{
+  String mssg;
+  setLocationSucess(this.mssg);
+}
+
+class setLocationFailed extends ProfileblocState{
+  String mssg;
+  setLocationFailed(this.mssg);
+}
+
+

@@ -1,7 +1,7 @@
 
 import 'dart:ui';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-const BASE_URL = "http://10.0.2.2:3000/";
+const BASE_URL = "http://192.168.29.48:3000/";
 
 const Color green = Color.fromRGBO(0, 156, 74, 1);
 

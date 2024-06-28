@@ -13,7 +13,7 @@ class _UserProfileService implements UserProfileService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://10.0.2.2:3000/';
+    baseUrl ??= 'http://192.168.29.48:3000/';
   }
 
   final Dio _dio;
@@ -24,11 +24,13 @@ class _UserProfileService implements UserProfileService {
   Future<HttpResponse<ProfilesModel>> getProfiles(
     String userId,
     String? search,
+    int page,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'user_id': userId,
       r'search_string': search,
+      r'page': page,
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
@@ -41,7 +43,7 @@ class _UserProfileService implements UserProfileService {
     )
             .compose(
               _dio.options,
-              'api/user/profiles',
+              'api/profiles/all-profiles',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -171,6 +173,42 @@ class _UserProfileService implements UserProfileService {
               baseUrl,
             ))));
     final value = MyFullProfileModel.fromJson(_result.data!);
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<CommonResponseModel>> setUpMyLocation(
+    double longitude,
+    double latitude,
+    String UserId,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'longitude': longitude,
+      r'latitude': latitude,
+      r'user_id': UserId,
+    };
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<CommonResponseModel>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'api/profiles/update-location',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = CommonResponseModel.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }

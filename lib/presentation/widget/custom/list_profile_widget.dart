@@ -18,10 +18,11 @@ class ListProfileWidget extends StatefulWidget {
 
 class _ListProfileWidgetState extends State<ListProfileWidget> {
   List<Profile> listItem = [];
+  int page = 0;
 
   @override
   Widget build(BuildContext context) {
-    BlocProvider.of<ProfileblocBloc>(context).add(getProfilesEvent(null));
+    BlocProvider.of<ProfileblocBloc>(context).add(getProfilesEvent("",0));
 
     return BlocConsumer<ProfileblocBloc, ProfileblocState>(
       listener: (context, state) {
@@ -54,7 +55,7 @@ class _ListProfileWidgetState extends State<ListProfileWidget> {
                       color: Colors.white
                   ),
                   onChanged: (value){
-                    BlocProvider.of<ProfileblocBloc>(context).add(getProfilesEvent(value));
+                    BlocProvider.of<ProfileblocBloc>(context).add(getProfilesEvent(value,page));
                   },
                   textAlign: TextAlign.justify,
                   decoration: InputDecoration(

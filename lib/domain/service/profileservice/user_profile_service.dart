@@ -1,11 +1,7 @@
-
-
-
-
-
 import 'package:dio/dio.dart';
 import 'package:powerwhim/constant/service_api_constant.dart';
 import 'package:powerwhim/data/model/account_managment_model.dart';
+import 'package:powerwhim/data/model/common/common_model_response.dart';
 import 'package:powerwhim/data/model/friends_model.dart';
 import 'package:powerwhim/data/model/help_model.dart';
 import 'package:powerwhim/data/model/profilemodel/full_profile.dart';
@@ -23,10 +19,11 @@ part 'user_profile_service.g.dart';
 abstract class UserProfileService{
   factory UserProfileService(Dio dio) = _UserProfileService;
 
-  @GET("api/user/profiles")
+  @GET("api/profiles/all-profiles")
   Future<HttpResponse<ProfilesModel>> getProfiles(
       @Query("user_id")String userId,
-      @Query("search_string")String ? search
+      @Query("search_string")String ? search,
+      @Query("page")int page
       );
 
 
@@ -50,6 +47,13 @@ abstract class UserProfileService{
   @GET("api/user/my-profile")
   Future<HttpResponse<MyFullProfileModel>> getMyProfile(
       @Query("user_id")String userId,
+      );
+
+  @GET("api/profiles/update-location")
+  Future<HttpResponse<CommonResponseModel>> setUpMyLocation(
+      @Query("longitude")double longitude,
+      @Query("latitude")double latitude,
+      @Query("user_id")String UserId
       );
 
 }

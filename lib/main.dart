@@ -27,7 +27,6 @@ void main() async {
   injectionDependencies();
   final DatabaseService databaseService = DatabaseService.instance;
   USER_ID = await databaseService.getDetail()!=null?await databaseService.getDetail():null;
-  print(USER_ID);
   runApp(const MyApp());
 }
 
@@ -36,6 +35,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context){
+    var TABTOOPEN = '/auth';
+    if(USER_ID != null)
+      TABTOOPEN = '/home';
     return MultiBlocProvider (
         providers: [
           BlocProvider<ProfileblocBloc>(create: (context) => ProfileblocBloc()),
@@ -48,7 +50,7 @@ class MyApp extends StatelessWidget {
             selectionHandleColor: Colors.transparent,
           ),
         ),
-      initialRoute: USER_ID==null?'/':'/home',
+      initialRoute: USER_ID==null?'/':TABTOOPEN,
     onGenerateRoute: RouteGenerator.routeGenerate,
     ));
   }
