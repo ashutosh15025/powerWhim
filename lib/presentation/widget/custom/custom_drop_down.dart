@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:powerwhim/constant/color_constant.dart';
 import 'package:powerwhim/presentation/bloc/authbloc/auth_bloc.dart';
-import 'package:powerwhim/presentation/widget/custom/selected_drop_item_widget.dart';
-
-import '../../../constant/service_api_constant.dart';
 
 class CustomDropDown extends StatefulWidget {
   const CustomDropDown(
@@ -48,7 +46,8 @@ class _CustomDropDownState extends State<CustomDropDown> {
           child:value!=""?Container(
             child: Text(value,
               style: TextStyle(
-                  color: Colors.black
+                  color: Colors.white,
+                  fontWeight: FontWeight.w400
               ),),
           ):Container(
             width: MediaQuery.of(context).size.width,
@@ -61,11 +60,11 @@ class _CustomDropDownState extends State<CustomDropDown> {
                     decoration: InputDecoration(
                       fillColor: Colors.white,
                       enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
+                          borderSide: BorderSide(color: Colors.white),
                           borderRadius: BorderRadius.circular(10)
                       ),
                       focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
+                          borderSide: BorderSide(color: Colors.white),
                           borderRadius: BorderRadius.circular(10)
                       ),
                       hintText: "Enter Your choice (if not listed)",
@@ -81,7 +80,8 @@ class _CustomDropDownState extends State<CustomDropDown> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(6.0),
-                  child: Icon(Icons.add),
+                  child: Icon(Icons.add,
+                  color: themeColorLight,),
                 )
 
               ],
@@ -105,52 +105,57 @@ class _CustomDropDownState extends State<CustomDropDown> {
               border: Border.all(width: 1, color: Colors.yellow.shade500),
               borderRadius: BorderRadius.circular(8)
           ),
-          child: DropdownButtonHideUnderline(
-            child: ButtonTheme(
-              alignedDropdown: true,
-              child: DropdownButton<String>(
-                isExpanded: true,
-                hint: Text("${widget.dropDownHeading}",
-                    style: GoogleFonts.baloo2(
-                      textStyle: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                          color: Colors.white
-                      ),)),
-                style: TextStyle(color: Colors.white),
-                selectedItemBuilder: (BuildContext context) {
-                  return myList.map<Widget>((String item) {
-                    return Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
-                      child: Text("Please select something",
-                          style: GoogleFonts.baloo2(
-                            textStyle: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14,
-                                color: Colors.white
-                            ),)),
-                    );
-                  }).toList();
-                },
-                iconEnabledColor: Colors.yellow.shade500,
-                value: selectedValue,
-                items: dropdownItems,
-                onChanged: (String? newValue) {
-                  if(inputvalue!=null){
-                    selectedItem.add(inputvalue!);
-                    inputvalue = null;
-                  }
-                  else{
-                  if (selectedItem.indexOf(newValue!) == -1&&newValue!="")
-                    selectedItem.add(newValue!);
-                  }
-                  setState(() {
-                    if(selectedItem!="")
-                    widget.selectedItemFun(selectedItem);
-                    selectedValue = newValue!;
-                  });
-                },
+          child: Container(
+            child: DropdownButtonHideUnderline(
+              child: ButtonTheme(
+                alignedDropdown: true,
+                child: DropdownButton<String>(
+                  borderRadius:BorderRadius.circular(16),
+                  isExpanded: true,
+                  dropdownColor: Colors.grey.shade900,
+                  hint: Text("${widget.dropDownHeading}",
+                      style: GoogleFonts.baloo2(
+                        textStyle: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                            color: Colors.white
+                        ),)),
+                  style: TextStyle(color: Colors.white),
+                  selectedItemBuilder: (BuildContext context) {
+                    return myList.map<Widget>((String item) {
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
+                        child: Text("Please select something",
+                            style: GoogleFonts.baloo2(
+                              textStyle: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                  color: Colors.white
+                              ),)),
+                      );
+                    }).toList();
+                  },
+                  iconEnabledColor: Colors.yellow.shade500,
+                  value: selectedValue,
+                  items: dropdownItems,
+                  onChanged: (String? newValue) {
+                    if(inputvalue!=null){
+                      selectedItem.add(inputvalue!);
+                      inputvalue = null;
+                    }
+                    else{
+                    if (selectedItem.indexOf(newValue!) == -1&&newValue!="")
+                      selectedItem.add(newValue!);
+                    }
+                    setState(() {
+                      if(selectedItem!="")
+                      widget.selectedItemFun(selectedItem);
+                      selectedValue = newValue!;
+                    });
+                  },
+                ),
               ),
+
             ),
           ),
         ),
