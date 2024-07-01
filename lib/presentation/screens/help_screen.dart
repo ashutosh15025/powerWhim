@@ -47,215 +47,218 @@ class _HelpScreenState extends State<HelpScreen> {
   errorWidget =!errorWidget;
   },
   builder: (context, state) {
-    return Stack(
-      children: [
-        Container(
-        color: Color.fromRGBO(0, 0, 0, 0.95),
-        padding: EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.all(16),
-              child: Text("Get in touch with us today",
-                style: GoogleFonts.baloo2(
-                    textStyle: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 20
-                    )
+    return SingleChildScrollView(
+      padding: EdgeInsets.fromLTRB(0, 0, 0, 60),
+      child: Stack(
+        children: [
+          Container(
+          color: Color.fromRGBO(0, 0, 0, 0.95),
+          padding: EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.all(16),
+                child: Text("Get in touch with us today",
+                  style: GoogleFonts.baloo2(
+                      textStyle: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 20
+                      )
+                  ),
                 ),
               ),
-            ),
-            Container(
-              padding: EdgeInsets.all(24),
-              child: Column(
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(16),
-                    child: TextField(
-                      cursorColor: Colors.yellow,
-                      controller: _topicControllerName,
-                      style: TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                        fillColor: Colors.white,
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: error==null?Colors.yellow:Colors.redAccent, width: .5),
-                            borderRadius: BorderRadius.circular(10)
+              Container(
+                padding: EdgeInsets.all(24),
+                child: Column(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(16),
+                      child: TextField(
+                        cursorColor: Colors.yellow,
+                        controller: _topicControllerName,
+                        style: TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          fillColor: Colors.white,
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: error==null?Colors.yellow:Colors.redAccent, width: .5),
+                              borderRadius: BorderRadius.circular(10)
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: error==null?Colors.yellow:Colors.redAccent, width: 1),
+                              borderRadius: BorderRadius.circular(10)
+                          ),
+                          hintText: "Enter Your Name",
+                          hintStyle: GoogleFonts.baloo2(
+                              textStyle: TextStyle(color: Colors.grey,
+                                  fontWeight: FontWeight.w400)
+                          ),
                         ),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: error==null?Colors.yellow:Colors.redAccent, width: 1),
-                            borderRadius: BorderRadius.circular(10)
-                        ),
-                        hintText: "Enter Your Name",
-                        hintStyle: GoogleFonts.baloo2(
-                            textStyle: TextStyle(color: Colors.grey,
-                                fontWeight: FontWeight.w400)
-                        ),
+                        onChanged:(newValue){
+                          name = newValue;
+                          error = null;
+                          successmsg = null;
+                          errormsg = null;
+                        },
                       ),
-                      onChanged:(newValue){
-                        name = newValue;
-                        error = null;
-                        successmsg = null;
-                        errormsg = null;
-                      },
                     ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(16),
-                    child: TextField(
-                      cursorColor: Colors.yellow,
-                      controller: _topicControllerEmail,
-                      style: TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                        fillColor: Colors.white,
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: error==null?Colors.yellow:Colors.redAccent, width: .5),
-                            borderRadius: BorderRadius.circular(10)
+                    Container(
+                      padding: EdgeInsets.all(16),
+                      child: TextField(
+                        cursorColor: Colors.yellow,
+                        controller: _topicControllerEmail,
+                        style: TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          fillColor: Colors.white,
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: error==null?Colors.yellow:Colors.redAccent, width: .5),
+                              borderRadius: BorderRadius.circular(10)
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: error==null?Colors.yellow:Colors.redAccent, width: 1),
+                              borderRadius: BorderRadius.circular(10)
+                          ),
+                          hintText: "Enter Your Email",
+                          hintStyle: GoogleFonts.baloo2(
+                              textStyle: TextStyle(color: Colors.grey,
+                                  fontWeight: FontWeight.w400)
+                          ),
                         ),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: error==null?Colors.yellow:Colors.redAccent, width: 1),
-                            borderRadius: BorderRadius.circular(10)
-                        ),
-                        hintText: "Enter Your Email",
-                        hintStyle: GoogleFonts.baloo2(
-                            textStyle: TextStyle(color: Colors.grey,
-                                fontWeight: FontWeight.w400)
-                        ),
+                        onChanged:(newValue){
+                          email = newValue;
+                          error = null;
+                          successmsg = null;
+                          errormsg = null;
+                        },
                       ),
-                      onChanged:(newValue){
-                        email = newValue;
-                        error = null;
-                        successmsg = null;
-                        errormsg = null;
-                      },
                     ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(16),
-                    child: TextField(
-                      cursorColor: Colors.yellow,
-                      controller: _topicControllerPhone,
-                      style: TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                        fillColor: Colors.white,
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: error==null?Colors.yellow:Colors.redAccent, width: .5),
-                            borderRadius: BorderRadius.circular(10)
+                    Container(
+                      padding: EdgeInsets.all(16),
+                      child: TextField(
+                        cursorColor: Colors.yellow,
+                        controller: _topicControllerPhone,
+                        style: TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          fillColor: Colors.white,
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: error==null?Colors.yellow:Colors.redAccent, width: .5),
+                              borderRadius: BorderRadius.circular(10)
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: error==null?Colors.yellow:Colors.redAccent, width: 1),
+                              borderRadius: BorderRadius.circular(10)
+                          ),
+                          hintText: "Enter Your Phone Number",
+                          hintStyle: GoogleFonts.baloo2(
+                              textStyle: TextStyle(color: Colors.grey,
+                                  fontWeight: FontWeight.w400)
+                          ),
                         ),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: error==null?Colors.yellow:Colors.redAccent, width: 1),
-                            borderRadius: BorderRadius.circular(10)
-                        ),
-                        hintText: "Enter Your Phone Number",
-                        hintStyle: GoogleFonts.baloo2(
-                            textStyle: TextStyle(color: Colors.grey,
-                                fontWeight: FontWeight.w400)
-                        ),
+                        onChanged:(newValue){
+                          phone = newValue;
+                          error = null;
+                          successmsg = null;
+                          errormsg = null;
+                        },
                       ),
-                      onChanged:(newValue){
-                        phone = newValue;
-                        error = null;
-                        successmsg = null;
-                        errormsg = null;
-                      },
                     ),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    // <-- TextField width
-                    height: 120,
-                    // <-- TextField height
-                    margin: EdgeInsets.all(16),
-                    padding: EdgeInsets.all(4),
-                    child: TextField(
-                      controller: _topicControllerMessage,
-                      cursorColor: Colors.yellow,
-                      maxLines: null,
-                      expands: true,
-                      style: GoogleFonts.baloo2(
-                        textStyle: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white
-                        ),),
-                      keyboardType: TextInputType.multiline,
-                      decoration: InputDecoration.collapsed(
-                        filled: true, hintText: 'Enter a message',
-                        fillColor: Color.fromRGBO(0, 0, 0, 0),
-                        hintStyle: GoogleFonts.baloo2(
+                    Container(
+                      width: double.infinity,
+                      // <-- TextField width
+                      height: 120,
+                      // <-- TextField height
+                      margin: EdgeInsets.all(16),
+                      padding: EdgeInsets.all(4),
+                      child: TextField(
+                        controller: _topicControllerMessage,
+                        cursorColor: Colors.yellow,
+                        maxLines: null,
+                        expands: true,
+                        style: GoogleFonts.baloo2(
                           textStyle: TextStyle(
                               fontWeight: FontWeight.w500,
-                              color: Colors.grey
+                              color: Colors.white
                           ),),
+                        keyboardType: TextInputType.multiline,
+                        decoration: InputDecoration.collapsed(
+                          filled: true, hintText: 'Enter a message',
+                          fillColor: Color.fromRGBO(0, 0, 0, 0),
+                          hintStyle: GoogleFonts.baloo2(
+                            textStyle: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: Colors.grey
+                            ),),
+                        ),
+                        onChanged:(newValue){
+                          message = newValue;
+                          error = null;
+                          successmsg = null;
+                          errormsg = null;
+                        },
                       ),
-                      onChanged:(newValue){
-                        message = newValue;
-                        error = null;
-                        successmsg = null;
-                        errormsg = null;
-                      },
+      
+      
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(width: 1, color: error==null?Colors.yellow:Colors.redAccent),
+                      ),
                     ),
-
-
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(width: 1, color: error==null?Colors.yellow:Colors.redAccent),
-                    ),
-                  ),
-                  Container(
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width / 2,
-                    child: InkWell(
-                      onTap: () {
-                        if (name!=null && name!.isNotEmpty && message!=null && message!.isNotEmpty && phone!=null && phone!.isNotEmpty && email!=null && email!.isNotEmpty){
-                          HelpModel helpModel = HelpModel(name: name,emailId: email,mobileNumber: phone,message: message);
-                          BlocProvider.of<ProfileblocBloc>(context).add(getHelpEvent(helpModel));
-                        }
-                        else{
-                          setState(() {
-                            error = "fill required fields";
-                          });
-                        }
-                      },
-                      child: GradientButtonGreenYellow(
-                          buttonText: "Send message"),
-                    ),
-                  )
-
-
-                ],
+                    Container(
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width / 2,
+                      child: InkWell(
+                        onTap: () {
+                          if (name!=null && name!.isNotEmpty && message!=null && message!.isNotEmpty && phone!=null && phone!.isNotEmpty && email!=null && email!.isNotEmpty){
+                            HelpModel helpModel = HelpModel(name: name,emailId: email,mobileNumber: phone,message: message);
+                            BlocProvider.of<ProfileblocBloc>(context).add(getHelpEvent(helpModel));
+                          }
+                          else{
+                            setState(() {
+                              error = "fill required fields";
+                            });
+                          }
+                        },
+                        child: GradientButtonGreenYellow(
+                            buttonText: "Send message"),
+                      ),
+                    )
+      
+      
+                  ],
+                ),
+                decoration: BoxDecoration(
+                    color: Color.fromRGBO(31, 31, 31, .95),
+      
+                    borderRadius: BorderRadius.circular(16.0)
+                ),
               ),
-              decoration: BoxDecoration(
-                  color: Color.fromRGBO(31, 31, 31, .95),
-
-                  borderRadius: BorderRadius.circular(16.0)
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
+          Visibility(
+            visible: errorWidget,
+              child: CustomErrorWidget(mssg: errormsg==null?successmsg:errormsg,error:errormsg==null?false!:true, closeErrorWidget: () {
+                setState(() {
+                  errorWidget=!errorWidget ;
+                  if(successmsg!=null){
+                    successmsg=null;
+                    _topicControllerName.clear();
+                    _topicControllerMessage.clear();
+                    _topicControllerPhone.clear();
+                    _topicControllerEmail.clear();
+                  }
+                });},))
+      
+      ]
       ),
-        Visibility(
-          visible: errorWidget,
-            child: CustomErrorWidget(mssg: errormsg==null?successmsg:errormsg,error:errormsg==null?false!:true, closeErrorWidget: () {
-              setState(() {
-                errorWidget=!errorWidget ;
-                if(successmsg!=null){
-                  successmsg=null;
-                  _topicControllerName.clear();
-                  _topicControllerMessage.clear();
-                  _topicControllerPhone.clear();
-                  _topicControllerEmail.clear();
-                }
-              });},))
-
-    ]
     );
   },
 );
