@@ -77,5 +77,3 @@ class setLocationFailed extends ProfileblocState{
   String mssg;
   setLocationFailed(this.mssg);
 }
-
-

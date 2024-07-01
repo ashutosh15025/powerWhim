@@ -25,7 +25,7 @@ class ProfileblocBloc extends Bloc<ProfileblocEvent, ProfileblocState> {
 
   void ongetProfilesEvent(getProfilesEvent event,Emitter<ProfileblocState>emit)async{
     var response = await locator.get<UserProfileUsecase>().getProfiles(USER_ID!,event.searchValue,event.page);
-    if(response.data.data!=null && response.data.data!.profiles!=null && response.data.data!.profiles!.length>0 ){
+    if(response.data.data!=null && response.data.data!.profiles!=null && response.data.data!.profiles!.length>=0 ){
       emit(getProfilesSuccessState(response.data));
     }
     else{

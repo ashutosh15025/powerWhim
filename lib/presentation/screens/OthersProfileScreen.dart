@@ -68,9 +68,6 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
               'FriendsScreen') {
             BlocProvider.of<ChatBloc>(context).add(GetFriendsEvent(USER_ID!));
           } else {
-            BlocProvider.of<ChatBloc>(context).add(SetChatEvent(
-                USER_ID!,
-                (fullprofile==null||fullprofile!.userId==null)?"":fullprofile!.userId!));
           }
         },
         child: Scaffold(
