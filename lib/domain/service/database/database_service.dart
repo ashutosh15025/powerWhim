@@ -10,6 +10,8 @@ class DatabaseService{
   final String _user = "User";
   final String  _userTableCId = "id";
   final String _userCUserId = "user_id";
+  final String _userCUserStatus = "status";
+
 
 
 
@@ -38,7 +40,9 @@ class DatabaseService{
 
           $_userTableCId INTEGER PRIMARY KEY AUTOINCREMENT,
 
-          $_userCUserId TEXT NOT NULL
+          $_userCUserId TEXT NOT NULL,
+          
+          $_userCUserStatus TEXT
 
         )
 
@@ -51,21 +55,30 @@ class DatabaseService{
   }
 
 
-  void addDetails(String userId)async{
+  void addDetails(String userId,String ? status)async{
     final db= await database;
     await db.insert(_user, {
-      _userCUserId : userId
+      _userCUserId : userId,
+      _userCUserStatus:status
+
     });
   }
 
 
-  Future<String?> getDetail() async{
-    final db= await database;
+  Future<Map<Object?, Object?>?> getDetail() async {
+    final db = await database;
     final data = await db.query(_user);
-    if(data.length>0&&data[0]['user_id']!=null)
-    return data[0]['user_id'].toString();
-    else return null;
+
+    if (data.isNotEmpty && data[0]['user_id'] != null) {
+      return {
+        'user_id': data[0]['user_id'],
+        'status': data[0]['status'],
+      };
+    } else {
+      return null;
+    }
   }
+
 
 
   Future<int> delete(String id) async {

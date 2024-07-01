@@ -26,7 +26,14 @@ void main() async {
   ]);
   injectionDependencies();
   final DatabaseService databaseService = DatabaseService.instance;
-  USER_ID = await databaseService.getDetail()!=null?await databaseService.getDetail():null;
+  Map<Object?, Object?>? details = await databaseService.getDetail();
+
+  if (details != null && details.isNotEmpty) {
+    USER_ID = details['user_id'] as String?;
+    STATUS = details['status'] as String?;
+
+    // Use the userId and status as needed
+  }
   runApp(const MyApp());
 }
 
@@ -36,8 +43,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context){
     var TABTOOPEN = '/auth';
-    if(USER_ID != null)
-      TABTOOPEN = '/home';
+    if(USER_ID != null && STATUS!=null){
+      print(USER_ID);
+      print(STATUS);
+      TABTOOPEN = '/home';}
+    else if(USER_ID!=null){
+      TABTOOPEN = '/addProfile';
+    }
+    print(TABTOOPEN);
     return MultiBlocProvider (
         providers: [
           BlocProvider<ProfileblocBloc>(create: (context) => ProfileblocBloc()),

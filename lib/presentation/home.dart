@@ -21,13 +21,19 @@ import 'bloc/profilebloc/profilebloc_bloc.dart';
 
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  const Home({super.key, this.indexSelected});
+  final int ? indexSelected;
 
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
+
+
+  final DatabaseService databaseService = DatabaseService.instance;
+
+
   void switchToViewProfile(){
     setState(() {
       _selectedIndex = 0;
@@ -48,6 +54,9 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
+    databaseService.addDetails(USER_ID!,"complete");
+    if( widget.indexSelected!=null)
+    _selectedIndex = widget.indexSelected!;
     checkPermission(context);
     super.initState();
   }

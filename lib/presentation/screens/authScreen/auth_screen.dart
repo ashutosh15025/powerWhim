@@ -42,11 +42,16 @@ class _LoginScreenState extends State<AuthScreen> {
 
   String forgetPassword = "no";
 
+  @override
+  void initState() {
+    if(USER_ID!=null)
+      BlocProvider.of<AuthBloc>(context).add(GetCheckProfileEvent());
+    super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    if(USER_ID!=null)
-    BlocProvider.of<AuthBloc>(context).add(GetCheckProfileEvent());
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthRegistorSuccessState) {
@@ -60,7 +65,8 @@ class _LoginScreenState extends State<AuthScreen> {
           onPressVerifyPassword();
         }
         else if(state is LoginSuccessState){
-          databaseService.addDetails(USER_ID!);
+          databaseService.delete(USER_ID!);
+          databaseService.addDetails(USER_ID!,null);
           navigateToHomePage();
         }
         else if (state is ApiFailedState ){

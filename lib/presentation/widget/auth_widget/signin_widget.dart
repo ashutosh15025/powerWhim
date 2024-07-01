@@ -74,7 +74,8 @@ class _SignInScreenState extends State<SignInScreen> {
               child: InkWell(
                  onTap: (){
                    if(userEmail!=null){
-                   bloc.add(RegisterEvent(userEmail!,widget.forget));}
+                   bloc.add(RegisterEvent(userEmail!,widget.forget));
+                   }
                  },
                   child: GradientButtonGreenYellow(buttonText: "Next")),
             ),

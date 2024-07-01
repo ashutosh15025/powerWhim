@@ -24,7 +24,7 @@ class _VerifyOptWidgetState extends State<VerifyOptWidget> {
       child: Container(
         margin: EdgeInsets.all(24),
         width: double.infinity,
-        height: MediaQuery.of(context).size.height/3,
+        height: MediaQuery.of(context).size.height/3+35,
         child:  Column(
           children: [
             InkWell(

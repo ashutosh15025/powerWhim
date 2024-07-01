@@ -121,10 +121,11 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
         if(state is AddProfileSuccessState)
           {
             loadingState = !loadingState;
+            BlocProvider.of<ProfileblocBloc>(context).add(getMyFullProfileEvent(USER_ID!));
+
             if(widget.name==null)
             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const Home()));
             else{
-              BlocProvider.of<ProfileblocBloc>(context).add(getMyFullProfileEvent(USER_ID!));
               Navigator.of(context).pop();}
           }
         else{

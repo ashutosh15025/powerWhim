@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:powerwhim/constant/full_profile_privious_screen.dart';
+import 'package:powerwhim/presentation/screens/add_profile_screen.dart';
 import 'package:powerwhim/presentation/screens/authScreen/auth_screen.dart';
 import 'package:powerwhim/presentation/screens/currentLocation/ask_permission.dart';
 import 'package:powerwhim/presentation/screens/onboard_screen.dart';
@@ -25,6 +26,12 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (_) => const Home(),
         );
+
+      case "/addProfile":
+        return MaterialPageRoute(
+          builder: (_) => const AddProfileScreen(),
+        );
+
       case "/askPermission":
         return MaterialPageRoute(
           builder: (_) => const AskPermission(),

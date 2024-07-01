@@ -56,7 +56,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       switch (response.data.data!.status) {
         case "success":
           {
-            USER_ID = response.data.data?.userId;
             emit(AuthRegistorSuccessState(
                 response.data.data!.mssg!, response.data.data!.userId));
           }
@@ -69,7 +68,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   void onVerifyOTPsEvent(VerifyOTPsEvent event, Emitter<AuthState> emit) async {
-    print(USER_ID.toString());
     emit(LoadingState());
     var response = await locator
         .get<AccountManagmentUsecase>()
