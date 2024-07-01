@@ -91,11 +91,14 @@ class AskPermission extends StatelessWidget {
 
 
   void determinePosition(BuildContext context) async{
-    print("ask");
    bool serviceEnabled;
    LocationPermission permission;
    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Location services are disabled. Please enable the services')));
+      return;
+    }
 
    permission = await Geolocator.checkPermission();
    if(permission == LocationPermission.denied){
@@ -109,13 +112,14 @@ class AskPermission extends StatelessWidget {
      print("permission denied Forever");
    }
    if(permission == LocationPermission.whileInUse||permission == LocationPermission.always) {
+     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+         content: Text('Fetching Location......')));
      Position position = await Geolocator.getCurrentPosition(
          desiredAccuracy: LocationAccuracy.high
      );
      try {
        List<Placemark> placemarks = await placemarkFromCoordinates(
            position.latitude, position.longitude);
-
        Placemark place = placemarks[0];
        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const Home()));
 

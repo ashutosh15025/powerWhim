@@ -2,12 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:molten_navigationbar_flutter/molten_navigationbar_flutter.dart';
 import 'package:powerwhim/constant/service_api_constant.dart';
 import 'package:powerwhim/presentation/bloc/chatbloc/chat_bloc.dart';
 import 'package:powerwhim/presentation/screens/authScreen/auth_screen.dart';
 import 'package:powerwhim/presentation/screens/chat_screen/chat_screen.dart';
+import 'package:powerwhim/presentation/screens/currentLocation/ask_permission.dart';
 import 'package:powerwhim/presentation/screens/friend_screen.dart';
 import 'package:powerwhim/presentation/screens/help_screen.dart';
 import 'package:powerwhim/presentation/screens/my_profile_widget.dart';
@@ -15,6 +17,7 @@ import 'package:powerwhim/presentation/screens/view_profile_screen.dart';
 
 import '../data/model/chats/chats_details_model.dart';
 import '../domain/service/database/database_service.dart';
+import 'bloc/profilebloc/profilebloc_bloc.dart';
 
 
 class Home extends StatefulWidget {
@@ -25,7 +28,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   void switchToViewProfile(){
     setState(() {
       _selectedIndex = 0;
@@ -46,6 +48,7 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
+    checkPermission(context);
     super.initState();
   }
 
@@ -58,7 +61,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-
 
     return  PopScope(
       canPop: false,
@@ -92,16 +94,13 @@ class _HomeState extends State<Home> {
                         child: Row(
                           children: [
                             Icon(Icons.logout,color: Colors.black,),
-                            InkWell(
-                              onTap: (){
-                                print("click");
+                              TextButton(
+                              onPressed: (){
                                 final DatabaseService databaseService = DatabaseService.instance;
                                 databaseService.delete(USER_ID!);
+                                USER_ID = null;
                                 Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const AuthScreen()));
-                              },
-                              child: Text(
-                                "Log Out"),
-                            ),
+                              }, child: Text("Log Out"),),
                           ]
                         )
                       )
@@ -110,7 +109,9 @@ class _HomeState extends State<Home> {
 
 
             ),
-            body: tabsArray[_selectedIndex],
+            body: SingleChildScrollView(
+              child: tabsArray[_selectedIndex],
+            ),
             bottomNavigationBar: Container(
               color: Colors.transparent,
               child: Container(
@@ -139,14 +140,14 @@ class _HomeState extends State<Home> {
                       title: Text("Whim-span",
                         style: GoogleFonts.poppins(
                             color: Colors.white,
-                            fontSize: 12,
+                            fontSize:   MediaQuery.of(context).size.width>=414?12:10,
                             fontWeight: FontWeight.w500
                         ),)
                     ),
                     MoltenTab(
                       icon: Icon(Icons.dashboard_rounded,
                         color:  _selectedIndex==1?Colors.white:Colors.blueGrey,),
-                        title: Text("Networks",
+                        title: Text("Network",
                           style: GoogleFonts.poppins(
                               color: Colors.white,
                               fontSize: 12,
@@ -195,6 +196,25 @@ class _HomeState extends State<Home> {
 
           ),
     );
+  }
+
+
+
+  void checkPermission(BuildContext context) async{
+    print("checkPermission run");
+    var permission = await Geolocator.checkPermission();
+    if(permission == LocationPermission.whileInUse||permission == LocationPermission.always){
+
+
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high
+      );
+      BlocProvider.of<ProfileblocBloc>(context).add(setUpMyLocationEvent(position.longitude, position.latitude));
+    }
+    else{
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const AskPermission()));
+    }
   }
 
 }
