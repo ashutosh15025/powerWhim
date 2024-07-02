@@ -54,6 +54,7 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
+    databaseService.delete();
     databaseService.addDetails(USER_ID!,"complete");
     if( widget.indexSelected!=null)
     _selectedIndex = widget.indexSelected!;
@@ -106,7 +107,7 @@ class _HomeState extends State<Home> {
                               TextButton(
                               onPressed: (){
                                 final DatabaseService databaseService = DatabaseService.instance;
-                                databaseService.delete(USER_ID!);
+                                databaseService.delete();
                                 USER_ID = null;
                                 Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const AuthScreen()));
                               }, child: Text("Log Out"),),
@@ -124,7 +125,6 @@ class _HomeState extends State<Home> {
             bottomNavigationBar: Container(
               color: Colors.transparent,
               child: Container(
-                padding: const EdgeInsets.all(8.0),
                 color: Colors.black,
                 child: MoltenBottomNavigationBar(
                   selectedIndex: _selectedIndex,

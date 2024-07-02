@@ -81,8 +81,8 @@ class DatabaseService{
 
 
 
-  Future<int> delete(String id) async {
+  Future<int> delete() async {
     final db= await database;
-    return await db.delete(_user, where: '$_userCUserId = ?', whereArgs: [id]);
+    return await db.delete(_user);
   }
 }

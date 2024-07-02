@@ -65,7 +65,7 @@ class _LoginScreenState extends State<AuthScreen> {
           onPressVerifyPassword();
         }
         else if(state is LoginSuccessState){
-          databaseService.delete(USER_ID!);
+          databaseService.delete();
           databaseService.addDetails(USER_ID!,null);
           navigateToHomePage();
         }
