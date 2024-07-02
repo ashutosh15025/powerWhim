@@ -340,7 +340,7 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
     for (int i = 0; i < list.length; i++) {
       outputString += list[i];
       if (i != list.length - 1) {
-        outputString += " ,";
+        outputString += ",";
       }
     }
     if(outputString.isEmpty)
