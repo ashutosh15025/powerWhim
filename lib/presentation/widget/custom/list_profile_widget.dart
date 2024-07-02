@@ -39,6 +39,7 @@ class _ListProfileWidgetState extends State<ListProfileWidget> {
     if (_controller.position.atEdge) {
       bool isTop = _controller.position.pixels == 0;
       if (!isTop) {
+        //! sign mean bottom
         page++;
         BlocProvider.of<ProfileblocBloc>(context).add(getProfilesEvent("", page));
       }

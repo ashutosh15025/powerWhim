@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
@@ -7,10 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:powerwhim/constant/color_constant.dart';
 import 'package:powerwhim/constant/service_api_constant.dart';
 import 'package:powerwhim/constant/string_constant.dart';
-import 'package:powerwhim/data/model/chats/chats_details_model.dart';
 import 'package:powerwhim/data/model/chats/personal_chat_model.dart';
 import 'package:powerwhim/presentation/bloc/chatbloc/chat_bloc.dart';
 import 'package:powerwhim/presentation/screens/view_image_screen/view_image_screen.dart';
@@ -43,6 +40,7 @@ class PersonalChatScreen extends StatefulWidget {
 }
 
 class _PersonalChatScreenState extends State<PersonalChatScreen> {
+
   List<Message> listItem = [];
   List<Message> traceList = [];
   IO.Socket? socketP;
@@ -53,35 +51,42 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
   String? uploaded_file_url;
   final TextEditingController _controller = new TextEditingController();
   final focusInput = FocusNode();
-
-  int pageCount = 0;
-
+  int page = 0;
   bool scrollLoaderVisibility = false;
-
   bool disableSendbutton = false;
-
   bool imageLoader = false;
-
   DateTime? deactivate_on;
-
   bool errorWidgetVisibility = false;
-
   bool endReasonWidget = false;
-
   final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
-
   final ScrollController _scrollController = ScrollController();
+  String previousScoketId="";
 
   @override
   void initState() {
     deactivate_on = widget.deactivate_on;
     initSocket();
+    _scrollController.addListener(_onScroll);
     super.initState();
     _scrollToBottom();
   }
 
   void _scrollToBottom() async {
     await Future.delayed(Duration(milliseconds: 100));
+  }
+
+
+  void _onScroll() {
+    if (_scrollController.position.atEdge) {
+      bool isTop = _scrollController.position.pixels == 0;
+      if (!isTop) {
+        //! sign mean bottom
+        print("top");
+        page++;
+        BlocProvider.of<ChatBloc>(context).add(
+            GetPersonalChatEvent(chatId: widget.chatId, page: page));
+      }
+    }
   }
 
   initSocket() {
@@ -140,6 +145,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                 setState(() {
                   BlocProvider.of<ChatBloc>(context).add(
                       GetPersonalChatEvent(chatId: widget.chatId, page: 0));
+                  listItem=[];
                 });
               },
             ),
@@ -152,13 +158,17 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
           }
           BlocProvider.of<ChatBloc>(context)
               .add(GetPersonalChatEvent(chatId: widget.chatId, page: 0));
+          listItem=[];
           return CustomCircularLoadingBar();
         } else if (state is GetPersonalChatSuccessState) {
-          print("GetPersonalChatSuccessState");
           scrollLoaderVisibility = false;
-          if(socketP!.id!=null)
-          BlocProvider.of<ChatBloc>(context).add(SetSocketEvent(socketP!.id!));
-          listItem = state.personalChatModel.data!.messages!;
+          if(socketP!.id!=null && previousScoketId!=socketP!.id) {
+            previousScoketId = socketP!.id!;
+            BlocProvider.of<ChatBloc>(context).add(
+                SetSocketEvent(socketP!.id!));
+          }
+
+            listItem +=state.personalChatModel.data!.messages!;
           return PopScope(
             canPop: true,
             onPopInvoked: (bool didPop) {
