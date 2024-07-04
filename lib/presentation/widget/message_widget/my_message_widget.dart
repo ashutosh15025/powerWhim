@@ -2,8 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../../../constant/service_api_constant.dart';
+import 'package:powerwhim/constant/color_constant.dart';
 
 class MyMessageWidget extends StatelessWidget {
   const MyMessageWidget({super.key, required this.message, required this.time, this.image});
@@ -14,10 +13,11 @@ class MyMessageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return   ChatBubble(
+      shadowColor: Colors.transparent,
       clipper: ChatBubbleClipper1(type: BubbleType.sendBubble),
       alignment: Alignment.topRight,
       margin: EdgeInsets.only(top: 20),
-      backGroundColor: green,
+      backGroundColor: themeColor,
       child: Container(
         constraints: BoxConstraints(
           maxWidth: MediaQuery.of(context).size.width * 0.7,
