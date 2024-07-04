@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:powerwhim/constant/color_constant.dart';
 import 'package:powerwhim/presentation/widget/custom/profile_card_widget.dart';
 
 import '../../../constant/full_profile_privious_screen.dart';
@@ -80,6 +81,7 @@ class _ListProfileWidgetState extends State<ListProfileWidget> {
                   alignment: Alignment.center,
                   height: 50,
                   child: TextField(
+                    cursorColor: themeColorLight,
                     style: TextStyle(color: Colors.white),
                     onChanged: (value) {
                       setState(() {
