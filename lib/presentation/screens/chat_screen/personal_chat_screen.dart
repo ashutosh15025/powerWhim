@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:powerwhim/constant/color_constant.dart';
 import 'package:powerwhim/constant/service_api_constant.dart';
 import 'package:powerwhim/constant/string_constant.dart';
 import 'package:powerwhim/data/model/chats/personal_chat_model.dart';
@@ -40,7 +42,6 @@ class PersonalChatScreen extends StatefulWidget {
 }
 
 class _PersonalChatScreenState extends State<PersonalChatScreen> {
-
   List<Message> listItem = [];
   List<Message> traceList = [];
   IO.Socket? socketP;
@@ -51,42 +52,35 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
   String? uploaded_file_url;
   final TextEditingController _controller = new TextEditingController();
   final focusInput = FocusNode();
-  int page = 0;
+
+  int pageCount = 0;
+
   bool scrollLoaderVisibility = false;
+
   bool disableSendbutton = false;
+
   bool imageLoader = false;
+
   DateTime? deactivate_on;
+
   bool errorWidgetVisibility = false;
+
   bool endReasonWidget = false;
+
   final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
+
   final ScrollController _scrollController = ScrollController();
-  String previousScoketId="";
 
   @override
   void initState() {
     deactivate_on = widget.deactivate_on;
     initSocket();
-    _scrollController.addListener(_onScroll);
     super.initState();
     _scrollToBottom();
   }
 
   void _scrollToBottom() async {
     await Future.delayed(Duration(milliseconds: 100));
-  }
-
-
-  void _onScroll() {
-    if (_scrollController.position.atEdge) {
-      bool isTop = _scrollController.position.pixels == 0;
-      if (!isTop) {
-        //! sign mean bottom
-        print("top");
-        page++;
-        BlocProvider.of<ChatBloc>(context).add(
-            GetPersonalChatEvent(chatId: widget.chatId, page: page));
-      }
-    }
   }
 
   initSocket() {
@@ -145,7 +139,6 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                 setState(() {
                   BlocProvider.of<ChatBloc>(context).add(
                       GetPersonalChatEvent(chatId: widget.chatId, page: 0));
-                  listItem=[];
                 });
               },
             ),
@@ -158,17 +151,13 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
           }
           BlocProvider.of<ChatBloc>(context)
               .add(GetPersonalChatEvent(chatId: widget.chatId, page: 0));
-          listItem=[];
           return CustomCircularLoadingBar();
         } else if (state is GetPersonalChatSuccessState) {
+          print("GetPersonalChatSuccessState");
           scrollLoaderVisibility = false;
-          if(socketP!.id!=null && previousScoketId!=socketP!.id) {
-            previousScoketId = socketP!.id!;
-            BlocProvider.of<ChatBloc>(context).add(
-                SetSocketEvent(socketP!.id!));
-          }
-
-            listItem +=state.personalChatModel.data!.messages!;
+          if(socketP!.id!=null)
+            BlocProvider.of<ChatBloc>(context).add(SetSocketEvent(socketP!.id!));
+          listItem = state.personalChatModel.data!.messages!;
           return PopScope(
             canPop: true,
             onPopInvoked: (bool didPop) {
@@ -202,8 +191,18 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                   ),
                   actions: [
                     PopupMenuButton(
+                        padding: const EdgeInsets.all(8),
+                         color:Colors.black,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                          side: BorderSide(
+                            color: themeColorLight,
+                            width: 1
+                          )
+                        ),
                         itemBuilder: (context) => [
                           PopupMenuItem(
+                            padding: const EdgeInsets.all(8),
                             onTap: () {
                               focusInput.unfocus();
                               if (deactivate_on == null) {
@@ -229,20 +228,30 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                             },
                             child: deactivate_on == null
                                 ? Center(
-                                child: Text(
-                                  "End Chat",
-                                  style: GoogleFonts.poppins(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 16),
+                                child: Container(
+                                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                                  child: Text(
+                                    "End Chat",
+                                    style: GoogleFonts.poppins(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 16),
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50)
+                                  ),
+                                  
                                 ))
                                 : Center(
-                                child: Text(
-                                  "Start Chat",
-                                  style: GoogleFonts.poppins(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 16),
+                                child: Container(
+                                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                                  child: Text(
+                                    "Start Chat",
+                                    style: GoogleFonts.poppins(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 16),
+                                  ),
                                 )),
                           )
                         ])
@@ -388,7 +397,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                       controller: _controller,
                                       minLines: 1,
                                       maxLines: 3,
-                                      cursorColor: Colors.yellow.shade600,
+                                      cursorColor: themeColorLight,
                                       onChanged: (value) {
                                         inputValue = value;
                                       },
@@ -402,7 +411,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                                 },
                                                 child: Icon(Icons
                                                     .photo_library_sharp))),
-                                        prefixIconColor: Colors.yellow,
+                                        prefixIconColor: themeColorLight,
                                         suffixIcon: InkWell(
                                           child: Icon(Icons.send),
                                           onTap: () async {
@@ -465,19 +474,19 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                             inputValue = null;
                                           },
                                         ),
-                                        suffixIconColor: Colors.yellow,
+                                        suffixIconColor: themeColorLight,
                                         fillColor: Colors.white,
                                         enabledBorder: OutlineInputBorder(
                                             borderRadius:
                                             BorderRadius.circular(30),
                                             borderSide: BorderSide(
-                                                color: Colors.yellow,
+                                                color: themeColorLight,
                                                 width: 1)),
                                         focusedBorder: OutlineInputBorder(
                                             borderRadius:
                                             BorderRadius.circular(30),
                                             borderSide: BorderSide(
-                                                color: Colors.yellow,
+                                                color: themeColorLight,
                                                 width: 1)),
                                         hintText: "type here",
                                         hintStyle: GoogleFonts.baloo2(
@@ -499,7 +508,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                               color: Colors.black,
                               child: Center(
                                 child: CircularProgressIndicator(
-                                  color: Colors.yellow,
+                                  color: themeColorLight,
                                 ),
                               ),
                             ),
@@ -526,9 +535,9 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                   child: Container(
                                     padding: EdgeInsets.all(8),
                                     constraints: BoxConstraints(
-                                      maxHeight: MediaQuery.of(context)
-                                          .size
-                                          .height/2
+                                        maxHeight: MediaQuery.of(context)
+                                            .size
+                                            .height/2
                                     ),
                                     width: MediaQuery.of(context).size.width -
                                         MediaQuery.of(context).size.width / 4,
