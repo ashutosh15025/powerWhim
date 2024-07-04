@@ -73,6 +73,7 @@ class _SignInScreenState extends State<SignInScreen> {
               padding: const EdgeInsets.fromLTRB(0, 24, 0, 24),
               child: InkWell(
                  onTap: (){
+                   FocusScope.of(context).unfocus();
                    if(userEmail!=null){
                    bloc.add(RegisterEvent(userEmail!,widget.forget));
                    }
