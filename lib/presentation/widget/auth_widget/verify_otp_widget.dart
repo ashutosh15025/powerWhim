@@ -17,9 +17,10 @@ class VerifyOptWidget extends StatefulWidget {
 
 class _VerifyOptWidgetState extends State<VerifyOptWidget> {
   @override
+  String ? otp;
+
   Widget build(BuildContext context) {
     var bloc =  BlocProvider.of<AuthBloc>(context);
-    String ? otp;
     return Center(
       child: Container(
         margin: EdgeInsets.all(24),
@@ -65,14 +66,13 @@ class _VerifyOptWidgetState extends State<VerifyOptWidget> {
                 otp = output;
               },
             ),
-            Text("Resend OTP"),
             Container(
                 padding: EdgeInsets.all(24),
                 child: InkWell(
-                   onTap: (){
+                    onTap: (){
+                     print(otp.toString());
                       if(otp!=null)
                         bloc.add(VerifyOTPsEvent(otp!));
-                        print(otp);
                    },
                     child: GradientButtonGreenYellow(buttonText: "Verify",)))
           ],
