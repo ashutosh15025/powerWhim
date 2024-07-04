@@ -53,7 +53,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
           );
           else{
             return Container(
-              height: 2*MediaQuery.of(context).size.height/3,
+              height:5*MediaQuery.of(context).size.height/6,
               color: Colors.black,
               child: InkWell(
                 onTap: (){

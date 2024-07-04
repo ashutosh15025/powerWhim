@@ -170,10 +170,7 @@ class _ChatScreenState extends State<ChatScreen> {
               alignment: Alignment.topCenter,
               children: [
                 Container(
-                  height: MediaQuery
-                      .of(context)
-                      .size
-                      .height,
+                  height:5*MediaQuery.of(context).size.height/6,
                   color: Colors.black,
                   child: InkWell(
                     onTap: () {
