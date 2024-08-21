@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:powerwhim/constant/color_constant.dart';
 
 class ContentDescription extends StatefulWidget {
   const ContentDescription({super.key, required this.title, required this.description});
@@ -24,7 +25,7 @@ class _ContentDescriptionState extends State<ContentDescription> {
             textStyle:TextStyle(
             fontWeight: FontWeight.w800,
             fontSize: 16,
-            color: Colors.yellow.shade500,
+            color: themeColorLight,
           ),),),
           Text("${widget.description}",
             style: GoogleFonts.poppins(

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:powerwhim/constant/color_constant.dart';
 import 'package:powerwhim/presentation/bloc/chatbloc/chat_bloc.dart';
 import 'package:powerwhim/presentation/bloc/profilebloc/profilebloc_bloc.dart';
 
@@ -9,12 +10,14 @@ import '../../../constant/service_api_constant.dart';
 import '../../screens/chat_screen/personal_chat_screen.dart';
 
 class FriendDmWidget extends StatelessWidget {
-  const FriendDmWidget({super.key, required this.name, required this.description, required this.userId, required this.chatId, this.deactivate_on});
+  const FriendDmWidget({super.key, required this.name, required this.description, required this.userId, required this.chatId, this.deactivate_on, required this.event, });
   final String name;
-  final String description;
+  final String ? description;
   final String userId;
   final String chatId;
+  final String ? event;
   final int pageCount = 0;
+
   final DateTime ? deactivate_on;
 
   @override
@@ -51,12 +54,12 @@ class FriendDmWidget extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Container(
+                      description!=null?Container(
                         constraints:BoxConstraints(
                           maxWidth: MediaQuery.of(context).size.width-MediaQuery.of(context).size.width/4,
                         ),
                         child: Text(
-                          description,
+                          description!,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.baloo2(
@@ -68,7 +71,39 @@ class FriendDmWidget extends StatelessWidget {
                               )
                           ),
                         ),
-                      )
+                      ):SizedBox.shrink(),
+                      event!=null?Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Event:",
+                            style: GoogleFonts.baloo2(
+                                textStyle: TextStyle(
+                                    fontSize: 14,
+                                    color: themeColor,
+                                    fontWeight: FontWeight.bold
+
+                                )
+                            ),),
+                          Container(
+                            padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
+                            constraints:BoxConstraints(
+                              maxWidth: MediaQuery.of(context).size.width-200,
+                            ),
+                            child: Text(
+                              event!,
+                              style: GoogleFonts.baloo2(
+                                  textStyle: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w400
+
+                                  )
+                              ),
+                            ),
+                          ),
+                        ],
+                      ):SizedBox.shrink()
                     ],
                   ),
                 ),

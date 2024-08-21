@@ -29,6 +29,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<GetFriendsEvent>(onGetFriendsEvent);
     on<GetFullProfileEvent>(onGetFullProfileEvent);
     on<GetStartEndChatsEvent>(onGetStartEndChat);
+    on<GetChatEndReasonEvent>(onGetChatEndReason);
+
   }
 
   void onGetChatsSuccessEvent(
@@ -56,7 +58,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   void onGetPersonalChatEvent(
       GetPersonalChatEvent event, Emitter<ChatState> emit) async {
     if (event.scroll != null) emit(LoadingState());
-
+    print("api call");
     var apiResult = await locator
         .get<ChatsFriendsUsecase>()
         .getPersonalChat(event.chatId, event.page, USER_ID!);
@@ -64,6 +66,17 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       if (apiResult.response.statusCode == HttpStatus.ok) {
         if (apiResult.data != null && apiResult.data.data != null) {
           emit(GetPersonalChatSuccessState(apiResult.data));
+          if(event.page>0){
+            if(apiResult.data!.data!.messages!=null&&apiResult.data!.data!.messages!.length>0)
+            personalChatList?.addAll(apiResult.data!.data!.messages!);
+          }
+          else{
+            if(apiResult.data!.data!.messages!=null&&apiResult.data!.data!.messages!.length>0)
+              personalChatList=apiResult.data!.data!.messages!;
+            else
+              personalChatList=[];
+
+          }
         } else {
           emit(ErrorState(ERROR));
         }
@@ -154,6 +167,24 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     if (response.data!.data != null) {
       if (response.data.data!.status == StringConstant.successState) {
         emit(GetStartEndChatsState(response.data.data!.mssg!));
+      } else {
+        emit(ErrorState(response.data!.data!.mssg!));
+      }
+    } else {}
+  }
+
+
+
+  void onGetChatEndReason(
+      GetChatEndReasonEvent event, Emitter<ChatState> emit) async {
+    emit(LoadingState());
+    var response = await locator
+        .get<ChatsFriendsUsecase>()
+        .getChatEndReason();
+    if (response.data!.data != null) {
+      if (response.data.data!.status == StringConstant.successState) {
+        if(response.data.data!.reasons!=null)
+        emit(GetChatEndReasonState(response.data.data!.reasons!));
       } else {
         emit(ErrorState(response.data!.data!.mssg!));
       }

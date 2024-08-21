@@ -55,6 +55,18 @@ class UserProfileRepoImp extends UserProfileRepo{
     return userProfileService.setUpMyLocation(longitude, latitude,USER_ID!);
   }
 
+  @override
+  Future<HttpResponse<AccountManagementModel>> setEventProfile(String userId,String event) {
+    var requestBody = {
+      "event" : event,
+      "user_id" : userId
+    };
+    return userProfileService.setEventProfile(requestBody);
+  }
 
+  @override
+  Future<HttpResponse<AccountManagementModel>> setRemoveEventFromProfile(String userId) {
+    return userProfileService.setRemoveEventFromProfile(userId);
+  }
 
 }

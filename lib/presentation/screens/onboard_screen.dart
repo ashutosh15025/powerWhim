@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:powerwhim/constant/string_constant.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../constant/service_api_constant.dart';
@@ -17,6 +18,7 @@ class OnBoardPage extends StatefulWidget {
 class _OnBoardPageState extends State<OnBoardPage> {
   int currentPage = 0;
   final controller = PageController();
+
 
   @override
   void dispose() {
@@ -35,13 +37,13 @@ class _OnBoardPageState extends State<OnBoardPage> {
             controller: controller,
             children: [
               Container(
-                child: onBoardPageView(),
+                child: onBoardPageView(description: StringConstant.onBoardPage1desp,),
               ),
               Container(
-                child: onBoardPageView(),
+                child: onBoardPageView(description: StringConstant.onBoardPage2desp,),
               ),
               Container(
-                child: onBoardPageView(),
+                child: onBoardPageView(description: StringConstant.onBoardPage3desp,),
               )
             ],
             onPageChanged: (int page) {

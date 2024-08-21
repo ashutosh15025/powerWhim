@@ -61,3 +61,8 @@ class GetStartEndChatsEvent extends ChatEvent {
 
   GetStartEndChatsEvent(this.userId, this.chatId, this.deactivate_on);
 }
+
+
+class GetChatEndReasonEvent extends ChatEvent {
+  GetChatEndReasonEvent();
+}

@@ -37,4 +37,10 @@ class UserProfileUsecase{
     return _userProfileRepoImp.setMyLocation(longitude,latitude);
   }
 
+  Future<HttpResponse<AccountManagementModel>> setEventProfile(String userId,String event) {
+    return _userProfileRepoImp.setEventProfile(userId,event);
+  }
+  Future<HttpResponse<AccountManagementModel>> setRemoveEventFromProfile(String userId) {
+    return _userProfileRepoImp.setRemoveEventFromProfile(userId);
+  }
 }

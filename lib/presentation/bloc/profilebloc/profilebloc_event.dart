@@ -45,6 +45,18 @@ class setUpMyLocationEvent extends ProfileblocEvent{
 
 
 
+class setEventProfileEvent extends ProfileblocEvent{
+  String event;
+  setEventProfileEvent(this.event);
+}
+
+
+class setRemoveEventFromProfileEvent extends ProfileblocEvent{
+  setRemoveEventFromProfileEvent();
+}
+
+
+
 
 
 

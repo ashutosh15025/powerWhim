@@ -1,8 +1,10 @@
 import 'package:powerwhim/data/model/account_managment_model.dart';
 import 'package:powerwhim/data/model/chats/add_chat_model.dart';
+import 'package:powerwhim/data/model/chats/chat_end_reason_model.dart';
 import 'package:powerwhim/data/model/chats/chats_details_model.dart';
 import 'package:powerwhim/data/model/chats/friends_model.dart';
 import 'package:powerwhim/data/model/chats/personal_chat_model.dart';
+import 'package:powerwhim/presentation/bloc/chatbloc/chat_bloc.dart';
 import 'package:retrofit/dio.dart';
 
 abstract class ChatsFriendsRepo{
@@ -19,4 +21,5 @@ abstract class ChatsFriendsRepo{
 
   Future<HttpResponse<AccountManagementModel>> startEndChats(String userId ,String chatId,int ? deactivate_on);
 
+  Future<HttpResponse<ChatEndReasonModel>> getChatEndReason();
 }

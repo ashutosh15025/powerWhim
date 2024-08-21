@@ -53,6 +53,7 @@ class Profile {
   DateTime? dateOfBirth;
   String? sports;
   String? hobbies;
+  String? event;
   String? userId;
 
   Profile({
@@ -60,6 +61,7 @@ class Profile {
     this.dateOfBirth,
     this.sports,
     this.hobbies,
+    this.event,
     this.userId,
   });
 
@@ -68,6 +70,7 @@ class Profile {
     dateOfBirth: json["date_of_birth"] == null ? null : DateTime.parse(json["date_of_birth"]),
     sports: json["sports"],
     hobbies: json["hobbies"],
+    event: json["event"],
     userId: json["user_id"],
   );
 
@@ -76,6 +79,7 @@ class Profile {
     "date_of_birth": dateOfBirth?.toIso8601String(),
     "sports": sports,
     "hobbies": hobbies,
+    "event": event,
     "user_id": userId,
   };
 }

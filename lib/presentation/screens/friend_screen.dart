@@ -42,10 +42,11 @@ class _FriendsScreenState extends State<FriendsScreen> {
                   Friend friend = friendList[index];
                   return FriendDmWidget(
                       name: friend.userName!=null?friend.userName!:"Name",
-                      description: friend.description!=null?friend.description!:"description",
+                      description: friend.description,
                       userId: friend.userId!=null?friend.userId!:"userid",
                       chatId: friend.chatId!=null?friend.chatId!:"chatid",
                       deactivate_on: friend.deactivateOn,
+                      event:friend.event
                   );
                 },
               ),

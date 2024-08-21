@@ -4,7 +4,8 @@ import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class onBoardPageView extends StatelessWidget {
-  const onBoardPageView({super.key});
+  const onBoardPageView({super.key, required this.description});
+  final String description;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +42,7 @@ class onBoardPageView extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-          child: Text("Join us socialize with millions of power which change match",
+          child: Text(description,
             style: GoogleFonts.poppins(
                 textStyle: TextStyle(
                     fontSize: 18,

@@ -3,12 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:powerwhim/constant/color_constant.dart';
 import 'package:powerwhim/presentation/widget/custom/profile_card_widget.dart';
-
 import '../../../constant/full_profile_privious_screen.dart';
-import '../../../constant/service_api_constant.dart';
 import '../../../data/model/profilemodel/profiles_model.dart';
 import '../../bloc/profilebloc/profilebloc_bloc.dart';
-import '../../screens/OthersProfileScreen.dart';
 
 class ListProfileWidget extends StatefulWidget {
   const ListProfileWidget({super.key});
@@ -119,7 +116,7 @@ class _ListProfileWidgetState extends State<ListProfileWidget> {
                         age: getAge(listItem[index].dateOfBirth),
                         sport: listItem[index].sports,
                         hobbies: listItem[index].hobbies,
-                        userId: listItem[index].userId,
+                        userId: listItem[index].userId
                       );
                     },
                   ),

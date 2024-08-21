@@ -61,6 +61,10 @@ class GetFullProfileSuccessState extends ChatState {
 
 class GetStartEndChatsState extends ChatState {
   String mssg;
-
   GetStartEndChatsState(this.mssg);
+}
+
+class GetChatEndReasonState extends ChatState {
+  List<String> reasons ;
+  GetChatEndReasonState(this.reasons);
 }

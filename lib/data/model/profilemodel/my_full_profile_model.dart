@@ -55,11 +55,12 @@ class MyProfile {
   String? meetingDistance;
   String? sports;
   String? hobbies;
-  dynamic ambition;
-  dynamic accomplishment;
+  String? ambition;
+  String? accomplishment;
   List<bool>? weekAvailability;
   AgeRange? ageRange;
   List<String>? photos;
+  String? event;
 
   MyProfile({
     this.profileId,
@@ -73,6 +74,7 @@ class MyProfile {
     this.weekAvailability,
     this.ageRange,
     this.photos,
+    this.event,
   });
 
   factory MyProfile.fromJson(Map<String, dynamic> json) => MyProfile(
@@ -87,6 +89,7 @@ class MyProfile {
     weekAvailability: json["week_availability"] == null ? [] : List<bool>.from(json["week_availability"]!.map((x) => x)),
     ageRange: json["age_range"] == null ? null : AgeRange.fromJson(json["age_range"]),
     photos: json["photos"] == null ? [] : List<String>.from(json["photos"]!.map((x) => x)),
+    event: json["event"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -101,6 +104,7 @@ class MyProfile {
     "week_availability": weekAvailability == null ? [] : List<dynamic>.from(weekAvailability!.map((x) => x)),
     "age_range": ageRange?.toJson(),
     "photos": photos == null ? [] : List<dynamic>.from(photos!.map((x) => x)),
+    "event": event,
   };
 }
 

@@ -56,9 +56,14 @@ class _CustomDropDownState extends State<CustomDropDown> {
                 Container(
                   width: MediaQuery.of(context).size.width-120,
                   child: TextField(
+
                     cursorColor: Colors.yellow,
+                    style: TextStyle(
+                      color: Colors.white
+                    ),
                     decoration: InputDecoration(
                       fillColor: Colors.white,
+                      contentPadding: EdgeInsets.all(2),
                       enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
                           borderRadius: BorderRadius.circular(10)
@@ -69,7 +74,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
                       ),
                       hintText: "Enter Your choice (if not listed)",
                       hintStyle: GoogleFonts.baloo2(
-                          textStyle: TextStyle(color: Colors.grey,
+                          textStyle: TextStyle(color: Colors.white,
                               fontWeight: FontWeight.w400)
                       ),
                     ),
@@ -110,6 +115,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
               child: ButtonTheme(
                 alignedDropdown: true,
                 child: DropdownButton<String>(
+                  menuMaxHeight: 300,
                   borderRadius:BorderRadius.circular(16),
                   isExpanded: true,
                   dropdownColor: Colors.grey.shade900,

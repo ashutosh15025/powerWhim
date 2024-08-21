@@ -118,7 +118,6 @@ class _ProfileCardWidgetState extends State<ProfileCardWidget> {
                           children: [
                             InkWell(
                               onTap: (){
-                                print("api clicked");
                                 BlocProvider.of<ProfileblocBloc>(context).add(getFullProfileEvent(widget.userId!));},
                               child: Icon(Icons.chevron_right_sharp,
                                 color: themeColor,

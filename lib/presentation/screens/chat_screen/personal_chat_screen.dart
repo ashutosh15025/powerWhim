@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
@@ -7,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:powerwhim/constant/color_constant.dart';
 import 'package:powerwhim/constant/service_api_constant.dart';
 import 'package:powerwhim/constant/string_constant.dart';
 import 'package:powerwhim/data/model/chats/personal_chat_model.dart';
@@ -17,6 +15,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:powerwhim/presentation/widget/custom/custom_circular_loading_bar.dart';
 import 'package:powerwhim/presentation/widget/error/custom_error_widget.dart';
 
+import '../../../constant/color_constant.dart';
 import '../../widget/message_widget/my_message_widget.dart';
 import '../../widget/message_widget/other_messages.dart';
 import 'package:dospace/dospace.dart' as dospace;
@@ -42,6 +41,7 @@ class PersonalChatScreen extends StatefulWidget {
 }
 
 class _PersonalChatScreenState extends State<PersonalChatScreen> {
+
   List<Message> listItem = [];
   List<Message> traceList = [];
   IO.Socket? socketP;
@@ -52,35 +52,42 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
   String? uploaded_file_url;
   final TextEditingController _controller = new TextEditingController();
   final focusInput = FocusNode();
-
-  int pageCount = 0;
-
+  int page = 0;
   bool scrollLoaderVisibility = false;
-
   bool disableSendbutton = false;
-
   bool imageLoader = false;
-
   DateTime? deactivate_on;
-
   bool errorWidgetVisibility = false;
-
   bool endReasonWidget = false;
-
   final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
-
   final ScrollController _scrollController = ScrollController();
+  String previousScoketId="";
 
   @override
   void initState() {
     deactivate_on = widget.deactivate_on;
     initSocket();
+    _scrollController.addListener(_onScroll);
     super.initState();
     _scrollToBottom();
   }
 
   void _scrollToBottom() async {
     await Future.delayed(Duration(milliseconds: 100));
+  }
+
+
+  void _onScroll() {
+    if (_scrollController.position.atEdge) {
+      bool isTop = _scrollController.position.pixels == 0;
+      if (!isTop) {
+        print("top");
+        page++;
+
+        BlocProvider.of<ChatBloc>(context).add(
+            GetPersonalChatEvent(chatId: widget.chatId, page: page));
+      }
+    }
   }
 
   initSocket() {
@@ -153,11 +160,13 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
               .add(GetPersonalChatEvent(chatId: widget.chatId, page: 0));
           return CustomCircularLoadingBar();
         } else if (state is GetPersonalChatSuccessState) {
-          print("GetPersonalChatSuccessState");
           scrollLoaderVisibility = false;
-          if(socketP!.id!=null)
-            BlocProvider.of<ChatBloc>(context).add(SetSocketEvent(socketP!.id!));
-          listItem = state.personalChatModel.data!.messages!;
+          if(socketP!.id!=null && previousScoketId!=socketP!.id) {
+            previousScoketId = socketP!.id!;
+            BlocProvider.of<ChatBloc>(context).add(
+                SetSocketEvent(socketP!.id!));
+          }
+          listItem = BlocProvider.of<ChatBloc>(context).personalChatList;
           return PopScope(
             canPop: true,
             onPopInvoked: (bool didPop) {
@@ -191,18 +200,9 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                   ),
                   actions: [
                     PopupMenuButton(
-                        padding: const EdgeInsets.all(8),
-                         color:Colors.black,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                          side: BorderSide(
-                            color: themeColorLight,
-                            width: 1
-                          )
-                        ),
+                         color:Colors.transparent,
                         itemBuilder: (context) => [
                           PopupMenuItem(
-                            padding: const EdgeInsets.all(8),
                             onTap: () {
                               focusInput.unfocus();
                               if (deactivate_on == null) {
@@ -229,7 +229,9 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                             child: deactivate_on == null
                                 ? Center(
                                 child: Container(
-                                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                                  width: 200,
+                                  alignment: Alignment.center,
+                                  padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
                                   child: Text(
                                     "End Chat",
                                     style: GoogleFonts.poppins(
@@ -238,13 +240,16 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                         fontSize: 16),
                                   ),
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(50)
+                                    borderRadius: BorderRadius.circular(50),
+                                    border: Border.all(color: themeColorLight,width: 1),
                                   ),
-                                  
+
                                 ))
                                 : Center(
                                 child: Container(
-                                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                                  width: 200,
+                                  alignment: Alignment.center,
+                                  padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
                                   child: Text(
                                     "Start Chat",
                                     style: GoogleFonts.poppins(
@@ -252,7 +257,36 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                         fontWeight: FontWeight.w400,
                                         fontSize: 16),
                                   ),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50),
+                                    border: Border.all(color: themeColorLight,width: 1)
+                                  ),
                                 )),
+                          ),
+                          PopupMenuItem(
+                            padding: const EdgeInsets.all(8),
+                            onTap: () {
+                              focusInput.unfocus();
+
+                            },
+                            child:Center(
+                                child: Container(
+                                  width: 200,
+                                  alignment: Alignment.center,
+                                  padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
+                                  child: Text(
+                                    "View Profile",
+                                    style: GoogleFonts.poppins(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 16),
+                                  ),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50),
+                                      border: Border.all(color: themeColorLight,width: 1)
+                                  ),
+
+                                ))
                           )
                         ])
                   ],

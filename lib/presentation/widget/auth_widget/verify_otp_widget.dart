@@ -66,6 +66,13 @@ class _VerifyOptWidgetState extends State<VerifyOptWidget> {
                 otp = output;
               },
             ),
+            Text("Please check your email for the OTP.",
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              fontFamily: 'Baloo2',
+              color: Colors.white
+            ),),
             Container(
                 padding: EdgeInsets.all(24),
                 child: InkWell(

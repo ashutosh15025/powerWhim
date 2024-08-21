@@ -14,7 +14,9 @@ abstract class UserProfileRepo{
   Future<HttpResponse<ProfilesModel>> getProfiles(String userId,String? search,int page);
   Future<HttpResponse<FullProfileModel>> getFullProfile(String userId,String myUserId);
   Future<HttpResponse<AccountManagementModel>> getHelp(HelpModel helpmodel);
+  Future<HttpResponse<AccountManagementModel>> setEventProfile(String userId,String event);
   Future<HttpResponse<FriendsModel>> getFriends(String userId);
   Future<HttpResponse<MyFullProfileModel>> getMyFullProfile(String userId);
   Future<HttpResponse<CommonResponseModel>> setMyLocation(double longitude, double latitude);
+  Future<HttpResponse<AccountManagementModel>> setRemoveEventFromProfile(String userId);
 }

@@ -77,3 +77,23 @@ class setLocationFailed extends ProfileblocState{
   String mssg;
   setLocationFailed(this.mssg);
 }
+
+class setEventSuccessState extends ProfileblocState{
+  String mssg;
+  setEventSuccessState(this.mssg);
+}
+
+class setRemoveEventSuccessState extends ProfileblocState{
+  String mssg;
+  setRemoveEventSuccessState(this.mssg);
+}
+
+class ErrorState extends ProfileblocState{
+  String mssg;
+  ErrorState(this.mssg);
+}
+
+
+class LoadingState extends ProfileblocState{
+  LoadingState();
+}

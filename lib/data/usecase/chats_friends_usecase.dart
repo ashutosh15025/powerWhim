@@ -1,5 +1,6 @@
 import 'package:powerwhim/data/model/account_managment_model.dart';
 import 'package:powerwhim/data/model/chats/add_chat_model.dart';
+import 'package:powerwhim/data/model/chats/chat_end_reason_model.dart';
 import 'package:powerwhim/data/model/chats/chats_details_model.dart';
 import 'package:powerwhim/data/model/chats/friends_model.dart';
 import 'package:powerwhim/data/model/chats/personal_chat_model.dart';
@@ -36,4 +37,7 @@ class ChatsFriendsUsecase {
     return _chatsFriendsRepoImp.startEndChats(userId, chatId, deactivate_on);
   }
 
+  Future<HttpResponse<ChatEndReasonModel>> getChatEndReason() {
+    return _chatsFriendsRepoImp.getChatEndReason();
+  }
 }

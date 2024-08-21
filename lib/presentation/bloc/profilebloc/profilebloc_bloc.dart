@@ -20,6 +20,8 @@ class ProfileblocBloc extends Bloc<ProfileblocEvent, ProfileblocState> {
     on<getFullProfileEvent>(ongetFullProfileEvent);
     on<getMyFullProfileEvent>(ongetMyFullProfileEvent);
     on<setUpMyLocationEvent>(onsetUpMyLocationEvent);
+    on<setEventProfileEvent>(onsetEventProfileEvent);
+    on<setRemoveEventFromProfileEvent>(onsetRemoveEventFromProfileEvent);
 
   }
 
@@ -70,10 +72,12 @@ class ProfileblocBloc extends Bloc<ProfileblocEvent, ProfileblocState> {
   }
 
   void ongetMyFullProfileEvent(getMyFullProfileEvent event,Emitter<ProfileblocState>emit)async{
+    print("getFullProfile");
     var response = await locator.get<UserProfileUsecase>().getMyFullProfile(event.userId);
     if(response.data!=null){
       if(response.data.data!=null && response.data.data!.status==StringConstant.successState)
-        emit(getMyFullProfileSuccessState(response.data));
+        {print(response.data.data!.myProfile!.event);
+        emit(getMyFullProfileSuccessState(response.data));}
       else
         emit(getMyFullProfileFailedState(response.data.data!.mssg!));
     }
@@ -85,15 +89,45 @@ class ProfileblocBloc extends Bloc<ProfileblocEvent, ProfileblocState> {
 
   void onsetUpMyLocationEvent(setUpMyLocationEvent event,Emitter<ProfileblocState>emit) async{
     var response = await locator.get<UserProfileUsecase>().setUpMyLocation(event.longitude,event.latitude);
-    print(response.data.data!.mssg);
     if(response.data!=null){
       if(response.data.data!=null && response.data.data!.status==StringConstant.successState)
-        emit(setLocationSucess(response.data.data!.mssg!));
+       {}
       else
         emit(setLocationFailed(response.data.data!.mssg!));
     }
     else{
       emit(setLocationFailed(response.data.data!.mssg!));
+    }
+  }
+
+  void onsetEventProfileEvent(setEventProfileEvent event,Emitter<ProfileblocState>emit) async{
+    var response = await locator.get<UserProfileUsecase>().setEventProfile(USER_ID!, event.event);
+    if(response.data!=null){
+      if(response.data.data!=null && response.data.data!.status==StringConstant.successState)
+       {
+         emit(LoadingState());
+       }
+      else
+        ErrorState(response.data.data!.mssg!);
+    }
+    else{
+      emit(ErrorState(response.data.data!.mssg!));
+    }
+  }
+
+
+
+  void onsetRemoveEventFromProfileEvent(setRemoveEventFromProfileEvent event,Emitter<ProfileblocState>emit) async{
+    emit(LoadingState());
+    var response = await locator.get<UserProfileUsecase>().setRemoveEventFromProfile(USER_ID!);
+    if(response.data!=null){
+      if(response.data.data!=null && response.data.data!.status==StringConstant.successState)
+        add(getMyFullProfileEvent(USER_ID!));
+      else
+        ErrorState(response.data.data!.mssg!);
+    }
+    else{
+      emit(ErrorState(response.data.data!.mssg!));
     }
   }
 

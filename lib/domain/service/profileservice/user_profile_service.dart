@@ -7,6 +7,7 @@ import 'package:powerwhim/data/model/help_model.dart';
 import 'package:powerwhim/data/model/profilemodel/full_profile.dart';
 import 'package:powerwhim/data/model/profilemodel/my_full_profile_model.dart';
 import 'package:powerwhim/data/model/profilemodel/profiles_model.dart';
+import 'package:powerwhim/presentation/bloc/profilebloc/profilebloc_bloc.dart';
 import 'package:retrofit/dio.dart';
 import 'package:retrofit/http.dart';
 
@@ -55,5 +56,18 @@ abstract class UserProfileService{
       @Query("latitude")double latitude,
       @Query("user_id")String UserId
       );
+
+  @POST("api/profiles/add-event")
+  Future<HttpResponse<AccountManagementModel>> setEventProfile(
+      @Body() Map<String, dynamic> body,
+      );
+
+
+
+  @GET("api/profiles/delete-event")
+  Future<HttpResponse<AccountManagementModel>> setRemoveEventFromProfile(
+      @Query("user_id")String userId
+      );
+
 
 }

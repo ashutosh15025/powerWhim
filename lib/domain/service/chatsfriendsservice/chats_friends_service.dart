@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:powerwhim/constant/service_api_constant.dart';
 import 'package:powerwhim/data/model/account_managment_model.dart';
 import 'package:powerwhim/data/model/chats/add_chat_model.dart';
+import 'package:powerwhim/data/model/chats/chat_end_reason_model.dart';
 import 'package:powerwhim/data/model/chats/chats_details_model.dart';
 import 'package:powerwhim/data/model/chats/friends_model.dart';
 import 'package:powerwhim/data/model/chats/personal_chat_model.dart';
@@ -59,4 +60,8 @@ abstract class ChatsFriendsService{
   Future<HttpResponse<AccountManagementModel>> startEndChats(
       @Body() Map<String, dynamic> body
       );
+
+
+  @GET("api/chats/end-chat-reason")
+  Future<HttpResponse<ChatEndReasonModel>> getChatEndReason();
 }
