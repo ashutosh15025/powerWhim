@@ -10,13 +10,14 @@ import '../../../constant/service_api_constant.dart';
 import '../../screens/chat_screen/personal_chat_screen.dart';
 
 class FriendDmWidget extends StatelessWidget {
-  const FriendDmWidget({super.key, required this.name, required this.description, required this.userId, required this.chatId, this.deactivate_on, required this.event, });
+  const FriendDmWidget({super.key, required this.name, required this.description, required this.userId, required this.chatId, this.deactivate_on, required this.event, required this.showEventWidget, });
   final String name;
   final String ? description;
   final String userId;
   final String chatId;
   final String ? event;
   final int pageCount = 0;
+  final Function(String,String) showEventWidget;
 
   final DateTime ? deactivate_on;
 
@@ -29,10 +30,9 @@ class FriendDmWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
-
               children: [
                 Container(
-                  width: MediaQuery.of(context).size.width-MediaQuery.of(context).size.width/4,
+                  width: MediaQuery.of(context).size.width-MediaQuery.of(context).size.width/3,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -72,38 +72,6 @@ class FriendDmWidget extends StatelessWidget {
                           ),
                         ),
                       ):SizedBox.shrink(),
-                      event!=null?Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Event:",
-                            style: GoogleFonts.baloo2(
-                                textStyle: TextStyle(
-                                    fontSize: 14,
-                                    color: themeColor,
-                                    fontWeight: FontWeight.bold
-
-                                )
-                            ),),
-                          Container(
-                            padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
-                            constraints:BoxConstraints(
-                              maxWidth: MediaQuery.of(context).size.width-200,
-                            ),
-                            child: Text(
-                              event!,
-                              style: GoogleFonts.baloo2(
-                                  textStyle: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w400
-
-                                  )
-                              ),
-                            ),
-                          ),
-                        ],
-                      ):SizedBox.shrink()
                     ],
                   ),
                 ),
@@ -117,12 +85,22 @@ class FriendDmWidget extends StatelessWidget {
                     )),
                 InkWell(
                     onTap: (){
-                      print(chatId +"chatId");
                       BlocProvider.of<ChatBloc>(context).add(GetPersonalChatEvent(chatId: chatId,page: pageCount,));
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (_) =>  PersonalChatScreen(chatId: chatId,name: name,previousScreen: "FriendsScreen",deactivate_on: deactivate_on,)));
                     },
-                    child: Icon(Icons.message,color: green,))
+                    child: Icon(Icons.message,color: green,)),
+                Visibility(
+                  visible: event==null?false:true,
+                  child: InkWell(
+                      onTap:(){
+                        showEventWidget(name,event!);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                        child: Icon(Icons.event,color: green,),
+                      )),
+                ),
               ],
             ),
           ),
