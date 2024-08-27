@@ -48,6 +48,7 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
                     name: fullprofile!.name==null?"":fullprofile!.name!,
                     previousScreen: "OthersProfileScreen",
                 deactivate_on: state.deactivate_on,
+                userId: fullprofile!.userId,
                   )));
           BlocProvider.of<ChatBloc>(context)
               .add(GetPersonalChatEvent(chatId:state.chatId,page: 0));
