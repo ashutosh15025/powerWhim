@@ -16,6 +16,7 @@ import 'package:powerwhim/presentation/widget/custom/custom_circular_loading_bar
 import 'package:powerwhim/presentation/widget/error/custom_error_widget.dart';
 
 import '../../../constant/color_constant.dart';
+import '../../../constant/full_profile_privious_screen.dart';
 import '../../widget/message_widget/my_message_widget.dart';
 import '../../widget/message_widget/other_messages.dart';
 import 'package:dospace/dospace.dart' as dospace;
@@ -28,10 +29,12 @@ class PersonalChatScreen extends StatefulWidget {
         required this.name,
         this.previousScreen,
         this.socketId,
+        this.userId,
         this.deactivate_on});
 
   final String chatId;
   final String name;
+  final String ? userId;
   final String? previousScreen;
   final String? socketId;
   final DateTime? deactivate_on;
@@ -135,7 +138,22 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
   Widget build(BuildContext context) {
 
     return BlocConsumer<ChatBloc, ChatState>(
-      listener: (context, state) {},
+      buildWhen: (previous,current){
+        if(current is getFullProfileSuccessState)
+          return false;
+        else
+          return true;
+      },
+      listener: (context, state) {
+         if(state is getFullProfileSuccessState){
+           print(state);
+           if (state.fullProfile != null) {
+             Navigator.of(context).pushNamed('/profile',
+                 arguments: FullProfilePriviousScreen(
+                     state.fullProfile, 'viewProfile'));
+           }
+        }
+      },
       builder: (context, state) {
         if (state is ErrorState) {
           return Scaffold(
@@ -150,7 +168,8 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
               },
             ),
           );
-        } else if (state is GetStartEndChatsState) {
+        }
+        else if (state is GetStartEndChatsState) {
           if (state.mssg == "Chat Activated") {
             deactivate_on = null;
           } else if (state.mssg == "Chat Deactivated") {
@@ -159,7 +178,10 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
           BlocProvider.of<ChatBloc>(context)
               .add(GetPersonalChatEvent(chatId: widget.chatId, page: 0));
           return CustomCircularLoadingBar();
-        } else if (state is GetPersonalChatSuccessState) {
+        }
+
+
+        else if (state is GetPersonalChatSuccessState) {
           scrollLoaderVisibility = false;
           if(socketP!.id!=null && previousScoketId!=socketP!.id) {
             previousScoketId = socketP!.id!;
@@ -267,7 +289,8 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                             padding: const EdgeInsets.all(8),
                             onTap: () {
                               focusInput.unfocus();
-
+                              print(widget.userId!);
+                              BlocProvider.of<ChatBloc>(context).add(getFullProfileEvent(widget.userId!));
                             },
                             child:Center(
                                 child: Container(
@@ -650,6 +673,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
             ),
           );
         } else {
+          print(state);
           return CustomCircularLoadingBar();
         }
       },

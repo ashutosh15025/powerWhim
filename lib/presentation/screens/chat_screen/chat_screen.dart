@@ -136,6 +136,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                     previousScreen: "ChatScreen",
                                                     socketId: socket!.id,
                                                   deactivate_on: null,
+                                                  userId: chatsDetailsModel!.data!.chats![index]!.userId,
                                                 )));
                                     BlocProvider.of<ChatBloc>(context).add(
                                         GetPersonalChatEvent(

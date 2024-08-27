@@ -68,3 +68,8 @@ class GetChatEndReasonState extends ChatState {
   List<String> reasons ;
   GetChatEndReasonState(this.reasons);
 }
+
+class getFullProfileSuccessState extends ChatState{
+  FullProfileModel fullProfile;
+  getFullProfileSuccessState(this.fullProfile);
+}

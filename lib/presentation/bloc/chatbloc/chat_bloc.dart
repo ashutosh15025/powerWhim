@@ -30,6 +30,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<GetFullProfileEvent>(onGetFullProfileEvent);
     on<GetStartEndChatsEvent>(onGetStartEndChat);
     on<GetChatEndReasonEvent>(onGetChatEndReason);
+    on<getFullProfileEvent>(ongetFullProfileEvent);
+
 
   }
 
@@ -190,4 +192,21 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       }
     } else {}
   }
+
+
+  void ongetFullProfileEvent(getFullProfileEvent event,Emitter<ChatState>emit)async{
+    print("api hit");
+    var response = await locator.get<UserProfileUsecase>().getFullProfiles(event.userId,USER_ID!);
+    print(response);
+    if(response.data!=null){
+      if(response.data!.data!=null)
+        emit(getFullProfileSuccessState(response.data));
+      print("full profile success");
+    }
+    else{
+      emit(ErrorState(response.data!.data!.mssg!));
+      print("full profile failed");
+    }
+  }
 }
+

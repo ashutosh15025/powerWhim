@@ -66,3 +66,11 @@ class GetStartEndChatsEvent extends ChatEvent {
 class GetChatEndReasonEvent extends ChatEvent {
   GetChatEndReasonEvent();
 }
+
+
+class getFullProfileEvent extends ChatEvent{
+  String userId;
+  getFullProfileEvent(this.userId);
+}
+
+
