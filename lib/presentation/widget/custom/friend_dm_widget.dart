@@ -10,15 +10,15 @@ import '../../../constant/service_api_constant.dart';
 import '../../screens/chat_screen/personal_chat_screen.dart';
 
 class FriendDmWidget extends StatelessWidget {
-  const FriendDmWidget({super.key, required this.name, required this.description, required this.userId, required this.chatId, this.deactivate_on, required this.event, required this.showEventWidget, });
+  const FriendDmWidget({super.key, required this.name, required this.description, required this.userId, required this.chatId, this.deactivate_on, required this.event, required this.showEventWidget, this.profileUpdated, });
   final String name;
   final String ? description;
   final String userId;
   final String chatId;
   final String ? event;
   final int pageCount = 0;
+  final String ? profileUpdated;
   final Function(String,String) showEventWidget;
-
   final DateTime ? deactivate_on;
 
   @override
@@ -81,7 +81,7 @@ class FriendDmWidget extends StatelessWidget {
                     },
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                      child: Icon(Icons.visibility,color: green,),
+                      child: Icon(profileUpdated==null?Icons.visibility:Icons.panorama_fish_eye,color: green,),
                     )),
                 InkWell(
                     onTap: (){

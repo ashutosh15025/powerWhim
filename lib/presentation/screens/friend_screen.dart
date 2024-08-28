@@ -57,6 +57,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
                           chatId: friend.chatId!=null?friend.chatId!:"chatid",
                           deactivate_on: friend.deactivateOn,
                           event:friend.event,
+                        profileUpdated:friend.profileUpdated,
                         showEventWidget: showEventWidget,
                       );
                     },

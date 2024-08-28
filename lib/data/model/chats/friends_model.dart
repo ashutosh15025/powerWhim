@@ -51,35 +51,43 @@ class Data {
 class Friend {
   dynamic description;
   String? chatId;
-  dynamic event;
   String? userName;
+  dynamic profileUpdated;
   DateTime? deactivateOn;
+  dynamic event;
+  dynamic eventTime;
   String? userId;
 
   Friend({
     this.description,
     this.chatId,
-    this.event,
     this.userName,
+    this.profileUpdated,
     this.deactivateOn,
+    this.event,
+    this.eventTime,
     this.userId,
   });
 
   factory Friend.fromJson(Map<String, dynamic> json) => Friend(
     description: json["description"],
     chatId: json["chat_id"],
-    event: json["event"],
     userName: json["user_name"],
+    profileUpdated: json["profile_updated"],
     deactivateOn: json["deactivate_on"] == null ? null : DateTime.parse(json["deactivate_on"]),
+    event: json["event"],
+    eventTime: json["event_time"],
     userId: json["user_id"],
   );
 
   Map<String, dynamic> toJson() => {
     "description": description,
     "chat_id": chatId,
-    "event": event,
     "user_name": userName,
+    "profile_updated": profileUpdated,
     "deactivate_on": deactivateOn?.toIso8601String(),
+    "event": event,
+    "event_time": eventTime,
     "user_id": userId,
   };
 }
