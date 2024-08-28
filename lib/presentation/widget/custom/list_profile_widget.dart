@@ -6,6 +6,7 @@ import 'package:powerwhim/presentation/widget/custom/profile_card_widget.dart';
 import '../../../constant/full_profile_privious_screen.dart';
 import '../../../data/model/profilemodel/profiles_model.dart';
 import '../../bloc/profilebloc/profilebloc_bloc.dart';
+import '../error/custom_error_widget.dart';
 
 class ListProfileWidget extends StatefulWidget {
   const ListProfileWidget({super.key});
@@ -18,11 +19,14 @@ class _ListProfileWidgetState extends State<ListProfileWidget> {
   List<Profile> listItem = [];
   int page = 0;
   final _controller = ScrollController();
+  String searchValue = "";
+  TextEditingController _searchController = TextEditingController(text: "");
 
   @override
   void initState() {
     super.initState();
     BlocProvider.of<ProfileblocBloc>(context).add(getProfilesEvent("", 0));
+    _searchController = TextEditingController(text: searchValue);
     _controller.addListener(_onScroll);
   }
 
@@ -67,6 +71,7 @@ class _ListProfileWidgetState extends State<ListProfileWidget> {
         }
       },
       builder: (context, state) {
+        if(state is getProfilesSuccessState){
         return SingleChildScrollView(
           child: Container(
             color: Color.fromRGBO(0, 0, 0, .99),
@@ -78,6 +83,7 @@ class _ListProfileWidgetState extends State<ListProfileWidget> {
                   alignment: Alignment.center,
                   height: 50,
                   child: TextField(
+                    controller: _searchController,
                     cursorColor: themeColorLight,
                     style: TextStyle(color: Colors.white),
                     onChanged: (value) {
@@ -85,6 +91,7 @@ class _ListProfileWidgetState extends State<ListProfileWidget> {
                         page = 0;
                         listItem.clear();
                       });
+                      searchValue=value;
                       BlocProvider.of<ProfileblocBloc>(context).add(getProfilesEvent(value, page));
                     },
                     textAlign: TextAlign.justify,
@@ -124,7 +131,19 @@ class _ListProfileWidgetState extends State<ListProfileWidget> {
               ],
             ),
           ),
-        );
+        );}
+        else{
+          BlocProvider.of<ProfileblocBloc>(context).add(getProfilesEvent(searchValue!, page));
+          return Container(
+            height: MediaQuery.of(context).size.height,
+            color: Color.fromRGBO(0,0,0,.4),
+            child: Center(
+              child: CircularProgressIndicator(
+                color: Colors.yellowAccent,
+              ),
+            ),
+          );
+        }
       },
     );
   }
