@@ -7,7 +7,6 @@ import 'package:powerwhim/data/model/chats/chats_details_model.dart';
 import 'package:powerwhim/presentation/bloc/chatbloc/chat_bloc.dart';
 import 'package:powerwhim/presentation/screens/chat_screen/all_ended_chat_screen.dart';
 import 'package:powerwhim/presentation/screens/chat_screen/personal_chat_screen.dart';
-import 'package:powerwhim/presentation/screens/chat_screen/start_chat_end_chat_widget.dart';
 import 'package:powerwhim/presentation/widget/custom/custom_circular_loading_bar.dart';
 import 'package:powerwhim/presentation/widget/error/custom_error_widget.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -40,7 +39,6 @@ class _ChatScreenState extends State<ChatScreen> {
     });
     socket?.connect();
     socket?.onConnect((_) {
-      print('Connection established');
       setState(() {});
     });
     listenMessage();
@@ -79,8 +77,8 @@ class _ChatScreenState extends State<ChatScreen> {
                     .pop(); // Action to perform on back pressed
               },
               child: SingleChildScrollView(
-
                 child: Container(
+                  margin: EdgeInsets.fromLTRB(0, 0, 0, 200),
                   color: Color.fromRGBO(0, 0, 0, .95),
                   child: Column(
                     children: [
@@ -117,7 +115,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         height: MediaQuery
                             .of(context)
                             .size
-                            .height - 50,
+                            .height - 100,
                         child: ListView.builder(
                             itemCount: chatsDetailsModel!.data!.chats!.length,
                             itemBuilder: (context, index) {
@@ -206,7 +204,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     color: Color.fromRGBO(255, 255, 17, .2),
                     child: Text(
                       "You Might have ${chatsDetailsModel!.data!
-                          .inactiveChats!} Unread Chat please check",
+                          .inactiveChats!} UnViewed Chat please check",
                       style: TextStyle(
                           color: Colors.white
                       ),
@@ -249,7 +247,11 @@ class _ChatScreenState extends State<ChatScreen> {
         }
         if (newMessageData != null) {
           newMessageData.lastConversations = data['message_text'];
-          newMessageData.updatedOn = data['image'];
+          if(data['message_text']==null)
+            newMessageData.lastConversations = data['message_text'];
+          if(data['image']!=null)
+            newMessageData.lastConversations = "📷 Photo";
+          newMessageData.updatedOn = DateTime.parse(data['message_time']);
           newMessageData.unreadCount =
               (int.parse(newMessageData.unreadCount!) + 1).toString();
           setState(() {

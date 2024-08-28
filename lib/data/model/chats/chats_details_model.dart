@@ -57,7 +57,7 @@ class Chat {
   String? userId;
   DateTime? activeTime;
   String? lastConversations;
-  dynamic deactivateOn;
+  DateTime? deactivateOn;
   DateTime? updatedOn;
   String? chatId;
   String? unreadCount;
@@ -78,7 +78,7 @@ class Chat {
     userId: json["user_id"],
     activeTime: json["active_time"] == null ? null : DateTime.parse(json["active_time"]),
     lastConversations: json["last_conversations"],
-    deactivateOn: json["deactivate_on"],
+    deactivateOn: json["deactivate_on"] == null ? null : DateTime.parse(json["deactivate_on"]),
     updatedOn: json["updated_on"] == null ? null : DateTime.parse(json["updated_on"]),
     chatId: json["chat_id"],
     unreadCount: json["unread_count"],
@@ -89,7 +89,7 @@ class Chat {
     "user_id": userId,
     "active_time": activeTime?.toIso8601String(),
     "last_conversations": lastConversations,
-    "deactivate_on": deactivateOn,
+    "deactivate_on": deactivateOn?.toIso8601String(),
     "updated_on": updatedOn?.toIso8601String(),
     "chat_id": chatId,
     "unread_count": unreadCount,

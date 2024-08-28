@@ -29,12 +29,14 @@ class Data {
   String? mssg;
   Profile? profile;
   bool? visibility;
+  String? chatId;
 
   Data({
     this.status,
     this.mssg,
     this.profile,
     this.visibility,
+    this.chatId,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
@@ -42,6 +44,7 @@ class Data {
     mssg: json["mssg"],
     profile: json["profile"] == null ? null : Profile.fromJson(json["profile"]),
     visibility: json["visibility"],
+    chatId: json["chatID"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -49,6 +52,7 @@ class Data {
     "mssg": mssg,
     "profile": profile?.toJson(),
     "visibility": visibility,
+    "chatID": chatId,
   };
 }
 
