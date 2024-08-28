@@ -25,6 +25,7 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
 
   Profile ? fullprofile ;
   int pageCount = 0;
+  String ? chatID = null;
 
 
   bool errorWidgetVisibility = false;
@@ -33,8 +34,11 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
   void initState() {
     if(widget.fullProfilePScreenModel.fullProfileModel!.data!.profile==null||widget.fullProfilePScreenModel.fullProfileModel==null||widget.fullProfilePScreenModel.fullProfileModel.data==null)
       fullprofile =null;
-    else
+    else{
     fullprofile = widget.fullProfilePScreenModel.fullProfileModel!.data!.profile!;
+    if(widget.fullProfilePScreenModel.fullProfileModel!.data!.chatId!=null)
+      chatID = widget.fullProfilePScreenModel.fullProfileModel!.data!.chatId!;
+    }
     super.initState();
   }
   @override
@@ -79,7 +83,7 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
               actions: <Widget>[
                 IconButton(
                   icon: Icon(
-                    Icons.message,
+                    chatID==null?Icons.add_comment:Icons.message,
                     color: Colors.white,
                   ),
                   onPressed: () {
@@ -113,6 +117,7 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
                   children: [
                     Row(children: [
                       Container(
+                        width: MediaQuery.of(context).size.width - MediaQuery.of(context).size.width/4 ,
                         padding: EdgeInsets.fromLTRB(0, 16, 0, 16),
                         child:fullprofile!.name==null?SizedBox.shrink():Text(
                             fullprofile!.name!,
