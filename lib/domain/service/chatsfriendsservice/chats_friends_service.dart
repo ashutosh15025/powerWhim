@@ -11,6 +11,7 @@ import 'package:powerwhim/data/model/chats/chats_details_model.dart';
 import 'package:powerwhim/data/model/chats/friends_model.dart';
 import 'package:powerwhim/data/model/chats/personal_chat_model.dart';
 import 'package:retrofit/dio.dart';
+import 'package:retrofit/error_logger.dart';
 import 'package:retrofit/http.dart';
 
 part 'chats_friends_service.g.dart';

@@ -165,7 +165,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       GetStartEndChatsEvent event, Emitter<ChatState> emit) async {
     var response = await locator
         .get<ChatsFriendsUsecase>()
-        .startEndChats(USER_ID!, event.chatId, event.deactivate_on);
+        .startEndChats(USER_ID!, event.chatId, event.deactivate_on,block: event.block,startChat: event.startChat);
     if (response.data!.data != null) {
       if (response.data.data!.status == StringConstant.successState) {
         emit(GetStartEndChatsState(response.data.data!.mssg!));

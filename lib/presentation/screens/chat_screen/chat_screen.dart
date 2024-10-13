@@ -135,6 +135,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                     socketId: socket!.id,
                                                   deactivate_on: null,
                                                   userId: chatsDetailsModel!.data!.chats![index]!.userId,
+                                                  connectionId: chatsDetailsModel!.data!.chats![index]!.connectionstatus,
                                                 )));
                                     BlocProvider.of<ChatBloc>(context).add(
                                         GetPersonalChatEvent(

@@ -6,12 +6,13 @@ part of 'chats_friends_service.dart';
 // RetrofitGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers
+// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element
 
 class _ChatsFriendsService implements ChatsFriendsService {
   _ChatsFriendsService(
     this._dio, {
     this.baseUrl,
+    this.errorLogger,
   }) {
     baseUrl ??= 'https://whim.cozytech.co.in/';
   }
@@ -19,6 +20,8 @@ class _ChatsFriendsService implements ChatsFriendsService {
   final Dio _dio;
 
   String? baseUrl;
+
+  final ParseErrorLogger? errorLogger;
 
   @override
   Future<HttpResponse<ChatsDetailsModel>> getChats(
@@ -32,25 +35,31 @@ class _ChatsFriendsService implements ChatsFriendsService {
     };
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<ChatsDetailsModel>>(Options(
+    final _options = _setStreamType<HttpResponse<ChatsDetailsModel>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
-            .compose(
-              _dio.options,
-              'api/chats/get-chats',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    final value = ChatsDetailsModel.fromJson(_result.data!);
-    final httpResponse = HttpResponse(value, _result);
+        .compose(
+          _dio.options,
+          'api/chats/get-chats',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ChatsDetailsModel _value;
+    try {
+      _value = ChatsDetailsModel.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    final httpResponse = HttpResponse(_value, _result);
     return httpResponse;
   }
 
@@ -68,25 +77,31 @@ class _ChatsFriendsService implements ChatsFriendsService {
     };
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<PersonalChatModel>>(Options(
+    final _options = _setStreamType<HttpResponse<PersonalChatModel>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
-            .compose(
-              _dio.options,
-              'api/chats/get-conversations',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    final value = PersonalChatModel.fromJson(_result.data!);
-    final httpResponse = HttpResponse(value, _result);
+        .compose(
+          _dio.options,
+          'api/chats/get-conversations',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late PersonalChatModel _value;
+    try {
+      _value = PersonalChatModel.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    final httpResponse = HttpResponse(_value, _result);
     return httpResponse;
   }
 
@@ -102,7 +117,7 @@ class _ChatsFriendsService implements ChatsFriendsService {
     };
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch<Map<String, dynamic>>(
+    final _options =
         _setStreamType<HttpResponse<AccountManagementModel>>(Options(
       method: 'GET',
       headers: _headers,
@@ -118,9 +133,16 @@ class _ChatsFriendsService implements ChatsFriendsService {
                 baseUrl: _combineBaseUrls(
               _dio.options.baseUrl,
               baseUrl,
-            ))));
-    final value = AccountManagementModel.fromJson(_result.data!);
-    final httpResponse = HttpResponse(value, _result);
+            )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late AccountManagementModel _value;
+    try {
+      _value = AccountManagementModel.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    final httpResponse = HttpResponse(_value, _result);
     return httpResponse;
   }
 
@@ -130,25 +152,31 @@ class _ChatsFriendsService implements ChatsFriendsService {
     final queryParameters = <String, dynamic>{r'user_id': userId};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<FriendsModel>>(Options(
+    final _options = _setStreamType<HttpResponse<FriendsModel>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
-            .compose(
-              _dio.options,
-              'api/connections/get-connections',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    final value = FriendsModel.fromJson(_result.data!);
-    final httpResponse = HttpResponse(value, _result);
+        .compose(
+          _dio.options,
+          'api/connections/get-connections',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late FriendsModel _value;
+    try {
+      _value = FriendsModel.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    final httpResponse = HttpResponse(_value, _result);
     return httpResponse;
   }
 
@@ -164,25 +192,31 @@ class _ChatsFriendsService implements ChatsFriendsService {
     };
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<AddChatModel>>(Options(
+    final _options = _setStreamType<HttpResponse<AddChatModel>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
-            .compose(
-              _dio.options,
-              'api/chats/add-chats',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    final value = AddChatModel.fromJson(_result.data!);
-    final httpResponse = HttpResponse(value, _result);
+        .compose(
+          _dio.options,
+          'api/chats/add-chats',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late AddChatModel _value;
+    try {
+      _value = AddChatModel.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    final httpResponse = HttpResponse(_value, _result);
     return httpResponse;
   }
 
@@ -194,7 +228,7 @@ class _ChatsFriendsService implements ChatsFriendsService {
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(body);
-    final _result = await _dio.fetch<Map<String, dynamic>>(
+    final _options =
         _setStreamType<HttpResponse<AccountManagementModel>>(Options(
       method: 'POST',
       headers: _headers,
@@ -210,9 +244,16 @@ class _ChatsFriendsService implements ChatsFriendsService {
                 baseUrl: _combineBaseUrls(
               _dio.options.baseUrl,
               baseUrl,
-            ))));
-    final value = AccountManagementModel.fromJson(_result.data!);
-    final httpResponse = HttpResponse(value, _result);
+            )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late AccountManagementModel _value;
+    try {
+      _value = AccountManagementModel.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    final httpResponse = HttpResponse(_value, _result);
     return httpResponse;
   }
 
@@ -222,25 +263,31 @@ class _ChatsFriendsService implements ChatsFriendsService {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<ChatEndReasonModel>>(Options(
+    final _options = _setStreamType<HttpResponse<ChatEndReasonModel>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
-            .compose(
-              _dio.options,
-              'api/chats/end-chat-reason',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    final value = ChatEndReasonModel.fromJson(_result.data!);
-    final httpResponse = HttpResponse(value, _result);
+        .compose(
+          _dio.options,
+          'api/chats/end-chat-reason',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ChatEndReasonModel _value;
+    try {
+      _value = ChatEndReasonModel.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    final httpResponse = HttpResponse(_value, _result);
     return httpResponse;
   }
 

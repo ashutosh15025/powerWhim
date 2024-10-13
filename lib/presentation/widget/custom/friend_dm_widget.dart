@@ -87,7 +87,7 @@ class FriendDmWidget extends StatelessWidget {
                     onTap: (){
                       BlocProvider.of<ChatBloc>(context).add(GetPersonalChatEvent(chatId: chatId,page: pageCount,));
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) =>  PersonalChatScreen(chatId: chatId,name: name,previousScreen: "FriendsScreen",deactivate_on: deactivate_on,userId: userId,)));
+                          builder: (_) =>  PersonalChatScreen(chatId: chatId,name: name,previousScreen: "FriendsScreen",deactivate_on: deactivate_on,userId: userId,presentInNetwork: 1,)));
                     },
                     child: Icon(Icons.message,color: green,)),
                 Visibility(

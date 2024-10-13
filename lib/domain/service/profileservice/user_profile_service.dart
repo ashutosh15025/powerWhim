@@ -9,6 +9,7 @@ import 'package:powerwhim/data/model/profilemodel/my_full_profile_model.dart';
 import 'package:powerwhim/data/model/profilemodel/profiles_model.dart';
 import 'package:powerwhim/presentation/bloc/profilebloc/profilebloc_bloc.dart';
 import 'package:retrofit/dio.dart';
+import 'package:retrofit/error_logger.dart';
 import 'package:retrofit/http.dart';
 
 

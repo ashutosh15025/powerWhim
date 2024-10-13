@@ -19,7 +19,7 @@ abstract class ChatsFriendsRepo{
 
   Future<HttpResponse<AddChatModel>> setChats(String fromUserId ,String toUserId);
 
-  Future<HttpResponse<AccountManagementModel>> startEndChats(String userId ,String chatId,int ? deactivate_on);
+  Future<HttpResponse<AccountManagementModel>> startEndChats(String userId ,String chatId,int ? deactivate_on,int ? block,int ? startChat);
 
   Future<HttpResponse<ChatEndReasonModel>> getChatEndReason();
 }

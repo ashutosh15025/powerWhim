@@ -54,9 +54,11 @@ class Friend {
   String? userName;
   dynamic profileUpdated;
   DateTime? deactivateOn;
+  dynamic blockedTime;
   dynamic event;
   dynamic eventTime;
   String? userId;
+  String? connectionstatus;
 
   Friend({
     this.description,
@@ -64,9 +66,11 @@ class Friend {
     this.userName,
     this.profileUpdated,
     this.deactivateOn,
+    this.blockedTime,
     this.event,
     this.eventTime,
     this.userId,
+    this.connectionstatus,
   });
 
   factory Friend.fromJson(Map<String, dynamic> json) => Friend(
@@ -75,9 +79,11 @@ class Friend {
     userName: json["user_name"],
     profileUpdated: json["profile_updated"],
     deactivateOn: json["deactivate_on"] == null ? null : DateTime.parse(json["deactivate_on"]),
+    blockedTime: json["blocked_time"],
     event: json["event"],
     eventTime: json["event_time"],
     userId: json["user_id"],
+    connectionstatus: json["connectionstatus"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -86,8 +92,10 @@ class Friend {
     "user_name": userName,
     "profile_updated": profileUpdated,
     "deactivate_on": deactivateOn?.toIso8601String(),
+    "blocked_time": blockedTime,
     "event": event,
     "event_time": eventTime,
     "user_id": userId,
+    "connectionstatus": connectionstatus,
   };
 }

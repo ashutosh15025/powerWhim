@@ -33,9 +33,9 @@ class _ProfileImageState extends State<ProfileImage> {
                 filter: widget.visibility?ImageFilter.blur(sigmaX: 0, sigmaY: 0):ImageFilter.blur(sigmaX: 2, sigmaY: 2),
                 child: Container(
                   alignment: Alignment.center,
-                  color: Colors.grey.withOpacity(0.1),
+                  color: Colors.grey.withOpacity(0.3),
                   child: Text(
-                    "",
+                    '"https://whim.ams3.digitaloceanspaces.com/"+${widget.profiles![index]}',
                     style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                   ),
                 ),

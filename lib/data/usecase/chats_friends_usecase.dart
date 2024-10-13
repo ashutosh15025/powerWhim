@@ -33,8 +33,8 @@ class ChatsFriendsUsecase {
     return _chatsFriendsRepoImp.setChats(fromUserId, toUserId);
   }
 
-  Future<HttpResponse<AccountManagementModel>> startEndChats(String userId,String chatId,int ? deactivate_on) {
-    return _chatsFriendsRepoImp.startEndChats(userId, chatId, deactivate_on);
+  Future<HttpResponse<AccountManagementModel>> startEndChats(String userId,String chatId,int ? deactivate_on,{int? block, int? startChat}) {
+    return _chatsFriendsRepoImp.startEndChats(userId, chatId, deactivate_on,block,startChat);
   }
 
   Future<HttpResponse<ChatEndReasonModel>> getChatEndReason() {

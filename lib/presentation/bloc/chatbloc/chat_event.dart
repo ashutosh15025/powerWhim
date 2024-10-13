@@ -58,9 +58,17 @@ class GetStartEndChatsEvent extends ChatEvent {
   String userId;
   String chatId;
   int? deactivate_on;
+  int? block;
+  int? startChat;
 
-  GetStartEndChatsEvent(this.userId, this.chatId, this.deactivate_on);
+  GetStartEndChatsEvent(
+      this.userId,
+      this.chatId,
+      this.deactivate_on,
+      {this.block, this.startChat} // Named optional parameters
+      );
 }
+
 
 
 class GetChatEndReasonEvent extends ChatEvent {

@@ -87,6 +87,8 @@ class _AllEndedChatScreenState extends State<AllEndedChatScreen> {
                                               deactivate_on: chatsDetailsModel!
                                                   .data!.chats![index]!
                                                   .deactivateOn,
+                                            presentInNetwork: 0,
+                                            connectionId:  chatsDetailsModel!.data!.chats![index]!.connectionstatus,
                                           )));
                               BlocProvider.of<ChatBloc>(context).add(
                                   GetPersonalChatEvent(

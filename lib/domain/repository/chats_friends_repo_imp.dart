@@ -42,9 +42,10 @@ class ChatsFriendsRepoImp extends ChatsFriendsRepo {
   }
 
   @override
-  Future<HttpResponse<AccountManagementModel>> startEndChats(String userId, String chatId, int ? deactivate_on) {
-    var requestBody = {"user_id": userId,"chat_id":chatId,"deactivate_on":deactivate_on};
+  Future<HttpResponse<AccountManagementModel>> startEndChats(String userId, String chatId, int ? deactivate_on,int ? block,int ? startChat) {
+    var requestBody = {"user_id": userId,"chat_id":chatId,"deactivate_on":deactivate_on,"block":block,"start_chat":startChat};
     print(requestBody);
+    print("print request body");
     return _chatsFriendsService.startEndChats(requestBody);
   }
 

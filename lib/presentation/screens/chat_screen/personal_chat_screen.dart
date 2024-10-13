@@ -30,7 +30,9 @@ class PersonalChatScreen extends StatefulWidget {
         this.previousScreen,
         this.socketId,
         this.userId,
-        this.deactivate_on});
+        this.deactivate_on,
+      this.presentInNetwork,
+       this.connectionId});
 
   final String chatId;
   final String name;
@@ -38,6 +40,8 @@ class PersonalChatScreen extends StatefulWidget {
   final String? previousScreen;
   final String? socketId;
   final DateTime? deactivate_on;
+  final int? presentInNetwork;
+  final String ? connectionId;
 
   @override
   State<PersonalChatScreen> createState() => _PersonalChatScreenState();
@@ -65,10 +69,12 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
   final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
   final ScrollController _scrollController = ScrollController();
   String previousScoketId="";
+  String ? connectionId;
 
   @override
   void initState() {
     deactivate_on = widget.deactivate_on;
+    connectionId = widget.connectionId;
     initSocket();
     _scrollController.addListener(_onScroll);
     super.initState();
@@ -174,6 +180,19 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
             deactivate_on = null;
           } else if (state.mssg == "Chat Deactivated") {
             deactivate_on = DateTime.now();
+          } else if(state.mssg == "Added to Network")
+          {
+              deactivate_on = null;
+              connectionId = USER_ID;
+          }
+          else if(state.mssg == "Remove from network")
+          {
+            deactivate_on =  DateTime.now();
+            connectionId = null;
+
+
+            print("here removed to network");
+
           }
           BlocProvider.of<ChatBloc>(context)
               .add(GetPersonalChatEvent(chatId: widget.chatId, page: 0));
@@ -225,9 +244,66 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                          color:Colors.transparent,
                         itemBuilder: (context) => [
                           PopupMenuItem(
+                            child: deactivate_on ==null
+                                ? Center(
+                                child: InkWell(
+                                  onTap: (){
+                                    deactivate_on = null;
+                                    print("block called ...");
+                                    BlocProvider.of<ChatBloc>(context).add(
+                                        GetStartEndChatsEvent(
+                                            USER_ID!, widget.chatId, 0,block:1,startChat: 0));
+                                    Navigator.pop(context);
+                                  },
+                                  child: Container(
+                                    width: 200,
+                                    alignment: Alignment.center,
+                                    padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
+                                    child: Text(
+                                      "Block",
+                                      style: GoogleFonts.poppins(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 16),
+                                    ),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50),
+                                      border: Border.all(color: themeColorLight,width: 1),
+                                    ),
+
+                                  ),
+                                ))
+                                : Center(
+                                child: InkWell(
+                                  onTap: (){
+                                    BlocProvider.of<ChatBloc>(context).add(
+                                        GetStartEndChatsEvent(
+                                            USER_ID!, widget.chatId, 1,startChat: 1));
+                                    Navigator.pop(context);
+                                  },
+                                  child: Container(
+                                    width: 200,
+                                    alignment: Alignment.center,
+                                    padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
+                                    child: Text(
+                                      "Start Chat",
+                                      style: GoogleFonts.poppins(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 16),
+                                    ),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                      border: Border.all(color: themeColorLight,width: 1)
+                                    ),
+                                  ),
+                                )),
+                          ),
+                          PopupMenuItem(
+                            padding: const EdgeInsets.all(8),
                             onTap: () {
                               focusInput.unfocus();
-                              if (deactivate_on == null) {
+                              if (connectionId != null) {
                                 setState(() {
                                   onPressChatEndCancelWidget();
                                 });
@@ -248,7 +324,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                 }
                               }
                             },
-                            child: deactivate_on == null
+                            child: connectionId != null
                                 ? Center(
                                 child: Container(
                                   width: 200,
@@ -273,7 +349,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                   alignment: Alignment.center,
                                   padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
                                   child: Text(
-                                    "Start Chat",
+                                    "Add To Network",
                                     style: GoogleFonts.poppins(
                                         color: Colors.white,
                                         fontWeight: FontWeight.w400,
@@ -281,7 +357,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                   ),
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(50),
-                                    border: Border.all(color: themeColorLight,width: 1)
+                                      border: Border.all(color: themeColorLight,width: 1)
                                   ),
                                 )),
                           ),

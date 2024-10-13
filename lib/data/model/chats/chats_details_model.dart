@@ -56,8 +56,10 @@ class Chat {
   String? userName;
   String? userId;
   DateTime? activeTime;
+  dynamic blockedTime;
   String? lastConversations;
   DateTime? deactivateOn;
+  dynamic connectionstatus;
   DateTime? updatedOn;
   String? chatId;
   String? unreadCount;
@@ -66,8 +68,10 @@ class Chat {
     this.userName,
     this.userId,
     this.activeTime,
+    this.blockedTime,
     this.lastConversations,
     this.deactivateOn,
+    this.connectionstatus,
     this.updatedOn,
     this.chatId,
     this.unreadCount,
@@ -77,8 +81,10 @@ class Chat {
     userName: json["user_name"],
     userId: json["user_id"],
     activeTime: json["active_time"] == null ? null : DateTime.parse(json["active_time"]),
+    blockedTime: json["blocked_time"],
     lastConversations: json["last_conversations"],
     deactivateOn: json["deactivate_on"] == null ? null : DateTime.parse(json["deactivate_on"]),
+    connectionstatus: json["connectionstatus"],
     updatedOn: json["updated_on"] == null ? null : DateTime.parse(json["updated_on"]),
     chatId: json["chat_id"],
     unreadCount: json["unread_count"],
@@ -88,8 +94,10 @@ class Chat {
     "user_name": userName,
     "user_id": userId,
     "active_time": activeTime?.toIso8601String(),
+    "blocked_time": blockedTime,
     "last_conversations": lastConversations,
     "deactivate_on": deactivateOn?.toIso8601String(),
+    "connectionstatus": connectionstatus,
     "updated_on": updatedOn?.toIso8601String(),
     "chat_id": chatId,
     "unread_count": unreadCount,
