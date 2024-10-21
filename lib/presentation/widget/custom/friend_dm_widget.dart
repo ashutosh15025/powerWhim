@@ -10,7 +10,7 @@ import '../../../constant/service_api_constant.dart';
 import '../../screens/chat_screen/personal_chat_screen.dart';
 
 class FriendDmWidget extends StatelessWidget {
-  const FriendDmWidget({super.key, required this.name, required this.description, required this.userId, required this.chatId, this.deactivate_on, required this.event, required this.showEventWidget, this.profileUpdated, });
+  const FriendDmWidget({super.key, required this.name, required this.description, required this.userId, required this.chatId, this.deactivate_on, required this.event, required this.showEventWidget, this.profileUpdated, this.connectionStatus, });
   final String name;
   final String ? description;
   final String userId;
@@ -18,11 +18,14 @@ class FriendDmWidget extends StatelessWidget {
   final String ? event;
   final int pageCount = 0;
   final String ? profileUpdated;
+  final String ? connectionStatus;
   final Function(String,String) showEventWidget;
   final DateTime ? deactivate_on;
 
   @override
   Widget build(BuildContext context) {
+
+    print(connectionStatus);
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -87,7 +90,7 @@ class FriendDmWidget extends StatelessWidget {
                     onTap: (){
                       BlocProvider.of<ChatBloc>(context).add(GetPersonalChatEvent(chatId: chatId,page: pageCount,));
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) =>  PersonalChatScreen(chatId: chatId,name: name,previousScreen: "FriendsScreen",deactivate_on: deactivate_on,userId: userId,presentInNetwork: 1,)));
+                          builder: (_) =>  PersonalChatScreen(chatId: chatId,name: name,previousScreen: "FriendsScreen",deactivate_on: deactivate_on,userId: userId,presentInNetwork: 1,connectionId: connectionStatus,)));
                     },
                     child: Icon(Icons.message,color: green,)),
                 Visibility(

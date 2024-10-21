@@ -133,33 +133,6 @@ class _AllEndedChatScreenState extends State<AllEndedChatScreen> {
                         ),
                       ),
                     ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (_) =>
-                                AllEndedChatScreen(
-                                )));
-                        BlocProvider.of<ChatBloc>(context).add(
-                            GetChatsEvent(0));
-                      },
-                      child: Container(
-                        alignment: Alignment.center,
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width,
-                        height: 50,
-                        color: Color.fromRGBO(255, 255, 17, .2),
-                        child: Text(
-                          "You Might have ${chatsDetailsModel!.data!
-                              .inactiveChats!} Unread Chat please check",
-                          style: TextStyle(
-                              color: Colors.white
-                          ),
-                        ),
-
-                      ),
-                    ),
                   ],
                 ),
               ),

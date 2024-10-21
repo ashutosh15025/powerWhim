@@ -35,7 +35,7 @@ class _ProfileImageState extends State<ProfileImage> {
                   alignment: Alignment.center,
                   color: Colors.grey.withOpacity(0.3),
                   child: Text(
-                    '"https://whim.ams3.digitaloceanspaces.com/"+${widget.profiles![index]}',
+                    '',
                     style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                   ),
                 ),

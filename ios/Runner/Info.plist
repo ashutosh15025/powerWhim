@@ -6,6 +6,10 @@
     <string>Photo Library Access Warning</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>We need your location to provide Better services in the app.</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>We need your location to provide Better services even when the app is not active.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

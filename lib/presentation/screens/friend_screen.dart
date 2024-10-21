@@ -58,6 +58,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
                           deactivate_on: friend.deactivateOn,
                           event:friend.event,
                         profileUpdated:friend.profileUpdated,
+                        connectionStatus: friend.connectionstatus,
                         showEventWidget: showEventWidget,
                       );
                     },
