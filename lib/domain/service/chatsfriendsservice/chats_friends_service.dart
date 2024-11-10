@@ -14,6 +14,7 @@ import 'package:retrofit/dio.dart';
 import 'package:retrofit/error_logger.dart';
 import 'package:retrofit/http.dart';
 
+import '../../../data/model/chats/chat_details_model.dart';
 part 'chats_friends_service.g.dart';
 
 
@@ -54,6 +55,7 @@ abstract class ChatsFriendsService{
   Future<HttpResponse<AddChatModel>> setChats(
       @Query("from_user_id") String fromUserId,
       @Query("to_user_id") String toUserId,
+      @Query("add_network") int addToNetwork,
       );
 
 
@@ -65,4 +67,13 @@ abstract class ChatsFriendsService{
 
   @GET("api/chats/end-chat-reason")
   Future<HttpResponse<ChatEndReasonModel>> getChatEndReason();
+
+
+
+  @GET("api/connections/check-connection-status")
+  Future<HttpResponse<ChatConnectionDetailsModel>> getChatDetails(
+      @Query("user_id")String userId,
+      @Query("my_user_id")String myUserId,
+      );
+
 }

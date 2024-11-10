@@ -184,11 +184,13 @@ class _ChatsFriendsService implements ChatsFriendsService {
   Future<HttpResponse<AddChatModel>> setChats(
     String fromUserId,
     String toUserId,
+    int addToNetwork,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'from_user_id': fromUserId,
       r'to_user_id': toUserId,
+      r'add_network': addToNetwork,
     };
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
@@ -283,6 +285,47 @@ class _ChatsFriendsService implements ChatsFriendsService {
     late ChatEndReasonModel _value;
     try {
       _value = ChatEndReasonModel.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    final httpResponse = HttpResponse(_value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<ChatConnectionDetailsModel>> getChatDetails(
+    String userId,
+    String myUserId,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'user_id': userId,
+      r'my_user_id': myUserId,
+    };
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options =
+        _setStreamType<HttpResponse<ChatConnectionDetailsModel>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'api/connections/check-connection-status',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ChatConnectionDetailsModel _value;
+    try {
+      _value = ChatConnectionDetailsModel.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

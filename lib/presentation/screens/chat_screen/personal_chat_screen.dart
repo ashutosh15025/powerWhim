@@ -71,6 +71,10 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
   String previousScoketId="";
   String ? connectionId;
 
+
+
+  bool block = false;
+
   @override
   void initState() {
     deactivate_on = widget.deactivate_on;
@@ -249,10 +253,9 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                 child: InkWell(
                                   onTap: (){
                                     deactivate_on = null;
+                                    block = true;
                                     print("block called ...");
-                                    BlocProvider.of<ChatBloc>(context).add(
-                                        GetStartEndChatsEvent(
-                                            USER_ID!, widget.chatId, 0,block:1,startChat: 0));
+                                    onPressChatEndCancelWidget();
                                     Navigator.pop(context);
                                   },
                                   child: Container(
@@ -278,7 +281,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                   onTap: (){
                                     BlocProvider.of<ChatBloc>(context).add(
                                         GetStartEndChatsEvent(
-                                            USER_ID!, widget.chatId, 1,startChat: 1));
+                                            USER_ID!, widget.chatId, 0,block: 0));
                                     Navigator.pop(context);
                                   },
                                   child: Container(
@@ -305,6 +308,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                               focusInput.unfocus();
                               if (connectionId != null) {
                                 setState(() {
+                                  block = false;
                                   onPressChatEndCancelWidget();
                                 });
 
@@ -315,7 +319,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                   deactivate_on = null;
                                   BlocProvider.of<ChatBloc>(context).add(
                                       GetStartEndChatsEvent(
-                                          USER_ID!, widget.chatId, 0));
+                                          USER_ID!, widget.chatId, 0,startChat: 1));
                                 } else {
                                   setState(() {
                                     errorWidgetVisibility =
@@ -704,14 +708,19 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                                   "message_text":
                                                   "${CHATENDREASON[i-1]}"
                                                 });
-                                                print(widget.chatId!+"chat id to deactivate");
+                                               if(block == false){
                                                 BlocProvider.of<ChatBloc>(
                                                     context)
                                                     .add(
                                                     GetStartEndChatsEvent(
                                                         USER_ID!,
                                                         widget.chatId,
-                                                        1));
+                                                        1));}
+                                               else{
+                                                 BlocProvider.of<ChatBloc>(context).add(
+                                                     GetStartEndChatsEvent(
+                                                         USER_ID!, widget.chatId, 0,block:1));
+                                               }
                                                 deactivate_on = DateTime.now();
                                                 onPressChatEndCancelWidget();
                                               },

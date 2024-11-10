@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:powerwhim/presentation/screens/add_to_network_just_chat_screen.dart';
 import 'package:powerwhim/presentation/screens/chat_screen/personal_chat_screen.dart';
 import 'package:powerwhim/presentation/screens/chat_screen/start_chat_end_chat_widget.dart';
 
@@ -33,6 +34,9 @@ class _AllEndedChatScreenState extends State<AllEndedChatScreen> {
   void dispose() {
     super.dispose();
   }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -73,10 +77,13 @@ class _AllEndedChatScreenState extends State<AllEndedChatScreen> {
                       itemBuilder: (context, index) {
                         return InkWell(
                             onTap: () {
-                              Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                      builder: (_) =>
-                                          PersonalChatScreen(
+
+                              if(chatsDetailsModel!.data!
+                                  .chats![index]!.deactivateOn==null) {
+                                Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (_) =>
+                                            PersonalChatScreen(
                                               chatId: chatsDetailsModel!
                                                   .data!.chats![index]!
                                                   .chatId!,
@@ -87,14 +94,25 @@ class _AllEndedChatScreenState extends State<AllEndedChatScreen> {
                                               deactivate_on: chatsDetailsModel!
                                                   .data!.chats![index]!
                                                   .deactivateOn,
-                                            presentInNetwork: 0,
-                                            connectionId:  chatsDetailsModel!.data!.chats![index]!.connectionstatus,
-                                          )));
-                              BlocProvider.of<ChatBloc>(context).add(
-                                  GetPersonalChatEvent(
-                                      chatId: chatsDetailsModel!.data!
-                                          .chats![index]!.chatId!,
-                                      page: 0));
+                                              presentInNetwork: 0,
+                                              connectionId: chatsDetailsModel!
+                                                  .data!.chats![index]!
+                                                  .connectionstatus,
+                                            )));
+                                BlocProvider.of<ChatBloc>(context).add(
+                                    GetPersonalChatEvent(
+                                        chatId: chatsDetailsModel!.data!
+                                            .chats![index]!.chatId!,
+                                        page: 0));
+                              }
+                              else{
+                                Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (_) =>
+                                            AddToNetworkJustChatScreen(name: chatsDetailsModel!.data!
+                                                .chats![index]!.userName!, userId:  chatsDetailsModel!.data!
+                                                .chats![index]!.userId!,previousScreen: "AllEndedChatScreen",)));
+                              }
                             },
                             child: ChatDmWidget(
                               name: chatsDetailsModel!.data!.chats![index]
@@ -137,7 +155,8 @@ class _AllEndedChatScreenState extends State<AllEndedChatScreen> {
                 ),
               ),
             );
-        } else if (state is ErrorState) {
+        }
+        else if (state is ErrorState) {
           return Scaffold(
             body: Container(
               color: Colors.black,

@@ -40,11 +40,8 @@ class SetSocketSuccessState extends ChatState {
 }
 
 class SetChatsSuccessState extends ChatState {
-  String mssg;
-  String chatId;
-  DateTime? deactivate_on;
-
-  SetChatsSuccessState(this.mssg, this.chatId, this.deactivate_on);
+  AddChatModel addChatModel;
+  SetChatsSuccessState(this.addChatModel);
 }
 
 class GetFriendsSuccessState extends ChatState {
@@ -72,4 +69,10 @@ class GetChatEndReasonState extends ChatState {
 class getFullProfileSuccessState extends ChatState{
   FullProfileModel fullProfile;
   getFullProfileSuccessState(this.fullProfile);
+}
+
+
+class getChatDetailsSuccess extends ChatState{
+  ChatConnectionDetailsModel ? chatConnectionDetailsModel;
+  getChatDetailsSuccess(this.chatConnectionDetailsModel);
 }

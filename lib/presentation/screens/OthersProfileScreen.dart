@@ -6,6 +6,7 @@ import 'package:powerwhim/constant/full_profile_privious_screen.dart';
 import 'package:powerwhim/constant/service_api_constant.dart';
 import 'package:powerwhim/data/model/profilemodel/full_profile.dart';
 import 'package:powerwhim/presentation/bloc/chatbloc/chat_bloc.dart';
+import 'package:powerwhim/presentation/screens/add_to_network_just_chat_screen.dart';
 import 'package:powerwhim/presentation/widget/error/custom_error_widget.dart';
 
 import '../widget/custom/content_description_widget.dart';
@@ -45,25 +46,26 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
   Widget build(BuildContext context) {
     return BlocListener<ChatBloc, ChatState>(
       listener: (context, state) {
-        if (state is SetChatsSuccessState) {
+        if(state is getChatDetailsSuccess){
+          if(state.chatConnectionDetailsModel!.data!.chatDetails!=null){
+            print(state.chatConnectionDetailsModel!.data!.chatDetails!);
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => PersonalChatScreen(
+                  chatId: state.chatConnectionDetailsModel!.data!.chatDetails!.chatId!,
+                  name: fullprofile!.name==null?"":fullprofile!.name!,
+                  previousScreen: "OthersProfileScreen",
+                  deactivate_on:  state.chatConnectionDetailsModel!.data!.chatDetails!.deactivateOn,
+                  userId: fullprofile!.userId,
+                  connectionId:widget.fullProfilePScreenModel.fullProfileModel!.data!.connectionStatus ,
+                )));
+            BlocProvider.of<ChatBloc>(context)
+                .add(GetPersonalChatEvent(chatId:state.chatConnectionDetailsModel!.data!.chatDetails!.chatId!,page: 0));
+          }
+          else{
           Navigator.of(context).push(MaterialPageRoute(
-              builder: (_) => PersonalChatScreen(
-                    chatId: state.chatId,
-                    name: fullprofile!.name==null?"":fullprofile!.name!,
-                    previousScreen: "OthersProfileScreen",
-                deactivate_on: state.deactivate_on,
-                userId: fullprofile!.userId,
-                connectionId:widget.fullProfilePScreenModel.fullProfileModel!.data!.connectionStatus ,
-                  )));
-          BlocProvider.of<ChatBloc>(context)
-              .add(GetPersonalChatEvent(chatId:state.chatId,page: 0));
+        builder: (_) => AddToNetworkJustChatScreen(name: fullprofile!.name!,userId: fullprofile!.userId!,previousScreen: "OthersProfileScreen",)));
+          }
         }
-        else if(state is ErrorState){
-          setState(() {
-            errorWidgetVisibility = true;
-            errorMssg = state.mssg;
-          });
-      }
       },
       child: PopScope(
         canPop: true,
@@ -84,15 +86,15 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
               actions: <Widget>[
                 IconButton(
                   icon: Icon(
-                    chatID==null?Icons.add_comment:Icons.message,
+                    Icons.add_comment,
                     color: Colors.white,
                   ),
                   onPressed: () {
                     if (fullprofile!.userId !=
-                        null)
-                      BlocProvider.of<ChatBloc>(context).add(SetChatEvent(
-                          USER_ID!,
-                          fullprofile!.userId!));
+                        null){
+                      BlocProvider.of<ChatBloc>(context).add(getChatDetailEvent(fullprofile!.userId!));
+                    }
+
 
                   },
                 )

@@ -1,5 +1,6 @@
 import 'package:powerwhim/data/model/account_managment_model.dart';
 import 'package:powerwhim/data/model/chats/add_chat_model.dart';
+import 'package:powerwhim/data/model/chats/chat_details_model.dart';
 import 'package:powerwhim/data/model/chats/chat_end_reason_model.dart';
 import 'package:powerwhim/data/model/chats/chats_details_model.dart';
 import 'package:powerwhim/data/model/chats/friends_model.dart';
@@ -37,8 +38,10 @@ class ChatsFriendsRepoImp extends ChatsFriendsRepo {
   }
 
   @override
-  Future<HttpResponse<AddChatModel>> setChats(String fromUserId, String toUserId) {
-    return _chatsFriendsService.setChats(fromUserId,toUserId);
+  Future<HttpResponse<AddChatModel>> setChats(String fromUserId, String toUserId,int addToNetwork) {
+    print(toUserId);
+    print(fromUserId);
+    return _chatsFriendsService.setChats(fromUserId,toUserId,addToNetwork);
   }
 
   @override
@@ -54,4 +57,10 @@ class ChatsFriendsRepoImp extends ChatsFriendsRepo {
   Future<HttpResponse<ChatEndReasonModel>> getChatEndReason() {
     return _chatsFriendsService.getChatEndReason();
   }
+
+  @override
+  Future<HttpResponse<ChatConnectionDetailsModel>> getChatsDetails(String userId) {
+      return _chatsFriendsService.getChatDetails(userId, USER_ID!);
+  }
+
 }

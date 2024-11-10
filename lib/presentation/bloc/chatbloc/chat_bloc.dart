@@ -4,12 +4,14 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:powerwhim/constant/service_api_constant.dart';
 import 'package:powerwhim/constant/string_constant.dart';
+import 'package:powerwhim/data/model/chats/add_chat_model.dart';
 import 'package:powerwhim/data/model/chats/chats_details_model.dart';
 import 'package:powerwhim/data/model/chats/friends_model.dart';
 import 'package:powerwhim/data/model/chats/personal_chat_model.dart';
 import 'package:powerwhim/data/usecase/chats_friends_usecase.dart';
 import 'package:powerwhim/injection_dependencies.dart';
 
+import '../../../data/model/chats/chat_details_model.dart';
 import '../../../data/model/profilemodel/full_profile.dart';
 import '../../../data/usecase/user_profile_usecase.dart';
 
@@ -31,6 +33,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<GetStartEndChatsEvent>(onGetStartEndChat);
     on<GetChatEndReasonEvent>(onGetChatEndReason);
     on<getFullProfileEvent>(ongetFullProfileEvent);
+    on<getChatDetailEvent>(ongetChatDetailEvent);
 
 
   }
@@ -111,14 +114,14 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   void onSetChatEvent(SetChatEvent event, Emitter<ChatState> emit) async {
     var apiResult = await locator
         .get<ChatsFriendsUsecase>()
-        .setChats(event.fromUserId, event.toUserId);
+        .setChats(event.fromUserId, event.toUserId,event.addToNetwork);
     try {
       if (apiResult.response.statusCode == HttpStatus.ok) {
         if (apiResult.data != null &&
             apiResult.data.data != null &&
             apiResult.data.data!.status == StringConstant.successState) {
-          emit(SetChatsSuccessState(apiResult.data.data!.mssg!,
-              apiResult.data.data!.chatId!, apiResult.data.data!.deactivateOn));
+          emit(SetChatsSuccessState(
+              apiResult.data!));
         } else {
           emit(ErrorState(ERROR));
         }
@@ -163,6 +166,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   void onGetStartEndChat(
       GetStartEndChatsEvent event, Emitter<ChatState> emit) async {
+    print(event);
     var response = await locator
         .get<ChatsFriendsUsecase>()
         .startEndChats(USER_ID!, event.chatId, event.deactivate_on,block: event.block,startChat: event.startChat);
@@ -207,6 +211,20 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       emit(ErrorState(response.data!.data!.mssg!));
       print("full profile failed");
     }
+  }
+}
+
+
+void ongetChatDetailEvent(getChatDetailEvent event , Emitter<ChatState>emit)async{
+  var response = await locator.get<ChatsFriendsUsecase>().getChatDetails(event.userId);
+  if(response.data!=null){
+    if(response.data!.data!=null)
+      emit(getChatDetailsSuccess(response.data!));
+    print("full profile success");
+  }
+  else{
+    emit(ErrorState(response.data!.data!.mssg!));
+    print("full profile failed");
   }
 }
 

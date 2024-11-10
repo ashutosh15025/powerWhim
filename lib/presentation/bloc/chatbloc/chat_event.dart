@@ -44,8 +44,9 @@ class GetFriendsEvent extends ChatEvent {
 class SetChatEvent extends ChatEvent {
   String fromUserId;
   String toUserId;
+  int addToNetwork;
 
-  SetChatEvent(this.fromUserId, this.toUserId);
+  SetChatEvent(this.fromUserId, this.toUserId, this.addToNetwork);
 }
 
 class GetFullProfileEvent extends ChatEvent {
@@ -82,3 +83,7 @@ class getFullProfileEvent extends ChatEvent{
 }
 
 
+class getChatDetailEvent extends ChatEvent{
+  String userId;
+  getChatDetailEvent(this.userId);
+}

@@ -101,6 +101,7 @@ flutter:
     - assets/icon/androidicon.png
     - .env
     - animations/location.json
+    - assets/icon/message_lottie.json
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
