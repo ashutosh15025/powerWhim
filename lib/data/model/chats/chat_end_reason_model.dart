@@ -27,23 +27,23 @@ class ChatEndReasonModel {
 class Data {
   String? status;
   String? mssg;
-  List<String>? reasons;
+  List<String>? endReasons;
 
   Data({
     this.status,
     this.mssg,
-    this.reasons,
+    this.endReasons,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
     status: json["status"],
     mssg: json["mssg"],
-    reasons: json["reasons"] == null ? [] : List<String>.from(json["reasons"]!.map((x) => x)),
+    endReasons: json["endReasons"] == null ? [] : List<String>.from(json["endReasons"]!.map((x) => x)),
   );
 
   Map<String, dynamic> toJson() => {
     "status": status,
     "mssg": mssg,
-    "reasons": reasons == null ? [] : List<dynamic>.from(reasons!.map((x) => x)),
+    "endReasons": endReasons == null ? [] : List<dynamic>.from(endReasons!.map((x) => x)),
   };
 }

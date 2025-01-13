@@ -34,8 +34,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<GetChatEndReasonEvent>(onGetChatEndReason);
     on<getFullProfileEvent>(ongetFullProfileEvent);
     on<getChatDetailEvent>(ongetChatDetailEvent);
-
-
   }
 
   void onGetChatsSuccessEvent(
@@ -183,15 +181,14 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   void onGetChatEndReason(
       GetChatEndReasonEvent event, Emitter<ChatState> emit) async {
-    emit(LoadingState());
     var response = await locator
         .get<ChatsFriendsUsecase>()
         .getChatEndReason();
     if (response.data!.data != null) {
-      if (response.data.data!.status == StringConstant.successState) {
-        if(response.data.data!.reasons!=null)
-        emit(GetChatEndReasonState(response.data.data!.reasons!));
-      } else {
+    if (response.data.data!.status == StringConstant.successState) {
+        if(response.data.data!.endReasons!=null)
+          CHATENDREASON = response.data.data!.endReasons!;
+     } else {
         emit(ErrorState(response.data!.data!.mssg!));
       }
     } else {}

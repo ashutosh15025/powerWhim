@@ -81,6 +81,11 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
     connectionId = widget.connectionId;
     initSocket();
     _scrollController.addListener(_onScroll);
+
+    BlocProvider.of<ChatBloc>(
+        context)
+        .add(
+        GetChatEndReasonEvent());
     super.initState();
     _scrollToBottom();
   }
