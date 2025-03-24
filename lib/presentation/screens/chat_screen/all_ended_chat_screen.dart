@@ -27,6 +27,7 @@ class _AllEndedChatScreenState extends State<AllEndedChatScreen> {
 
   @override
   void initState() {
+    BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(0));
     super.initState();
   }
 
@@ -50,10 +51,6 @@ class _AllEndedChatScreenState extends State<AllEndedChatScreen> {
               chatsDetailsModel!.data!.chats!.length >= 0)
             return PopScope(
               canPop: true,
-              onPopInvoked: (bool didPop) async {
-                BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(1));
-                // Action to perform on back pressed
-              },
               child: Scaffold(
                 appBar:  AppBar(
                     iconTheme: IconThemeData(

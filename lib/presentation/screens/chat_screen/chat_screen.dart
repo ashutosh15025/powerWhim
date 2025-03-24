@@ -7,7 +7,6 @@ import 'package:powerwhim/data/model/chats/chats_details_model.dart';
 import 'package:powerwhim/presentation/bloc/chatbloc/chat_bloc.dart';
 import 'package:powerwhim/presentation/screens/chat_screen/all_ended_chat_screen.dart';
 import 'package:powerwhim/presentation/screens/chat_screen/personal_chat_screen.dart';
-import 'package:powerwhim/presentation/widget/custom/custom_circular_loading_bar.dart';
 import 'package:powerwhim/presentation/widget/error/custom_error_widget.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
@@ -28,6 +27,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   void initState() {
+    BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(1));
     initSocket();
     super.initState();
   }
@@ -42,7 +42,7 @@ class _ChatScreenState extends State<ChatScreen> {
       setState(() {});
     });
     listenMessage();
-    socket?.onDisconnect((_) => print('Connection Disconnection hhhh'));
+    socket?.onDisconnect((_) => print('Connection Disconnection'));
     socket?.onConnectError((err) => print(err));
     socket?.onError((err) => print(err));
   }
@@ -61,13 +61,25 @@ class _ChatScreenState extends State<ChatScreen> {
     }
     return BlocConsumer<ChatBloc, ChatState>(
       listener: (context, state) {
+        if (state is GetChatsSuccessState) {
 
+          chatsDetailsModel = state.chatsDetailsModel;}
 
       },
       builder: (context, state) {
-        if (state is GetChatsSuccessState) {
-
-          chatsDetailsModel = state.chatsDetailsModel;
+        if (state is ErrorState) {
+          return Container(
+            color: Colors.black,
+            child: CustomErrorWidget(
+              error: true,
+              closeErrorWidget: () {
+                BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(1));
+              },
+              mssg: ERROR,
+            ),
+          );
+        }
+        else{
           if (chatsDetailsModel != null && chatsDetailsModel!.data != null &&
               chatsDetailsModel!.data!.chats!.length > 0) {
             return PopScope(
@@ -125,23 +137,22 @@ class _ChatScreenState extends State<ChatScreen> {
                                         MaterialPageRoute(
                                             builder: (_) =>
                                                 PersonalChatScreen(
-                                                    chatId: chatsDetailsModel!
-                                                        .data!.chats![index]!
-                                                        .chatId!,
-                                                    name: chatsDetailsModel!
-                                                        .data!.chats![index]!
-                                                        .userName!,
-                                                    previousScreen: "ChatScreen",
-                                                    socketId: socket!.id,
+                                                  chatId: chatsDetailsModel!
+                                                      .data!.chats![index]!
+                                                      .chatId!,
+                                                  name: chatsDetailsModel!
+                                                      .data!.chats![index]!
+                                                      .userName!,
+                                                  previousScreen: "ChatScreen",
+                                                  socketId: socket!.id,
                                                   deactivate_on: null,
-                                                  userId: chatsDetailsModel!.data!.chats![index]!.userId,
-                                                  connectionId: chatsDetailsModel!.data!.chats![index]!.connectionstatus,
+                                                  userId: chatsDetailsModel!
+                                                      .data!.chats![index]!
+                                                      .userId,
+                                                  connectionId: chatsDetailsModel!
+                                                      .data!.chats![index]!
+                                                      .connectionstatus,
                                                 )));
-                                    BlocProvider.of<ChatBloc>(context).add(
-                                        GetPersonalChatEvent(
-                                            chatId: chatsDetailsModel!.data!
-                                                .chats![index]!.chatId!,
-                                            page: 0));
                                   },
                                   child: ChatDmWidget(
                                     name: chatsDetailsModel!.data!.chats![index]
@@ -164,13 +175,16 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
               ),
             );
-
-        }else if(chatsDetailsModel !=null && chatsDetailsModel!.data!=null&& chatsDetailsModel!.data!.chats!.length==0) {
+          } else if (chatsDetailsModel != null && chatsDetailsModel!.data != null &&
+              chatsDetailsModel!.data!.chats!.length == 0) {
             return Stack(
               alignment: Alignment.topCenter,
               children: [
                 Container(
-                  height:5*MediaQuery.of(context).size.height/6,
+                  height: 5 * MediaQuery
+                      .of(context)
+                      .size
+                      .height / 6,
                   color: Colors.black,
                   child: InkWell(
                     onTap: () {
@@ -216,19 +230,10 @@ class _ChatScreenState extends State<ChatScreen> {
               ],
             );
           }
-        } else if (state is ErrorState) {
-          return Container(
-            color: Colors.black,
-            child: CustomErrorWidget(
-              error: true,
-              closeErrorWidget: () {
-                BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(1));
-              },
-              mssg: ERROR,
-            ),
-          );
+          else{
+            return CircularProgressIndicator();
+          }
         }
-        return CustomCircularLoadingBar();
       },
     );
   }

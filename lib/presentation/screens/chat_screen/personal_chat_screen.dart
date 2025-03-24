@@ -80,14 +80,17 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
     deactivate_on = widget.deactivate_on;
     connectionId = widget.connectionId;
     initSocket();
+    getChat();
     _scrollController.addListener(_onScroll);
-
-    BlocProvider.of<ChatBloc>(
-        context)
-        .add(
-        GetChatEndReasonEvent());
     super.initState();
     _scrollToBottom();
+  }
+
+  void getChat(){
+    BlocProvider.of<ChatBloc>(context).add(
+        GetPersonalChatEvent(
+            chatId: widget.chatId,
+            page: 0));
   }
 
   void _scrollToBottom() async {
@@ -161,7 +164,6 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
       },
       listener: (context, state) {
          if(state is getFullProfileSuccessState){
-           print(state);
            if (state.fullProfile != null) {
              Navigator.of(context).pushNamed('/profile',
                  arguments: FullProfilePriviousScreen(
@@ -198,10 +200,6 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
           {
             deactivate_on =  DateTime.now();
             connectionId = null;
-
-
-            print("here removed to network");
-
           }
           BlocProvider.of<ChatBloc>(context)
               .add(GetPersonalChatEvent(chatId: widget.chatId, page: 0));
@@ -225,12 +223,13 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                     .add(SetSocketEvent(widget.socketId!));
               emitActiveTime(widget.chatId);
               if (widget.previousScreen == "FriendsScreen") {
-                BlocProvider.of<ChatBloc>(context)
-                    .add(GetFriendsEvent(USER_ID!));
-              } else if (widget.previousScreen == "ChatScreen")
-                BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(1));
-              else if (widget.previousScreen == "AllEndedChatScreen")
-                BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(0));
+                // BlocProvider.of<ChatBloc>(context)
+                //     .add(GetFriendsEvent(USER_ID!));
+              } else if (widget.previousScreen == "ChatScreen") {
+                // BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(1));
+              } else if (widget.previousScreen == "AllEndedChatScreen") {
+                // BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(0));
+              }
             },
             child: GestureDetector(
               onTap: (){

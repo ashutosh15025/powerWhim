@@ -9,21 +9,35 @@ import 'package:powerwhim/presentation/widget/custom/custom_circular_loading_bar
 import 'package:powerwhim/presentation/widget/custom/friend_dm_widget.dart';
 import 'package:powerwhim/presentation/widget/custom/gradient_button_green_yelllow.dart';
 
+import '../../constant/service_api_constant.dart';
 import '../../data/model/chats/friends_model.dart';
 
 class FriendsScreen extends StatefulWidget {
   const FriendsScreen({super.key, required this.addProfile});
   final Function()  addProfile;
 
+
   @override
   State<FriendsScreen> createState() => _FriendsScreenState();
 }
+
 
 class _FriendsScreenState extends State<FriendsScreen> {
 
   String eventText = "";
   String eventUserName="";
   bool eventWidgetVisibility = false;
+
+
+  @override
+  void initState() {
+    BlocProvider.of<ChatBloc>(context)
+        .add(GetFriendsEvent(USER_ID!));
+    super.initState();
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ChatBloc, ChatState>(
@@ -153,6 +167,6 @@ class _FriendsScreenState extends State<FriendsScreen> {
     setState(() {
       eventWidgetVisibility = true;
     });
-
   }
+
 }
