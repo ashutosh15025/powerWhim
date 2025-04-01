@@ -26,12 +26,14 @@ class _ChatsFriendsService implements ChatsFriendsService {
   @override
   Future<HttpResponse<ChatsDetailsModel>> getChats(
     String userId,
-    int chatActiveStatus,
+    int activeChatStatus,
+    int page,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'from_user_id': userId,
-      r'chat_active_status': chatActiveStatus,
+      r'chat_active_status': activeChatStatus,
+      r'page': page,
     };
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;

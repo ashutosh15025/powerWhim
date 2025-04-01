@@ -5,6 +5,7 @@ import 'package:powerwhim/constant/color_constant.dart';
 import 'package:powerwhim/presentation/bloc/chatbloc/chat_bloc.dart';
 
 import '../../../constant/service_api_constant.dart';
+import '../../bloc/chatbloc/personal_chat_bloc.dart';
 
 class StartChatEndChatWidget extends StatefulWidget {
   const StartChatEndChatWidget({super.key, required this.name, required this.lastMessage, required this.count, required this.time, this.start, this.chatId});
@@ -65,7 +66,7 @@ class _StartChatEndChatWidgetState extends State<StartChatEndChatWidget> {
                 ),
                 InkWell(
                   onTap: (){
-                   BlocProvider.of<ChatBloc>(context).add(GetStartEndChatsEvent(USER_ID!, widget.chatId!, 0));
+                   BlocProvider.of<PersonalChatBloc>(context).add(GetStartEndChatsEvent(USER_ID!, widget.chatId!, 0));
                   },
                   child: true==true?Padding(
                     padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),

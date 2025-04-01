@@ -12,6 +12,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import 'chat_dm_widget.dart';
 
+
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key, required this.switchAddProfile});
   final Function() switchAddProfile;
@@ -20,13 +21,16 @@ class ChatScreen extends StatefulWidget {
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver, RouteAware {
   ChatsDetailsModel? chatsDetailsModel;
   IO.Socket? socket;
+  ChatBloc? _chatBloc;
+  final RouteObserver routeObserver = RouteObserver<PageRoute>();
 
 
   @override
   void initState() {
+    WidgetsBinding.instance.addObserver(this);
     BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(1));
     initSocket();
     super.initState();
@@ -48,11 +52,39 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _chatBloc ??= BlocProvider.of<ChatBloc>(context);
+  }
+
+  @override
   void dispose() {
+    // Unsubscribe from route observer
+    routeObserver.unsubscribe(this);
+    // Unregister from lifecycle events
+    WidgetsBinding.instance.removeObserver(this);
     socket?.dispose();
     super.dispose();
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    if (state == AppLifecycleState.resumed) {
+
+      BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(1)); // Refresh chat
+    } else if (state == AppLifecycleState.paused) {
+
+    }
+  }
+
+
+  // This is called when user returns to this route after popping the next route
+  @override
+  void didPopNext() {
+    BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(1));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,9 +94,8 @@ class _ChatScreenState extends State<ChatScreen> {
     return BlocConsumer<ChatBloc, ChatState>(
       listener: (context, state) {
         if (state is GetChatsSuccessState) {
-
-          chatsDetailsModel = state.chatsDetailsModel;}
-
+          chatsDetailsModel = state.chatsDetailsModel;
+        }
       },
       builder: (context, state) {
         if (state is ErrorState) {
@@ -79,14 +110,13 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           );
         }
-        else{
+        else {
           if (chatsDetailsModel != null && chatsDetailsModel!.data != null &&
               chatsDetailsModel!.data!.chats!.length > 0) {
             return PopScope(
               canPop: true,
               onPopInvoked: (bool didPop) async {
-                Navigator.of(context)
-                    .pop(); // Action to perform on back pressed
+                Navigator.of(context).pop(); // Action to perform on back pressed
               },
               child: SingleChildScrollView(
                 child: Container(
@@ -100,7 +130,8 @@ class _ChatScreenState extends State<ChatScreen> {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (_) =>
                                   AllEndedChatScreen(
-                                  )));
+                                  ))).then((_)=>{
+                                    BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(1))});
                           BlocProvider.of<ChatBloc>(context).add(
                               GetChatsEvent(0));
                         },
@@ -119,7 +150,6 @@ class _ChatScreenState extends State<ChatScreen> {
                                 color: Colors.white
                             ),
                           ),
-
                         ),
                       )
                           : SizedBox.shrink(),
@@ -152,7 +182,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                   connectionId: chatsDetailsModel!
                                                       .data!.chats![index]!
                                                       .connectionstatus,
-                                                )));
+                                                ))).then((_)=>{print("privious")});
                                   },
                                   child: ChatDmWidget(
                                     name: chatsDetailsModel!.data!.chats![index]
@@ -200,7 +230,8 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                   ),
                 ),
-                InkWell(
+                int.parse(chatsDetailsModel!.data!.inactiveChats!) > 0
+                    ? InkWell(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (_) =>
@@ -224,22 +255,21 @@ class _ChatScreenState extends State<ChatScreen> {
                           color: Colors.white
                       ),
                     ),
-
                   ),
-                ),
+                )
+                    : SizedBox.shrink(),
               ],
             );
           }
-          else{
-            return CircularProgressIndicator();
+          else {
+            return Center(child: CircularProgressIndicator());
           }
         }
       },
     );
   }
 
-
-  void listenMessage(){
+  void listenMessage() {
     socket!.on('message', (data) {
       String chatId = data['chat_id'];
       if (chatsDetailsModel != null) {
@@ -247,26 +277,32 @@ class _ChatScreenState extends State<ChatScreen> {
         for (int i = 0; i < chatsDetailsModel!.data!.chats!.length; i++) {
           if (chatsDetailsModel!.data!.chats![i].chatId == chatId) {
             newMessageData = chatsDetailsModel!.data!.chats![i];
-            chatsDetailsModel!.data!..chats!.removeAt(i);
+            chatsDetailsModel!.data!.chats!.removeAt(i);
             break; // Exit the loop once element is found
           }
         }
         if (newMessageData != null) {
-          newMessageData.lastConversations = data['message_text'];
-          if(data['message_text']==null)
+          // Assign message text if it exists
+          if (data['message_text'] != null) {
             newMessageData.lastConversations = data['message_text'];
-          if(data['image']!=null)
+          } else {
+            newMessageData.lastConversations = "";
+          }
+
+          // Override with photo text if image exists
+          if (data['image'] != null) {
             newMessageData.lastConversations = "📷 Photo";
+          }
+
           newMessageData.updatedOn = DateTime.parse(data['message_time']);
           newMessageData.unreadCount =
               (int.parse(newMessageData.unreadCount!) + 1).toString();
+
           setState(() {
-            chatsDetailsModel!.data!..chats!.insert(0, newMessageData!);
+            chatsDetailsModel!.data!.chats!.insert(0, newMessageData!);
           });
         }
       }
     });
   }
-
-
 }

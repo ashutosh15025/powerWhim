@@ -8,6 +8,7 @@ import 'package:powerwhim/constant/service_api_constant.dart';
 import 'package:powerwhim/domain/service/database/database_service.dart';
 import 'package:powerwhim/presentation/bloc/authbloc/auth_bloc.dart';
 import 'package:powerwhim/presentation/bloc/chatbloc/chat_bloc.dart';
+import 'package:powerwhim/presentation/bloc/chatbloc/personal_chat_bloc.dart';
 import 'package:powerwhim/presentation/bloc/profilebloc/profilebloc_bloc.dart';
 import 'package:powerwhim/presentation/routes/routes_generator.dart';
 
@@ -56,6 +57,8 @@ class MyApp extends StatelessWidget {
           BlocProvider<ProfileblocBloc>(create: (context) => ProfileblocBloc()),
           BlocProvider<ChatBloc>(create: (context) => ChatBloc()),
           BlocProvider<AuthBloc>(create: (context) => AuthBloc()),
+          BlocProvider<PersonalChatBloc>(create: (context) => PersonalChatBloc()),
+
         ],
       child: MaterialApp(
         theme: ThemeData(

@@ -1,46 +1,43 @@
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
-import 'package:powerwhim/constant/service_api_constant.dart';
-import 'package:powerwhim/constant/string_constant.dart';
-import 'package:powerwhim/data/model/chats/add_chat_model.dart';
-import 'package:powerwhim/data/model/chats/chats_details_model.dart';
-import 'package:powerwhim/data/model/chats/friends_model.dart';
-import 'package:powerwhim/data/model/chats/personal_chat_model.dart';
-import 'package:powerwhim/data/usecase/chats_friends_usecase.dart';
-import 'package:powerwhim/injection_dependencies.dart';
+
+import '../../../constant/service_api_constant.dart';
+import '../../../constant/string_constant.dart';
+import '../../../data/model/chats/add_chat_model.dart';
 import '../../../data/model/chats/chat_details_model.dart';
+import '../../../data/model/chats/chats_details_model.dart';
+import '../../../data/model/chats/friends_model.dart';
+import '../../../data/model/chats/personal_chat_model.dart';
 import '../../../data/model/profilemodel/full_profile.dart';
+import '../../../data/usecase/chats_friends_usecase.dart';
 import '../../../data/usecase/user_profile_usecase.dart';
+import '../../../injection_dependencies.dart';
 
-part 'chat_event.dart';
 
-part 'chat_state.dart';
+part 'personal_chat_event.dart';
+part 'personal_chat_state.dart';
 
-class ChatBloc extends Bloc<ChatEvent, ChatState> {
+class PersonalChatBloc extends Bloc<PersonalChatEvent, PersonalChatState> {
   List<Message> personalChatList = [];
-  ChatBloc() : super(ChatInitial()) {
-    on<ChatEvent>((event, emit) {});
-    on<GetChatsEvent>(onGetChatsSuccessEvent);
+  PersonalChatBloc() : super(PersonalChatInitial()) {
+    on<PersonalChatEvent>((event, emit) {});
+    on<GetPersonalChatEvent>(onGetPersonalChatEvent);
     on<SetSocketEvent>(onSetSocketEvent);
     on<SetChatEvent>(onSetChatEvent);
     on<GetFriendsEvent>(onGetFriendsEvent);
     on<GetFullProfileEvent>(onGetFullProfileEvent);
+    on<GetStartEndChatsEvent>(onGetStartEndChat);
+    on<GetChatEndReasonEvent>(onGetChatEndReason);
     on<getFullProfileEvent>(ongetFullProfileEvent);
-    on<getChatDetailEvent>(ongetChatDetailEvent);
   }
 
   void onGetChatsSuccessEvent(
-      GetChatsEvent event, Emitter<ChatState> emit) async {
-    print('uesrId2${USER_ID}');
-
+      GetChatsEvent event, Emitter<PersonalChatState> emit) async {
     var apiResult = await locator
         .get<ChatsFriendsUsecase>()
-        .getChats(USER_ID!, event.activeStatus,0);
-
-    print('${apiResult.data.data?.chats?.length} this is length');
+        .getChats(USER_ID!,event.activeStatus,0);
     try {
       if (apiResult.response.statusCode == HttpStatus.ok) {
         if (apiResult.data != null &&
@@ -57,18 +54,20 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
 
   void onGetPersonalChatEvent(
-      GetPersonalChatEvent event, Emitter<ChatState> emit) async {
-    if (event.scroll != null) emit(LoadingState());
+      GetPersonalChatEvent event, Emitter<PersonalChatState> emit) async {
+    if (event.scroll != null) emit(Loading());
+    print("apiResult");
     var apiResult = await locator
         .get<ChatsFriendsUsecase>()
         .getPersonalChat(event.chatId, event.page, USER_ID!);
+    print(apiResult);
     try {
       if (apiResult.response.statusCode == HttpStatus.ok) {
         if (apiResult.data != null && apiResult.data.data != null) {
           emit(GetPersonalChatSuccessState(apiResult.data));
           if(event.page>0){
             if(apiResult.data!.data!.messages!=null&&apiResult.data!.data!.messages!.length>0)
-            personalChatList?.addAll(apiResult.data!.data!.messages!);
+              personalChatList?.addAll(apiResult.data!.data!.messages!);
           }
           else{
             if(apiResult.data!.data!.messages!=null&&apiResult.data!.data!.messages!.length>0)
@@ -85,7 +84,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     }
   }
 
-  void onSetSocketEvent(SetSocketEvent event, Emitter<ChatState> emit) async {
+  void onSetSocketEvent(SetSocketEvent event, Emitter<PersonalChatState> emit) async {
     var apiResult = await locator
         .get<ChatsFriendsUsecase>()
         .setSocketId(event.socketId, USER_ID!);
@@ -103,7 +102,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     }
   }
 
-  void onSetChatEvent(SetChatEvent event, Emitter<ChatState> emit) async {
+  void onSetChatEvent(SetChatEvent event, Emitter<PersonalChatState> emit) async {
     var apiResult = await locator
         .get<ChatsFriendsUsecase>()
         .setChats(event.fromUserId, event.toUserId,event.addToNetwork);
@@ -123,9 +122,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     }
   }
 
-  void onGetFriendsEvent(GetFriendsEvent event, Emitter<ChatState> emit) async {
+  void onGetFriendsEvent(GetFriendsEvent event, Emitter<PersonalChatState> emit) async {
     var apiResult =
-        await locator.get<ChatsFriendsUsecase>().getConnection(event.userId);
+    await locator.get<ChatsFriendsUsecase>().getConnection(event.userId);
     try {
       if (apiResult.response.statusCode == HttpStatus.ok) {
         if (apiResult.data != null &&
@@ -145,7 +144,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
 
   void onGetFullProfileEvent(
-      GetFullProfileEvent event, Emitter<ChatState> emit) async {
+      GetFullProfileEvent event, Emitter<PersonalChatState> emit) async {
     var response = await locator
         .get<UserProfileUsecase>()
         .getFullProfiles(event.userId, USER_ID!);
@@ -156,9 +155,39 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     }
   }
 
+  void onGetStartEndChat(
+      GetStartEndChatsEvent event, Emitter<PersonalChatState> emit) async {
+    var response = await locator
+        .get<ChatsFriendsUsecase>()
+        .startEndChats(USER_ID!, event.chatId, event.deactivate_on,block: event.block,startChat: event.startChat);
+    if (response.data!.data != null) {
+      if (response.data.data!.status == StringConstant.successState) {
+        emit(GetStartEndChatsState(response.data.data!.mssg!));
+      } else {
+        emit(ErrorState(response.data!.data!.mssg!));
+      }
+    } else {}
+  }
 
 
-  void ongetFullProfileEvent(getFullProfileEvent event,Emitter<ChatState>emit)async{
+
+  void onGetChatEndReason(
+      GetChatEndReasonEvent event, Emitter<PersonalChatState> emit) async {
+    var response = await locator
+        .get<ChatsFriendsUsecase>()
+        .getChatEndReason();
+    if (response.data!.data != null) {
+      if (response.data.data!.status == StringConstant.successState) {
+        if(response.data.data!.endReasons!=null)
+          CHATENDREASON = response.data.data!.endReasons!;
+      } else {
+        emit(ErrorState(response.data!.data!.mssg!));
+      }
+    } else {}
+  }
+
+
+  void ongetFullProfileEvent(getFullProfileEvent event,Emitter<PersonalChatState>emit)async{
     var response = await locator.get<UserProfileUsecase>().getFullProfiles(event.userId,USER_ID!);
     if(response.data!=null){
       if(response.data!.data!=null)
@@ -171,7 +200,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 }
 
 
-void ongetChatDetailEvent(getChatDetailEvent event , Emitter<ChatState>emit)async{
+void ongetChatDetailEvent(getChatDetailEvent event , Emitter<PersonalChatState>emit)async{
   var response = await locator.get<ChatsFriendsUsecase>().getChatDetails(event.userId);
   if(response.data!=null){
     if(response.data!.data!=null)

@@ -22,19 +22,38 @@ class AllEndedChatScreen extends StatefulWidget {
 
 }
 
-class _AllEndedChatScreenState extends State<AllEndedChatScreen> {
+class _AllEndedChatScreenState extends State<AllEndedChatScreen>  with WidgetsBindingObserver {
   ChatsDetailsModel? chatsDetailsModel;
+  ChatBloc? _chatBloc;
 
   @override
   void initState() {
+    WidgetsBinding.instance.addObserver(this);
     BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(0));
     super.initState();
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _chatBloc ??= BlocProvider.of<ChatBloc>(context);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      print("App Resumed");
+      // Perform any actions when the app is resumed
+    }
+  }
+
+
 
 
 
@@ -77,30 +96,21 @@ class _AllEndedChatScreenState extends State<AllEndedChatScreen> {
 
                               if(chatsDetailsModel!.data!
                                   .chats![index]!.deactivateOn==null) {
-                                Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                        builder: (_) =>
-                                            PersonalChatScreen(
-                                              chatId: chatsDetailsModel!
-                                                  .data!.chats![index]!
-                                                  .chatId!,
-                                              name: chatsDetailsModel!
-                                                  .data!.chats![index]!
-                                                  .userName!,
-                                              previousScreen: "AllEndedChatScreen",
-                                              deactivate_on: chatsDetailsModel!
-                                                  .data!.chats![index]!
-                                                  .deactivateOn,
-                                              presentInNetwork: 0,
-                                              connectionId: chatsDetailsModel!
-                                                  .data!.chats![index]!
-                                                  .connectionstatus,
-                                            )));
-                                BlocProvider.of<ChatBloc>(context).add(
-                                    GetPersonalChatEvent(
-                                        chatId: chatsDetailsModel!.data!
-                                            .chats![index]!.chatId!,
-                                        page: 0));
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => PersonalChatScreen(
+                                      chatId: chatsDetailsModel!.data!.chats![index]!.chatId!,
+                                      name: chatsDetailsModel!.data!.chats![index]!.userName!,
+                                      previousScreen: "AllEndedChatScreen",
+                                      deactivate_on: chatsDetailsModel!.data!.chats![index]!.deactivateOn,
+                                      presentInNetwork: 0,
+                                      connectionId: chatsDetailsModel!.data!.chats![index]!.connectionstatus,
+                                    ),
+                                  ),
+                                ).then((_) {
+                                  _chatBloc?.add(GetChatsEvent(0));
+                                });
                               }
                               else{
                                 Navigator.of(context).push(

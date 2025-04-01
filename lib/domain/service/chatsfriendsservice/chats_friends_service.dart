@@ -22,12 +22,12 @@ part 'chats_friends_service.g.dart';
 abstract class ChatsFriendsService{
   factory ChatsFriendsService(Dio dio) = _ChatsFriendsService;
 
-
   @GET("api/chats/get-chats")
   Future<HttpResponse<ChatsDetailsModel>> getChats(
       @Query("from_user_id") String userId,
-     @Query("chat_active_status") int chatActiveStatus
-  );
+      @Query("chat_active_status") int activeChatStatus,
+      @Query("page") int page
+      );
 
 
   @GET("api/chats/get-conversations")

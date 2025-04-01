@@ -9,7 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:powerwhim/constant/service_api_constant.dart';
 import 'package:powerwhim/constant/string_constant.dart';
 import 'package:powerwhim/data/model/chats/personal_chat_model.dart';
-import 'package:powerwhim/presentation/bloc/chatbloc/chat_bloc.dart';
+import 'package:powerwhim/presentation/bloc/chatbloc/personal_chat_bloc.dart';
 import 'package:powerwhim/presentation/screens/view_image_screen/view_image_screen.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:powerwhim/presentation/widget/custom/custom_circular_loading_bar.dart';
@@ -87,7 +87,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
   }
 
   void getChat(){
-    BlocProvider.of<ChatBloc>(context).add(
+    BlocProvider.of<PersonalChatBloc>(context).add(
         GetPersonalChatEvent(
             chatId: widget.chatId,
             page: 0));
@@ -102,10 +102,9 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
     if (_scrollController.position.atEdge) {
       bool isTop = _scrollController.position.pixels == 0;
       if (!isTop) {
-        print("top");
         page++;
 
-        BlocProvider.of<ChatBloc>(context).add(
+        BlocProvider.of<PersonalChatBloc>(context).add(
             GetPersonalChatEvent(chatId: widget.chatId, page: page));
       }
     }
@@ -155,7 +154,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
   @override
   Widget build(BuildContext context) {
 
-    return BlocConsumer<ChatBloc, ChatState>(
+    return BlocConsumer<PersonalChatBloc, PersonalChatState>(
       buildWhen: (previous,current){
         if(current is getFullProfileSuccessState)
           return false;
@@ -179,7 +178,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
               error: true,
               closeErrorWidget: () {
                 setState(() {
-                  BlocProvider.of<ChatBloc>(context).add(
+                  BlocProvider.of<PersonalChatBloc>(context).add(
                       GetPersonalChatEvent(chatId: widget.chatId, page: 0));
                 });
               },
@@ -201,7 +200,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
             deactivate_on =  DateTime.now();
             connectionId = null;
           }
-          BlocProvider.of<ChatBloc>(context)
+          BlocProvider.of<PersonalChatBloc>(context)
               .add(GetPersonalChatEvent(chatId: widget.chatId, page: 0));
           return CustomCircularLoadingBar();
         }
@@ -211,24 +210,25 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
           scrollLoaderVisibility = false;
           if(socketP!.id!=null && previousScoketId!=socketP!.id) {
             previousScoketId = socketP!.id!;
-            BlocProvider.of<ChatBloc>(context).add(
+            BlocProvider.of<PersonalChatBloc>(context).add(
                 SetSocketEvent(socketP!.id!));
           }
-          listItem = BlocProvider.of<ChatBloc>(context).personalChatList;
+          listItem = BlocProvider.of<PersonalChatBloc>(context).personalChatList;
           return PopScope(
             canPop: true,
-            onPopInvoked: (bool didPop) {
-              if (widget.socketId != null)
-                BlocProvider.of<ChatBloc>(context)
-                    .add(SetSocketEvent(widget.socketId!));
-              emitActiveTime(widget.chatId);
-              if (widget.previousScreen == "FriendsScreen") {
-                // BlocProvider.of<ChatBloc>(context)
-                //     .add(GetFriendsEvent(USER_ID!));
-              } else if (widget.previousScreen == "ChatScreen") {
-                // BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(1));
-              } else if (widget.previousScreen == "AllEndedChatScreen") {
-                // BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(0));
+            onPopInvokedWithResult: (bool didPop, Object? result) {
+              if (didPop) {
+                // Capture values from widget synchronously
+                final socketId = widget.socketId;
+                final chatId = widget.chatId;
+
+                // Get the Bloc instance synchronously
+                final chatBloc = BlocProvider.of<PersonalChatBloc>(context);
+
+                if (socketId != null) {
+                  chatBloc.add(SetSocketEvent(socketId));
+                }
+                emitActiveTime(chatId);
               }
             },
             child: GestureDetector(
@@ -283,7 +283,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                 : Center(
                                 child: InkWell(
                                   onTap: (){
-                                    BlocProvider.of<ChatBloc>(context).add(
+                                    BlocProvider.of<PersonalChatBloc>(context).add(
                                         GetStartEndChatsEvent(
                                             USER_ID!, widget.chatId, 0,block: 0));
                                     Navigator.pop(context);
@@ -321,7 +321,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                     ?.activeChats ==
                                     true) {
                                   deactivate_on = null;
-                                  BlocProvider.of<ChatBloc>(context).add(
+                                  BlocProvider.of<PersonalChatBloc>(context).add(
                                       GetStartEndChatsEvent(
                                           USER_ID!, widget.chatId, 0,startChat: 1));
                                 } else {
@@ -374,7 +374,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                             onTap: () {
                               focusInput.unfocus();
                               print(widget.userId!);
-                              BlocProvider.of<ChatBloc>(context).add(getFullProfileEvent(widget.userId!));
+                              BlocProvider.of<PersonalChatBloc>(context).add(getFullProfileEvent(widget.userId!));
                             },
                             child:Center(
                                 child: Container(
@@ -713,7 +713,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                                   "${CHATENDREASON[i-1]}"
                                                 });
                                                if(block == false){
-                                                BlocProvider.of<ChatBloc>(
+                                                BlocProvider.of<PersonalChatBloc>(
                                                     context)
                                                     .add(
                                                     GetStartEndChatsEvent(
@@ -721,7 +721,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                                         widget.chatId,
                                                         1));}
                                                else{
-                                                 BlocProvider.of<ChatBloc>(context).add(
+                                                 BlocProvider.of<PersonalChatBloc>(context).add(
                                                      GetStartEndChatsEvent(
                                                          USER_ID!, widget.chatId, 0,block:1));
                                                }

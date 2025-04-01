@@ -9,7 +9,7 @@ import 'package:retrofit/dio.dart';
 import '../model/chats/chat_details_model.dart';
 
 abstract class ChatsFriendsRepo{
-  Future<HttpResponse<ChatsDetailsModel>> getChats(String userId,int activeChatStatu);
+  Future<HttpResponse<ChatsDetailsModel>> getChats(String userId,int activeChatStatus,int page);
   Future<HttpResponse<PersonalChatModel>> getPersonalChat(String chatId,int page,String userId);
 
 

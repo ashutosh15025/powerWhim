@@ -55,26 +55,10 @@ class GetFullProfileEvent extends ChatEvent {
   GetFullProfileEvent(this.userId);
 }
 
-class GetStartEndChatsEvent extends ChatEvent {
-  String userId;
-  String chatId;
-  int? deactivate_on;
-  int? block;
-  int? startChat;
-
-  GetStartEndChatsEvent(
-      this.userId,
-      this.chatId,
-      this.deactivate_on,
-      {this.block, this.startChat} // Named optional parameters
-      );
-}
 
 
 
-class GetChatEndReasonEvent extends ChatEvent {
-  GetChatEndReasonEvent();
-}
+
 
 
 class getFullProfileEvent extends ChatEvent{

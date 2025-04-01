@@ -233,7 +233,6 @@ class _HomeState extends State<Home> {
 
 
   void checkPermission(BuildContext context) async{
-    print("checkPermission run");
     var permission = await Geolocator.checkPermission();
     if(permission == LocationPermission.whileInUse||permission == LocationPermission.always){
 

@@ -17,9 +17,8 @@ class ChatsFriendsRepoImp extends ChatsFriendsRepo {
   ChatsFriendsRepoImp(this._chatsFriendsService);
 
   @override
-  Future<HttpResponse<ChatsDetailsModel>> getChats(String userId,int activeChatStatus) {
-    print(userId);
-    return _chatsFriendsService.getChats(userId,activeChatStatus);
+  Future<HttpResponse<ChatsDetailsModel>> getChats(String userId,int activeChatStatus,int page) {
+    return _chatsFriendsService.getChats(userId,activeChatStatus,page);
   }
 
   @override
