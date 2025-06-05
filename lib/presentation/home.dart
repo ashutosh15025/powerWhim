@@ -98,40 +98,7 @@ class _HomeState extends State<Home> {
                 color: Colors.white, //change your color here
               ),
               actions: [
-                PopupMenuButton(
-                    color: Colors.black,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                        side: BorderSide(
-                            color: themeColorLight,
-                            width: 1
-                        )
-                    ),
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                          child: Row(
-                            children: [
-                              Icon(Icons.logout,color: themeColorLight,),
-                                Spacer(),
-                                TextButton(
-                                onPressed: (){
-                                  final DatabaseService databaseService = DatabaseService.instance;
-                                  databaseService.delete();
-                                  USER_ID = null;
-                                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const AuthScreen()));
-                                }, child: Center(
-                                  child: Text("Log Out",
-                                  style: TextStyle(
-                                    color: Colors.white
-                                  ),),
-                                ),),
-                            ]
-                          ),
-                        )
-                      )
-                    ])
+                LogOutTopMenu()
               ],
 
 
@@ -161,65 +128,89 @@ class _HomeState extends State<Home> {
                   domeCircleColor:Colors.blueGrey,
                   tabs: [
                     MoltenTab(
-                        icon: Icon(Icons.supervised_user_circle_outlined,
-                          color:  _selectedIndex==0?Colors.white:Colors.blueGrey,),
-                        title: Padding(
-                          padding: const EdgeInsets.fromLTRB(8, 0, 0, 4),
-                          child: Text("Profile",
-                            style: GoogleFonts.poppins(
-                                color: Colors.white,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500
-                            ),),
-                        )
-                    ),
-                    MoltenTab(
-                        icon: Icon(Icons.dashboard_rounded,
-                          color:  _selectedIndex==1?Colors.white:Colors.blueGrey,),
-                        title: Text("Network",
-                          style: GoogleFonts.poppins(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500
-                          ),)
-
-                    ),
-                    MoltenTab(
-                      icon: Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                        child: Icon(Icons.home,
-                          color:  _selectedIndex==2?Colors.white:Colors.blueGrey,),
+                      icon: Icon(
+                        Icons.supervised_user_circle_outlined,
+                        color: _selectedIndex == 0 ? Colors.white : Colors.blueGrey,
                       ),
-                      title: Text("Whim-span",
-                        style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontSize:   MediaQuery.of(context).size.width>=404?12:10,
-                            fontWeight: FontWeight.w500
-                        ),)
-                    ),
-                    MoltenTab(
-                      icon: Icon(Icons.chat,
-                        color:  _selectedIndex==3?Colors.white:Colors.blueGrey,),
-                        title: Text("Chats",
-                          style: GoogleFonts.poppins(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500
-                          ),)
-                    ),
-                    MoltenTab(
-                      icon: Icon(Icons.headphones_rounded,
-                        color:  _selectedIndex==4?Colors.white:Colors.blueGrey,),
-                        title: Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
-                          child: Text("Help",
+                      title: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          "Profile",
                           style: GoogleFonts.poppins(
                             color: Colors.white,
                             fontSize: 12,
-                            fontWeight: FontWeight.w500
-                          ),),
-                        )
-
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
+                    MoltenTab(
+                      icon: Icon(
+                        Icons.dashboard_rounded,
+                        color: _selectedIndex == 1 ? Colors.white : Colors.blueGrey,
+                      ),
+                      title: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          "Network",
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
+                    MoltenTab(
+                      icon: Icon(
+                        Icons.home,
+                        color: _selectedIndex == 2 ? Colors.white : Colors.blueGrey,
+                      ),
+                      title: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          "Whim-span",
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
+                    MoltenTab(
+                      icon: Icon(
+                        Icons.chat,
+                        color: _selectedIndex == 3 ? Colors.white : Colors.blueGrey,
+                      ),
+                      title: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          "Chats",
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
+                    MoltenTab(
+                      icon: Icon(
+                        Icons.headphones_rounded,
+                        color: _selectedIndex == 4 ? Colors.white : Colors.blueGrey,
+                      ),
+                      title: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          "Help",
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -249,3 +240,57 @@ class _HomeState extends State<Home> {
   }
 
 }
+
+class LogOutTopMenu extends StatelessWidget {
+  const LogOutTopMenu({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.more_vert, color: Colors.white),
+      onPressed: () {
+        final RenderBox appBarBox = context.findRenderObject() as RenderBox;
+        final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+
+        final Offset offset = appBarBox.localToGlobal(Offset.zero, ancestor: overlay);
+
+        showMenu(
+          context: context,
+          color: Colors.grey.shade600,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0))
+          ),
+          position: RelativeRect.fromLTRB(
+            100,
+            offset.dy + kToolbarHeight, // Just below the AppBar
+            0,
+            0,
+          ),
+          items: [
+            PopupMenuItem(
+              onTap: () {
+                final DatabaseService databaseService = DatabaseService.instance;
+                databaseService.delete();
+                USER_ID = null;
+
+                Future.delayed(Duration.zero, () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (_) => const AuthScreen()),
+                  );
+                });
+              },
+              child: Row(
+                children: [
+                  Icon(Icons.logout, color: themeColorLight),
+                  const SizedBox(width: 10),
+                  Text("Log Out", style: TextStyle(color: Colors.white)),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+

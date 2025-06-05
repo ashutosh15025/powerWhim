@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,108 +9,198 @@ import '../../../constant/service_api_constant.dart';
 import '../../screens/chat_screen/personal_chat_screen.dart';
 
 class FriendDmWidget extends StatelessWidget {
-  const FriendDmWidget({super.key, required this.name, required this.description, required this.userId, required this.chatId, this.deactivate_on, required this.event, required this.showEventWidget, this.profileUpdated, this.connectionStatus, });
+  const FriendDmWidget({
+    super.key,
+    required this.name,
+    required this.description,
+    required this.userId,
+    required this.chatId,
+    this.deactivate_on,
+    required this.event,
+    required this.showEventWidget,
+    this.profileUpdated,
+    this.connectionStatus,
+    this.unreadMessages,
+    required this.markAsRead,
+  });
+
   final String name;
-  final String ? description;
+  final String? description;
   final String userId;
   final String chatId;
-  final String ? event;
+  final String? event;
   final int pageCount = 0;
-  final String ? profileUpdated;
-  final String ? connectionStatus;
-  final Function(String,String) showEventWidget;
-  final DateTime ? deactivate_on;
+  final DateTime? profileUpdated;
+  final String? connectionStatus;
+  final Function(String, String) showEventWidget;
+  final DateTime? deactivate_on;
+  final String? unreadMessages;
+  final Function(String chatId) markAsRead;
 
   @override
   Widget build(BuildContext context) {
-
-    print(connectionStatus);
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width-MediaQuery.of(context).size.width/3,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        constraints:BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width-MediaQuery.of(context).size.width/4,
-                        ),
-                        child: Text(
-                          name,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.baloo2(
-                            textStyle: TextStyle(
-                              fontSize: 18,
-                              color: Colors.yellow.shade600,
-                              fontWeight: FontWeight.w500
-                            )
-                          ),
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Name & Description
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.baloo2(
+                        fontSize: 18,
+                        color: Colors.yellow.shade600,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    if (description != null)
+                      Text(
+                        description!,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.baloo2(
+                          fontSize: 12,
+                          color: Colors.yellow.shade600,
+                          fontWeight: FontWeight.w400,
                         ),
                       ),
-                      description!=null?Container(
-                        constraints:BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width-MediaQuery.of(context).size.width/4,
-                        ),
-                        child: Text(
-                          description!,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.baloo2(
-                              textStyle: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.yellow.shade600,
-                                  fontWeight: FontWeight.w400
-
-                              )
-                          ),
-                        ),
-                      ):SizedBox.shrink(),
-                    ],
-                  ),
+                  ],
                 ),
+              ),
+              const SizedBox(width: 8),
+              viewProfileWidget(userId: userId, profileUpdated: profileUpdated),
+              const SizedBox(width: 8),
+              InkWell(
+                onTap: () {
+                  markAsRead(chatId);
+                  BlocProvider.of<ChatBloc>(context).add(
+                    GetPersonalChatEvent(chatId: chatId, page: pageCount),
+                  );
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => PersonalChatScreen(
+                        chatId: chatId,
+                        name: name,
+                        previousScreen: "FriendsScreen",
+                        deactivate_on: deactivate_on,
+                        userId: userId,
+                        presentInNetwork: 1,
+                        connectionId: connectionStatus,
+                      ),
+                    ),
+                  );
+                },
+                child: MessageIcon(
+                  messageCount: int.tryParse(unreadMessages ?? '0') ?? 0,
+                ),
+              ),
+              if (event != null) ...[
+                const SizedBox(width: 8),
                 InkWell(
-                    onTap:(){
-                      BlocProvider.of<ChatBloc>(context).add(GetFullProfileEvent(userId!));
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                      child: Icon(profileUpdated==null?Icons.visibility:Icons.panorama_fish_eye,color: green,),
-                    )),
-                InkWell(
-                    onTap: (){
-                      BlocProvider.of<ChatBloc>(context).add(GetPersonalChatEvent(chatId: chatId,page: pageCount,));
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) =>  PersonalChatScreen(chatId: chatId,name: name,previousScreen: "FriendsScreen",deactivate_on: deactivate_on,userId: userId,presentInNetwork: 1,connectionId: connectionStatus,)));
-                    },
-                    child: Icon(Icons.message,color: green,)),
-                Visibility(
-                  visible: event==null?false:true,
-                  child: InkWell(
-                      onTap:(){
-                        showEventWidget(name,event!);
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                        child: Icon(Icons.event,color: green,),
-                      )),
+                  onTap: () => showEventWidget(name, event!),
+                  child: Icon(Icons.event, color: green),
                 ),
               ],
+            ],
+          ),
+        ),
+        Divider(
+          color: Colors.yellow.shade600,
+          thickness: 0.5,
+        ),
+      ],
+    );
+  }
+}
+
+class viewProfileWidget extends StatelessWidget {
+  const viewProfileWidget({
+    super.key,
+    required this.userId,
+    required this.profileUpdated,
+  });
+
+  final String userId;
+  final DateTime? profileUpdated;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        BlocProvider.of<ChatBloc>(context).add(GetFullProfileEvent(userId));
+      },
+      child: Stack(
+        clipBehavior: Clip.none,
+        alignment: Alignment.center,
+        children: [
+          const Icon(Icons.visibility, color: green),
+          if (profileUpdated != null)
+            Positioned(
+              top: -1,
+              right: 0,
+              child: Container(
+                width: 10,
+                height: 10,
+                decoration: const BoxDecoration(
+                  color: Colors.red,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class MessageIcon extends StatelessWidget {
+  final int messageCount;
+
+  const MessageIcon({super.key, required this.messageCount});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      clipBehavior: Clip.none,
+      alignment: Alignment.center,
+      children: [
+        const Icon(Icons.message, color: green),
+        if (messageCount > 0)
+          Positioned(
+            top: -3,
+            right: -3,
+            child: Container(
+              width: 20,
+              height: 20,
+              decoration: const BoxDecoration(
+                color: Colors.red,
+                shape: BoxShape.circle,
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                _formatCount(messageCount),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ),
-          Divider(
-            color: Colors.yellow.shade600,
-            thickness: .5,
-          )
-        ],
-      );
+      ],
+    );
+  }
+
+  String _formatCount(int count) {
+    if (count > 999) return '999+';
+    return count.toString();
   }
 }

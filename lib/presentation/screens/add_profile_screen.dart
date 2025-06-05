@@ -96,6 +96,10 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
       start = widget.ageRange!.start.toString();
       end =  widget.ageRange!.end.toString();
     }
+    print(start);
+    print("start");
+    print(end);
+    print("end");
     if(widget.distance!=null)
    distance = int.parse(widget.distance!);
     super.initState();
@@ -204,6 +208,7 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
                         margin: const EdgeInsets.all(8.0),
                         child: CheckboxGridWidget(
                           weekAvailability: weekAvailability,
+                          previousweekAvailability: weekelyAvailability,
                         ),
                       )),
                       DistanceSlider(setDistance: setMeetingDistance,distance: distance,),

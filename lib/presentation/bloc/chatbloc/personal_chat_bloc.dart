@@ -56,7 +56,6 @@ class PersonalChatBloc extends Bloc<PersonalChatEvent, PersonalChatState> {
   void onGetPersonalChatEvent(
       GetPersonalChatEvent event, Emitter<PersonalChatState> emit) async {
     if (event.scroll != null) emit(Loading());
-    print("apiResult");
     var apiResult = await locator
         .get<ChatsFriendsUsecase>()
         .getPersonalChat(event.chatId, event.page, USER_ID!);
@@ -103,6 +102,8 @@ class PersonalChatBloc extends Bloc<PersonalChatEvent, PersonalChatState> {
   }
 
   void onSetChatEvent(SetChatEvent event, Emitter<PersonalChatState> emit) async {
+
+    print(event.fromUserId+'j/'+event.toUserId+'/'+event.addToNetwork.toString());
     var apiResult = await locator
         .get<ChatsFriendsUsecase>()
         .setChats(event.fromUserId, event.toUserId,event.addToNetwork);

@@ -36,7 +36,7 @@ class ProfileblocBloc extends Bloc<ProfileblocEvent, ProfileblocState> {
 
   void ongetFullProfileEvent(getFullProfileEvent event,Emitter<ProfileblocState>emit)async{
     var response = await locator.get<UserProfileUsecase>().getFullProfiles(event.userId,USER_ID!);
-    print(response.data);
+    print(response.data!.data!);
     if(response.data!=null){
       if(response.data!.data!=null)
       emit(getFullProfileSuccessState(response.data));
@@ -73,8 +73,8 @@ class ProfileblocBloc extends Bloc<ProfileblocEvent, ProfileblocState> {
   }
 
   void ongetMyFullProfileEvent(getMyFullProfileEvent event,Emitter<ProfileblocState>emit)async{
-    print("getFullProfile");
     var response = await locator.get<UserProfileUsecase>().getMyFullProfile(event.userId);
+    print(response.data!.data!.myProfile!.weekAvailability);
     if(response.data!=null){
       if(response.data.data!=null && response.data.data!.status==StringConstant.successState)
         {print(response.data.data!.myProfile!.event);

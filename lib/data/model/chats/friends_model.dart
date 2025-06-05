@@ -52,13 +52,14 @@ class Friend {
   dynamic description;
   String? chatId;
   String? userName;
-  dynamic profileUpdated;
+  DateTime? profileUpdated;
   DateTime? deactivateOn;
-  dynamic blockedTime;
-  dynamic event;
-  dynamic eventTime;
+  DateTime? blockedTime;
+  String? event;
+  DateTime? eventTime;
   String? userId;
   String? connectionstatus;
+  String? unreadMessages;
 
   Friend({
     this.description,
@@ -71,31 +72,34 @@ class Friend {
     this.eventTime,
     this.userId,
     this.connectionstatus,
+    this.unreadMessages,
   });
 
   factory Friend.fromJson(Map<String, dynamic> json) => Friend(
     description: json["description"],
     chatId: json["chat_id"],
     userName: json["user_name"],
-    profileUpdated: json["profile_updated"],
+    profileUpdated: json["profile_updated"] == null ? null : DateTime.parse(json["profile_updated"]),
     deactivateOn: json["deactivate_on"] == null ? null : DateTime.parse(json["deactivate_on"]),
-    blockedTime: json["blocked_time"],
+    blockedTime: json["blocked_time"] == null ? null : DateTime.parse(json["blocked_time"]),
     event: json["event"],
-    eventTime: json["event_time"],
+    eventTime: json["event_time"] == null ? null : DateTime.parse(json["event_time"]),
     userId: json["user_id"],
     connectionstatus: json["connectionstatus"],
+    unreadMessages: json["unread_messages"],
   );
 
   Map<String, dynamic> toJson() => {
     "description": description,
     "chat_id": chatId,
     "user_name": userName,
-    "profile_updated": profileUpdated,
+    "profile_updated": profileUpdated?.toIso8601String(),
     "deactivate_on": deactivateOn?.toIso8601String(),
-    "blocked_time": blockedTime,
+    "blocked_time": blockedTime?.toIso8601String(),
     "event": event,
-    "event_time": eventTime,
+    "event_time": eventTime?.toIso8601String(),
     "user_id": userId,
     "connectionstatus": connectionstatus,
+    "unread_messages": unreadMessages,
   };
 }

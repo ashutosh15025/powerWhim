@@ -87,7 +87,7 @@ class _LoginWidgetState extends State<LoginWidget> {
               onTap: (){
                 widget.signInLogin("yes");
               },
-              child: Text("Forget password?", style: TextStyle(color: Colors.white,
+              child: Text("Forgot password?", style: TextStyle(color: Colors.white,
                   fontWeight: FontWeight.w500,
                   fontSize: 16),
                 textAlign: TextAlign.center,),

@@ -63,7 +63,7 @@ class _AllEndedChatScreenState extends State<AllEndedChatScreen>  with WidgetsBi
     return BlocConsumer<ChatBloc, ChatState>(
       listener: (context, state) {},
       builder: (context, state) {
-        if (state is GetChatsSuccessState) {
+        if (state is GetChatsInactiveSuccessState) {
           chatsDetailsModel = state.chatsDetailsModel;
           if (chatsDetailsModel != null &&
               chatsDetailsModel!.data != null &&

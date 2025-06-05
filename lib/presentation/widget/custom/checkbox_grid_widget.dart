@@ -18,8 +18,8 @@ class _CheckboxGridWidgetState extends State<CheckboxGridWidget> {
   void initState() {
     if( widget.previousweekAvailability!=null){
       for(var i=0;i<widget.previousweekAvailability!.length;i++){
-        if(widget.previousweekAvailability![i]=="1")
-          weeklyAvailability[i] = true;
+        if (widget.previousweekAvailability![i] == "1"){
+          weeklyAvailability[i] = true;}
         else
           weeklyAvailability[i] = false;
       }
@@ -31,7 +31,7 @@ class _CheckboxGridWidgetState extends State<CheckboxGridWidget> {
 
   List<bool> weeklyAvailability =
       List.generate(14, (_) => true); // List to hold checkbox states
-  bool checkedBox = true;
+  bool checkedBox = false;
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +101,7 @@ class _CheckboxGridWidgetState extends State<CheckboxGridWidget> {
                             },
                             child: Container(
                               margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              child: isSelected[index]
+                              child:weeklyAvailability[index - ((index/8)+1).toInt()]
                                   ? Icon(
                                       Icons.check,
                                       color: Colors.green,

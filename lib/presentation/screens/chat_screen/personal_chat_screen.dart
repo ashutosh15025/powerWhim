@@ -11,6 +11,7 @@ import 'package:powerwhim/constant/string_constant.dart';
 import 'package:powerwhim/data/model/chats/personal_chat_model.dart';
 import 'package:powerwhim/presentation/bloc/chatbloc/personal_chat_bloc.dart';
 import 'package:powerwhim/presentation/screens/view_image_screen/view_image_screen.dart';
+import 'package:powerwhim/presentation/widget/custom/gradient_button_green_yelllow.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:powerwhim/presentation/widget/custom/custom_circular_loading_bar.dart';
 import 'package:powerwhim/presentation/widget/error/custom_error_widget.dart';
@@ -50,11 +51,11 @@ class PersonalChatScreen extends StatefulWidget {
 class _PersonalChatScreenState extends State<PersonalChatScreen> {
 
   List<Message> listItem = [];
-  List<Message> traceList = [];
   IO.Socket? socketP;
   File? file;
   String? inputValue;
   bool showImage = false;
+  int totalPage = 0;
   String? image = "https://whim.ams3.digitaloceanspaces.com/whim/Testimage.jpg";
   String? uploaded_file_url;
   final TextEditingController _controller = new TextEditingController();
@@ -70,6 +71,25 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
   final ScrollController _scrollController = ScrollController();
   String previousScoketId="";
   String ? connectionId;
+  int myTotalMessage = 0;
+  int addNetworkStatus = 0;
+
+
+
+  double? _scrollOffsetBeforeUpdate;
+
+  void _preserveScrollPosition() {
+    if (_scrollController.hasClients) {
+      _scrollOffsetBeforeUpdate = _scrollController.offset;
+    }
+  }
+
+  void _restoreScrollPosition() {
+    if (_scrollOffsetBeforeUpdate != null && _scrollController.hasClients) {
+      _scrollController.jumpTo(_scrollOffsetBeforeUpdate!);
+      _scrollOffsetBeforeUpdate = null; // Reset after use
+    }
+  }
 
 
 
@@ -79,6 +99,9 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
   void initState() {
     deactivate_on = widget.deactivate_on;
     connectionId = widget.connectionId;
+    listItem = [];
+    myTotalMessage = 0;
+    addNetworkStatus = 0;
     initSocket();
     getChat();
     _scrollController.addListener(_onScroll);
@@ -94,14 +117,16 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
   }
 
   void _scrollToBottom() async {
-    await Future.delayed(Duration(milliseconds: 100));
+    await Future.delayed(const Duration(milliseconds: 100));
   }
 
 
   void _onScroll() {
     if (_scrollController.position.atEdge) {
+      print("this is page ${page}");
       bool isTop = _scrollController.position.pixels == 0;
-      if (!isTop) {
+      if (!isTop&&totalPage>page) {
+
         page++;
 
         BlocProvider.of<PersonalChatBloc>(context).add(
@@ -145,6 +170,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
 
   @override
   void dispose() {
+    listItem = [];
     socketP!.dispose();
     super.dispose();
   }
@@ -156,10 +182,11 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
 
     return BlocConsumer<PersonalChatBloc, PersonalChatState>(
       buildWhen: (previous,current){
-        if(current is getFullProfileSuccessState)
+        if(current is getFullProfileSuccessState) {
           return false;
-        else
+        } else {
           return true;
+        }
       },
       listener: (context, state) {
          if(state is getFullProfileSuccessState){
@@ -174,14 +201,16 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
         if (state is ErrorState) {
           return Scaffold(
             backgroundColor: Colors.black,
-            body: CustomErrorWidget(
-              error: true,
-              closeErrorWidget: () {
-                setState(() {
-                  BlocProvider.of<PersonalChatBloc>(context).add(
-                      GetPersonalChatEvent(chatId: widget.chatId, page: 0));
-                });
-              },
+            body: Center(
+              child: CustomErrorWidget(
+                error: true,
+                closeErrorWidget: () {
+                  setState(() {
+                    BlocProvider.of<PersonalChatBloc>(context).add(
+                        GetPersonalChatEvent(chatId: widget.chatId, page: 0));
+                  });
+                },
+              ),
             ),
           );
         }
@@ -191,7 +220,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
           } else if (state.mssg == "Chat Deactivated") {
             deactivate_on = DateTime.now();
           } else if(state.mssg == "Added to Network")
-          {
+          {  addNetworkStatus =1;
               deactivate_on = null;
               connectionId = USER_ID;
           }
@@ -202,12 +231,17 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
           }
           BlocProvider.of<PersonalChatBloc>(context)
               .add(GetPersonalChatEvent(chatId: widget.chatId, page: 0));
-          return CustomCircularLoadingBar();
+          return const CustomCircularLoadingBar();
         }
-
-
         else if (state is GetPersonalChatSuccessState) {
+          totalPage = state.personalChatModel.data?.total ?? 1;
           scrollLoaderVisibility = false;
+          WidgetsBinding.instance.addPostFrameCallback((_) => _restoreScrollPosition());
+          if(myTotalMessage<=(state.personalChatModel.data?.addNetwork?.count ??0)){
+    myTotalMessage = state.personalChatModel.data?.addNetwork?.count ?? 0;
+    }
+          addNetworkStatus = state.personalChatModel.data?.addNetwork?.status ?? 0;
+
           if(socketP!.id!=null && previousScoketId!=socketP!.id) {
             previousScoketId = socketP!.id!;
             BlocProvider.of<PersonalChatBloc>(context).add(
@@ -237,171 +271,102 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
               },
               child: Scaffold(
                 key: _key,
-                drawer: Drawer(),
+                drawer: const Drawer(),
                 appBar: AppBar(
                   leading: new IconButton(
                       icon: new Icon(Icons.arrow_back),
                       onPressed: () {
                         Navigator.pop(context);
                       }),
-                  iconTheme: IconThemeData(
+                  iconTheme: const IconThemeData(
                     color: Colors.white, //change your color here
                   ),
                   actions: [
                     PopupMenuButton(
-                         color:Colors.transparent,
-                        itemBuilder: (context) => [
-                          PopupMenuItem(
-                            child: deactivate_on ==null
-                                ? Center(
-                                child: InkWell(
-                                  onTap: (){
-                                    deactivate_on = null;
-                                    block = true;
-                                    print("block called ...");
-                                    onPressChatEndCancelWidget();
-                                    Navigator.pop(context);
-                                  },
-                                  child: Container(
-                                    width: 200,
-                                    alignment: Alignment.center,
-                                    padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
-                                    child: Text(
-                                      "Block",
-                                      style: GoogleFonts.poppins(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 16),
-                                    ),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(50),
-                                      border: Border.all(color: themeColorLight,width: 1),
-                                    ),
-
-                                  ),
-                                ))
-                                : Center(
-                                child: InkWell(
-                                  onTap: (){
-                                    BlocProvider.of<PersonalChatBloc>(context).add(
-                                        GetStartEndChatsEvent(
-                                            USER_ID!, widget.chatId, 0,block: 0));
-                                    Navigator.pop(context);
-                                  },
-                                  child: Container(
-                                    width: 200,
-                                    alignment: Alignment.center,
-                                    padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
-                                    child: Text(
-                                      "Start Chat",
-                                      style: GoogleFonts.poppins(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 16),
-                                    ),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                      border: Border.all(color: themeColorLight,width: 1)
-                                    ),
-                                  ),
-                                )),
-                          ),
-                          PopupMenuItem(
-                            padding: const EdgeInsets.all(8),
+                      offset: const Offset(0, kToolbarHeight),
+                      color: Colors.grey.shade600,
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          height: 36, // Reduce item height
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: GestureDetector(
                             onTap: () {
-                              focusInput.unfocus();
-                              if (connectionId != null) {
-                                setState(() {
-                                  block = false;
-                                  onPressChatEndCancelWidget();
-                                });
-
+                              if (deactivate_on == null) {
+                                deactivate_on = null;
+                                block = true;
+                                onPressChatEndCancelWidget();
                               } else {
-                                if (state.personalChatModel.data
-                                    ?.activeChats ==
-                                    true) {
-                                  deactivate_on = null;
-                                  BlocProvider.of<PersonalChatBloc>(context).add(
-                                      GetStartEndChatsEvent(
-                                          USER_ID!, widget.chatId, 0,startChat: 1));
-                                } else {
-                                  setState(() {
-                                    errorWidgetVisibility =
-                                    !errorWidgetVisibility;
-                                  });
-                                }
+                                BlocProvider.of<PersonalChatBloc>(context).add(
+                                    GetStartEndChatsEvent(USER_ID!, widget.chatId, 0, block: 0));
                               }
+                              Navigator.pop(context);
                             },
-                            child: connectionId != null
-                                ? Center(
-                                child: Container(
-                                  width: 200,
-                                  alignment: Alignment.center,
-                                  padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
-                                  child: Text(
-                                    "End Chat",
-                                    style: GoogleFonts.poppins(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 16),
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(50),
-                                    border: Border.all(color: themeColorLight,width: 1),
-                                  ),
-
-                                ))
-                                : Center(
-                                child: Container(
-                                  width: 200,
-                                  alignment: Alignment.center,
-                                  padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
-                                  child: Text(
-                                    "Add To Network",
-                                    style: GoogleFonts.poppins(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 16),
-                                  ),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(50),
-                                      border: Border.all(color: themeColorLight,width: 1)
-                                  ),
-                                )),
+                            child: Text(
+                              deactivate_on == null ? "Block" : "Start Chat",
+                              style: GoogleFonts.poppins(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
+                              ),
+                            ),
                           ),
-                          PopupMenuItem(
-                            padding: const EdgeInsets.all(8),
-                            onTap: () {
-                              focusInput.unfocus();
-                              print(widget.userId!);
-                              BlocProvider.of<PersonalChatBloc>(context).add(getFullProfileEvent(widget.userId!));
-                            },
-                            child:Center(
-                                child: Container(
-                                  width: 200,
-                                  alignment: Alignment.center,
-                                  padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
-                                  child: Text(
-                                    "View Profile",
-                                    style: GoogleFonts.poppins(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 16),
-                                  ),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(50),
-                                      border: Border.all(color: themeColorLight,width: 1)
-                                  ),
-
-                                ))
-                          )
-                        ])
+                        ),
+                        PopupMenuItem(
+                          height: 36,
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          onTap: () {
+                            focusInput.unfocus();
+                            if (connectionId != null) {
+                              setState(() {
+                                block = false;
+                                onPressChatEndCancelWidget();
+                              });
+                            } else {
+                              if (state.personalChatModel.data?.activeChats == true) {
+                                deactivate_on = null;
+                                BlocProvider.of<PersonalChatBloc>(context).add(
+                                    GetStartEndChatsEvent(USER_ID!, widget.chatId, 0, startChat: 1));
+                              } else {
+                                setState(() {
+                                  errorWidgetVisibility = !errorWidgetVisibility;
+                                });
+                              }
+                            }
+                          },
+                          child: Text(
+                            connectionId != null ? "End Chat" : "Add To Network",
+                            style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                        PopupMenuItem(
+                          height: 36,
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          onTap: () {
+                            focusInput.unfocus();
+                            BlocProvider.of<PersonalChatBloc>(context).add(
+                                getFullProfileEvent(widget.userId!));
+                          },
+                          child: Text(
+                            "View Profile",
+                            style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
                   ],
                   centerTitle: true,
                   title: Text(
                     widget.name,
                     style: GoogleFonts.baloo2(
-                        textStyle: TextStyle(
+                        textStyle: const TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 20,
                             color: Colors.white)),
@@ -410,7 +375,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                 ),
                 body: Container(
                   height: MediaQuery.of(context).size.height,
-                  color: Color.fromRGBO(0, 0, 0, .9),
+                  color: const Color.fromRGBO(0, 0, 0, .9),
                   child: Column(children: [
                     Expanded(
                       child: SingleChildScrollView(
@@ -429,7 +394,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                     itemBuilder: (context, i) {
                                       if (i == listItem.length - 1) {}
                                       int index = i;
-                                      if (USER_ID == listItem[index]!.userId)
+                                      if (USER_ID == listItem[index]!.userId) {
                                         return InkWell(
                                           onTap: () {
                                             if (listItem[index]!.image !=
@@ -446,7 +411,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                             image: listItem[index].image,
                                           ),
                                         );
-                                      else if (listItem[index]!.userId !=
+                                      } else if (listItem[index]!.userId !=
                                           null) {
                                         return InkWell(
                                           onTap: () {
@@ -466,14 +431,14 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                         );
                                       } else {
                                         return Container(
-                                          margin: EdgeInsets.fromLTRB(
+                                          margin: const EdgeInsets.fromLTRB(
                                               16, 16, 16, 0),
-                                          padding: EdgeInsets.all(8),
-                                          constraints: BoxConstraints(
+                                          padding: const EdgeInsets.all(8),
+                                          constraints: const BoxConstraints(
                                             maxWidth: 500,
                                           ),
                                           decoration: BoxDecoration(
-                                              color: Color.fromRGBO(
+                                              color: const Color.fromRGBO(
                                                   218, 202, 58, .1),
                                               borderRadius:
                                               BorderRadius.circular(16)),
@@ -482,7 +447,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                             listItem[index]!
                                                 .conversationMessage!,
                                             style: GoogleFonts.poppins(
-                                                textStyle: TextStyle(
+                                                textStyle: const TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 12)),
                                           ),
@@ -491,15 +456,15 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                     }),
                               ),
                               Container(
-                                constraints: BoxConstraints(),
-                                padding: EdgeInsets.fromLTRB(8, 16, 8, 16),
+                                constraints: const BoxConstraints(),
+                                padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     file == null
-                                        ? SizedBox.shrink()
+                                        ? const SizedBox.shrink()
                                         : InkWell(
-                                      child: Icon(Icons.cancel_outlined,
+                                      child: const Icon(Icons.cancel_outlined,
                                           color: Colors.white),
                                       onTap: () async {
                                         setState(() {
@@ -509,7 +474,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                       },
                                     ),
                                     file == null
-                                        ? SizedBox.shrink()
+                                        ? const SizedBox.shrink()
                                         : Container(
                                       width: MediaQuery.of(context)
                                           .size
@@ -525,7 +490,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                         width:
                                         MediaQuery.of(context).size.width,
                                         alignment: Alignment.center,
-                                        child: Text(
+                                        child: const Text(
                                           "sending...",
                                           style: TextStyle(
                                               fontSize: 20,
@@ -542,7 +507,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                       onChanged: (value) {
                                         inputValue = value;
                                       },
-                                      style: TextStyle(color: Colors.white),
+                                      style: const TextStyle(color: Colors.white),
                                       decoration: InputDecoration(
                                         prefixIcon: InkWell(
                                             onTap: () {},
@@ -550,25 +515,63 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                                 onTap: () {
                                                   openImagePicker();
                                                 },
-                                                child: Icon(Icons
+                                                child: const Icon(Icons
                                                     .photo_library_sharp))),
                                         prefixIconColor: themeColorLight,
                                         suffixIcon: InkWell(
-                                          child: Icon(Icons.send),
+                                          child: const Icon(Icons.send),
                                           onTap: () async {
 
-                                            if (disableSendbutton == false &&
-                                                deactivate_on == null) {
+                                              myTotalMessage++;
+                                              print("Updated total: $myTotalMessage");
+                                              print("astatus total: $addNetworkStatus");
+                                              print("astatus total: 0");
+
+                                            if (addNetworkStatus==0 && myTotalMessage == 5) {
+                                              final result = await showDialog<bool>(
+                                                context: context,
+                                                builder: (BuildContext context) {
+                                                  return AlertDialog(
+                                                    backgroundColor: Colors.black87,
+                                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                                    title: const Text(
+                                                      "Looks like you're getting along!",
+                                                      style: TextStyle(color: Colors.white),
+                                                    ),
+                                                    content: const Text(
+                                                      "You’ve exchanged 5 messages with this user. Would you like to add them to your network to continue the conversation?",
+                                                      style: TextStyle(color: Colors.white70),
+                                                    ),
+                                                    actions: [
+                                                      TextButton(
+                                                        child: const Text("Cancel", style: TextStyle(color: Colors.white60)),
+                                                        onPressed: () => Navigator.of(context).pop(false),
+                                                      ),
+                                                      TextButton(
+                                                        child: const Text("Add to Network", style: TextStyle(color: Colors.yellow)),
+                                                        onPressed: () {
+                                                          BlocProvider.of<PersonalChatBloc>(context).add(
+                                                            GetStartEndChatsEvent(USER_ID!, widget.chatId, 0, startChat: 1),
+                                                          );
+                                                          Navigator.of(context).pop(true); // Signal to proceed
+                                                        },
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              );
+                                            }
+
+                                            // ✅ Only runs if user tapped "Add to Network" or condition was not met
+
+                                            if (disableSendbutton == false && deactivate_on == null) {
                                               disableSendbutton = true;
-                                              if (inputValue != null &&
-                                                  inputValue!.isNotEmpty) {
+                                              if (inputValue != null && inputValue!.isNotEmpty) {
                                                 if (file == null) {
                                                   imageLoader = true;
                                                   socketP?.emit("message", {
-                                                    "message_text":
-                                                    "$inputValue",
-                                                    "chat_id":
-                                                    "${widget.chatId}",
+                                                    "message_text": "$inputValue",
+                                                    "chat_id": "${widget.chatId}",
                                                     "user_id": "$USER_ID"
                                                   });
                                                 } else {
@@ -577,13 +580,10 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                                   });
                                                   await uploadfile();
                                                   socketP?.emit("message", {
-                                                    "message_text":
-                                                    "$inputValue",
-                                                    "chat_id":
-                                                    "${widget.chatId}",
+                                                    "message_text": "$inputValue",
+                                                    "chat_id": "${widget.chatId}",
                                                     "user_id": "$USER_ID",
-                                                    "image":
-                                                    "$uploaded_file_url"
+                                                    "image": "$uploaded_file_url"
                                                   });
                                                   await file!.delete();
                                                   file = null;
@@ -605,12 +605,11 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                               disableSendbutton = false;
                                             } else if (deactivate_on != null) {
                                               setState(() {
-                                                errorWidgetVisibility =
-                                                !errorWidgetVisibility;
-                                                FocusScope.of(context)
-                                                    .unfocus();
+                                                errorWidgetVisibility = !errorWidgetVisibility;
+                                                FocusScope.of(context).unfocus();
                                               });
                                             }
+
                                             _controller.clear();
                                             inputValue = null;
                                           },
@@ -620,18 +619,18 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                         enabledBorder: OutlineInputBorder(
                                             borderRadius:
                                             BorderRadius.circular(30),
-                                            borderSide: BorderSide(
+                                            borderSide: const BorderSide(
                                                 color: themeColorLight,
                                                 width: 1)),
                                         focusedBorder: OutlineInputBorder(
                                             borderRadius:
                                             BorderRadius.circular(30),
-                                            borderSide: BorderSide(
+                                            borderSide: const BorderSide(
                                                 color: themeColorLight,
                                                 width: 1)),
                                         hintText: "type here",
                                         hintStyle: GoogleFonts.baloo2(
-                                          textStyle: TextStyle(
+                                          textStyle: const TextStyle(
                                               fontWeight: FontWeight.w300,
                                               fontSize: 16,
                                               color: Colors.white),
@@ -644,16 +643,16 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                             ],
                           ),
                           Visibility(
+                            visible: scrollLoaderVisibility,
                             child: Container(
                               height: 40,
                               color: Colors.black,
-                              child: Center(
+                              child: const Center(
                                 child: CircularProgressIndicator(
                                   color: themeColorLight,
                                 ),
                               ),
                             ),
-                            visible: scrollLoaderVisibility,
                           ),
                           Visibility(
                               visible: errorWidgetVisibility,
@@ -669,12 +668,12 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                           Visibility(
                               visible: endReasonWidget,
                               child: Container(
-                                color: Color.fromRGBO(255, 255, 255, .3),
+                                color: const Color.fromRGBO(255, 255, 255, .3),
                                 height: MediaQuery.of(context).size.height -
                                     MediaQuery.of(context).size.height / 5,
                                 child: Center(
                                   child: Container(
-                                    padding: EdgeInsets.all(8),
+                                    padding: const EdgeInsets.all(8),
                                     constraints: BoxConstraints(
                                         maxHeight: MediaQuery.of(context)
                                             .size
@@ -683,25 +682,25 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                     width: MediaQuery.of(context).size.width -
                                         MediaQuery.of(context).size.width / 4,
                                     decoration: BoxDecoration(
-                                      color: Color.fromRGBO(0, 0, 0, 1),
+                                      color: const Color.fromRGBO(0, 0, 0, 1),
                                       borderRadius: BorderRadius.circular(16),
                                     ),
                                     child: ListView.builder(
                                       itemBuilder: (context, i) {
-                                        if (i == 0)
+                                        if (i == 0) {
                                           return Container(
-                                            padding: EdgeInsets.all(8),
+                                            padding: const EdgeInsets.all(8),
                                             alignment: Alignment.centerRight,
                                             child: IconButton(
                                               icon:
-                                              Icon(Icons.cancel_rounded),
+                                              const Icon(Icons.cancel_rounded),
                                               color: Colors.white,
                                               onPressed: () {
                                                 onPressChatEndCancelWidget();
                                               },
                                             ),
                                           );
-                                        else
+                                        } else {
                                           return Container(
                                             alignment: Alignment.center,
                                             child: InkWell(
@@ -729,14 +728,14 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                                 onPressChatEndCancelWidget();
                                               },
                                               child: Container(
-                                                margin: EdgeInsets.fromLTRB(
+                                                margin: const EdgeInsets.fromLTRB(
                                                     2, 2, 2, 2),
                                                 alignment: Alignment.center,
-                                                padding: EdgeInsets.all(16),
+                                                padding: const EdgeInsets.all(16),
                                                 width: MediaQuery.of(context)
                                                     .size
                                                     .width,
-                                                color: Color.fromRGBO(
+                                                color: const Color.fromRGBO(
                                                     218, 202, 58, .2),
                                                 child: Text(
                                                   CHATENDREASON[i - 1],
@@ -747,6 +746,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                               ),
                                             ),
                                           );
+                                        }
                                       },
                                       itemCount: CHATENDREASON.length + 1,
                                     ),
@@ -762,8 +762,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
             ),
           );
         } else {
-          print(state);
-          return CustomCircularLoadingBar();
+          return const CustomCircularLoadingBar();
         }
       },
     );

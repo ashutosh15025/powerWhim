@@ -245,17 +245,19 @@ class _HelpScreenState extends State<HelpScreen> {
         ),
           Visibility(
             visible: errorWidget,
-              child: CustomErrorWidget(mssg: errormsg==null?successmsg:errormsg,error:errormsg==null?false!:true, closeErrorWidget: () {
-                setState(() {
-                  errorWidget=!errorWidget ;
-                  if(successmsg!=null){
-                    successmsg=null;
-                    _topicControllerName.clear();
-                    _topicControllerMessage.clear();
-                    _topicControllerPhone.clear();
-                    _topicControllerEmail.clear();
-                  }
-                });},))
+              child: Center(
+                child: CustomErrorWidget(mssg: errormsg==null?successmsg:errormsg,error:errormsg==null?false!:true, closeErrorWidget: () {
+                  setState(() {
+                    errorWidget=!errorWidget ;
+                    if(successmsg!=null){
+                      successmsg=null;
+                      _topicControllerName.clear();
+                      _topicControllerMessage.clear();
+                      _topicControllerPhone.clear();
+                      _topicControllerEmail.clear();
+                    }
+                  });},),
+              ))
       
       ]
       ),

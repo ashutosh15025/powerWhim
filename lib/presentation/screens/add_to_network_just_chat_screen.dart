@@ -4,9 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:powerwhim/constant/service_api_constant.dart';
-import 'package:powerwhim/presentation/bloc/chatbloc/chat_bloc.dart';
+
 
 import '../../constant/color_constant.dart';
+import '../bloc/chatbloc/personal_chat_bloc.dart';
 import 'chat_screen/personal_chat_screen.dart';
 
 class AddToNetworkJustChatScreen extends StatefulWidget {
@@ -23,9 +24,11 @@ class _AddToNetworkJustChatScreenState extends State<AddToNetworkJustChatScreen>
   @override
   Widget build(BuildContext context) {
     print(widget.userId);
-    return BlocListener<ChatBloc, ChatState>(
+    return BlocListener<PersonalChatBloc, PersonalChatState>(
   listener: (context, state) {
+    print("state");
     if(state is SetChatsSuccessState){
+      print("no state");
       print(state.addChatModel.data!.chatId!);
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (_) => PersonalChatScreen(
@@ -36,7 +39,7 @@ class _AddToNetworkJustChatScreenState extends State<AddToNetworkJustChatScreen>
             userId: widget!.userId,
             connectionId: state.addChatModel.data!.connectionStatus,
           )));
-      BlocProvider.of<ChatBloc>(context)
+      BlocProvider.of<PersonalChatBloc>(context)
           .add(GetPersonalChatEvent(chatId: state.addChatModel.data!.chatId!,page: 0));
 
     }
@@ -94,7 +97,7 @@ class _AddToNetworkJustChatScreenState extends State<AddToNetworkJustChatScreen>
                           borderRadius: BorderRadius.circular(16)
                       ),
                       child: TextButton(onPressed: (){
-                        BlocProvider.of<ChatBloc>(context).add(SetChatEvent(USER_ID!,widget.userId,0));
+                        BlocProvider.of<PersonalChatBloc>(context).add(SetChatEvent(USER_ID!,widget.userId,0));
                       }, child: Text('Just Chat',style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),),)),
 
                   Container(
@@ -104,7 +107,7 @@ class _AddToNetworkJustChatScreenState extends State<AddToNetworkJustChatScreen>
                           borderRadius: BorderRadius.circular(16)
                       ),
                       child: TextButton(onPressed: (){
-                        BlocProvider.of<ChatBloc>(context).add(SetChatEvent(USER_ID!,widget.userId,1));
+                        BlocProvider.of<PersonalChatBloc>(context).add(SetChatEvent(USER_ID!,widget.userId,1));
                       }, child: Text('Add To Network',style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),)))
                   
                 ],

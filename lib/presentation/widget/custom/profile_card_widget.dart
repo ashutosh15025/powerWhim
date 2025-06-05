@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,140 +5,164 @@ import 'package:powerwhim/presentation/bloc/profilebloc/profilebloc_bloc.dart';
 
 import '../../../constant/color_constant.dart';
 import '../../../constant/service_api_constant.dart';
-import '../../screens/OthersProfileScreen.dart';
-import '../../screens/my_profile_widget.dart';
 
-class ProfileCardWidget extends StatefulWidget {
-  const ProfileCardWidget({super.key, required this.name, required this.age, required this.sport, required this.hobbies, required this.userId});
-  final String ? name;
-  final int ? age;
-  final String ? sport;
-  final String ? hobbies;
-  final String ? userId;
+class ProfileCardWidget extends StatelessWidget {
+  const ProfileCardWidget({
+    super.key,
+    required this.name,
+    required this.age,
+    required this.sport,
+    required this.hobbies,
+    required this.userId,
+  });
 
-  @override
-  State<ProfileCardWidget> createState() => _ProfileCardWidgetState();
-}
+  final String? name;
+  final int? age;
+  final String? sport;
+  final String? hobbies;
+  final String? userId;
 
-class _ProfileCardWidgetState extends State<ProfileCardWidget> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){
-       BlocProvider.of<ProfileblocBloc>(context).add(getFullProfileEvent(widget.userId!));
+      onTap: () {
+        if (userId != null) {
+          BlocProvider.of<ProfileblocBloc>(context).add(getFullProfileEvent(userId!));
+        }
       },
       child: Column(
         children: [
-          Container(
-            padding: EdgeInsets.fromLTRB(16, 8, 16, 0),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  children: [
-                    Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
-                          child: Row(
-                            children: [
-                              Container(
-                                constraints:BoxConstraints(
-                                  maxWidth: MediaQuery.of(context).size.width- MediaQuery.of(context).size.width/4
-                                ),
-                                child: Text(widget.name!,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.poppins(
-                                 textStyle:TextStyle(
-                                  color: themeColor,
-                                  fontSize: 18,
-                                    fontWeight: FontWeight.bold
-                                ),)),
-                              ),
-                              Spacer(),
-                              Text(widget.age!.toString() + "Yrs",
-                                style:  GoogleFonts.poppins(
-                                  textStyle:TextStyle(
-                                    color: green,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w500
-                                ),))
-                            ],
+                // Name and Age Row
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: Row(
+                    children: [
+                      if (name != null)
+                        Container(
+                          constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width * 0.75,
                           ),
-                        ),
-                        widget.sport!=null?Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Sports : ",
-                              style:  GoogleFonts.poppins(
-                                textStyle:TextStyle(
-                                  color: themeColorLight,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold
-                              ),)),
-                            Expanded(
-                              child: Text(widget.sport!,
-                                  maxLines: 4,
-                                  style:  GoogleFonts.poppins(
-                                textStyle:TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500
-                              ),)),
-                            )
-                          ],
-                        ):SizedBox.shrink(),
-                        widget.hobbies!=null?Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Hobbies : ",
-                                style:  GoogleFonts.poppins(
-                                  textStyle:TextStyle(
-                                      color: themeColorLight,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold
-                                  ),)),
-                            Expanded(
-                              child: Text( widget.hobbies!,
-                                  maxLines: 4,
-                                  style:  GoogleFonts.poppins(
-                                    textStyle:TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500
-                                    ),)),
-                            )
-                          ],
-                        ):SizedBox.shrink(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            InkWell(
-                              onTap: (){
-                                BlocProvider.of<ProfileblocBloc>(context).add(getFullProfileEvent(widget.userId!));},
-                              child: Icon(Icons.chevron_right_sharp,
+                          child: Text(
+                            name!,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.poppins(
+                              textStyle: TextStyle(
                                 color: themeColor,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                          ],
+                          ),
                         ),
-
-                      ],
+                      const Spacer(),
+                      if (age != null)
+                        Text(
+                          '$age Yrs',
+                          style: GoogleFonts.poppins(
+                            textStyle: TextStyle(
+                              color: green,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                // Sport
+                if (sport != null)
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Sports: ",
+                        style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                            color: themeColorLight,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          sport!,
+                          maxLines: 4,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.poppins(
+                            textStyle: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                const SizedBox(height: 8),
+                // Hobbies
+                if (hobbies != null)
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Hobbies: ",
+                        style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                            color: themeColorLight,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          hobbies!,
+                          maxLines: 4,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.poppins(
+                            textStyle: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                // Chevron icon
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: IconButton(
+                    onPressed: () {
+                      if (userId != null) {
+                        BlocProvider.of<ProfileblocBloc>(context).add(getFullProfileEvent(userId!));
+                      }
+                    },
+                    icon: Icon(
+                      Icons.chevron_right_sharp,
+                      color: themeColor,
                     ),
-                  ],
+                  ),
                 ),
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8, 16, 8, 8),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(8, 16, 8, 8),
             child: Divider(
               thickness: 0.4,
               color: themeColorLight,
             ),
-          )
+          ),
         ],
       ),
     );

@@ -27,6 +27,7 @@ class PersonalChatModel {
 class Data {
   List<Message>? messages;
   String? status;
+  AddNetwork? addNetwork;
   String? mssg;
   int? total;
   bool? activeChats;
@@ -34,6 +35,7 @@ class Data {
   Data({
     this.messages,
     this.status,
+    this.addNetwork,
     this.mssg,
     this.total,
     this.activeChats,
@@ -42,6 +44,7 @@ class Data {
   factory Data.fromJson(Map<String, dynamic> json) => Data(
     messages: json["messages"] == null ? [] : List<Message>.from(json["messages"]!.map((x) => Message.fromJson(x))),
     status: json["status"],
+    addNetwork: json["addNetwork"] == null ? null : AddNetwork.fromJson(json["addNetwork"]),
     mssg: json["mssg"],
     total: json["total"],
     activeChats: json["active_chats"],
@@ -50,16 +53,37 @@ class Data {
   Map<String, dynamic> toJson() => {
     "messages": messages == null ? [] : List<dynamic>.from(messages!.map((x) => x.toJson())),
     "status": status,
+    "addNetwork": addNetwork?.toJson(),
     "mssg": mssg,
     "total": total,
     "active_chats": activeChats,
   };
 }
 
+class AddNetwork {
+  int? status;
+  int? count;
+
+  AddNetwork({
+    this.status,
+    this.count,
+  });
+
+  factory AddNetwork.fromJson(Map<String, dynamic> json) => AddNetwork(
+    status: json["status"],
+    count: json["count"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "status": status,
+    "count": count,
+  };
+}
+
 class Message {
   String? conversationMessage;
   DateTime? createdOn;
-  dynamic userId;
+  String? userId;
   dynamic image;
 
   Message({

@@ -29,6 +29,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
   bool eventWidgetVisibility = false;
 
 
+
   @override
   void initState() {
     BlocProvider.of<ChatBloc>(context)
@@ -64,6 +65,9 @@ class _FriendsScreenState extends State<FriendsScreen> {
                     itemCount: friendList.length,
                     itemBuilder: (context, index) {
                       Friend friend = friendList[index];
+                      void markAsRead(String ChatId){
+                        friendList[index].unreadMessages = "0";
+                      }
                       return FriendDmWidget(
                           name: friend.userName!=null?friend.userName!:"Name",
                           description: friend.description,
@@ -74,6 +78,8 @@ class _FriendsScreenState extends State<FriendsScreen> {
                         profileUpdated:friend.profileUpdated,
                         connectionStatus: friend.connectionstatus,
                         showEventWidget: showEventWidget,
+                          unreadMessages:friend.unreadMessages,
+                        markAsRead:markAsRead
                       );
                     },
                   ),

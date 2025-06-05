@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
@@ -139,9 +140,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   void onAddProfileEvent(AddProfileEvent event, Emitter<AuthState> emit) async {
     emit(LoadingState());
+    print(const JsonEncoder.withIndent('  ').convert(event.addProfileModel));
     var response = await locator
         .get<AccountManagmentUsecase>()
         .addProfile(addProfileModel: event.addProfileModel);
+    print(response.data.data!.mssg);
     if (response.response.statusCode == HttpStatus.ok &&
         response.data.data != null &&
         response.data.data?.status != null) {

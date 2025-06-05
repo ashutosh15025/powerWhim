@@ -19,6 +19,13 @@ class GetChatsSuccessState extends ChatState {
   GetChatsSuccessState(this.chatsDetailsModel);
 }
 
+
+class GetChatsInactiveSuccessState extends ChatState {
+  ChatsDetailsModel chatsDetailsModel;
+
+  GetChatsInactiveSuccessState(this.chatsDetailsModel);
+}
+
 class GetPersonalChatSuccessState extends ChatState {
   PersonalChatModel personalChatModel;
 

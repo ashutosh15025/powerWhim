@@ -37,13 +37,13 @@ class _OnBoardPageState extends State<OnBoardPage> {
             controller: controller,
             children: [
               Container(
-                child: onBoardPageView(description: StringConstant.onBoardPage1desp,),
+                child: onBoardPageView(heading:StringConstant.onBoardPage1head,description: StringConstant.onBoardPage1desp,),
               ),
               Container(
-                child: onBoardPageView(description: StringConstant.onBoardPage2desp,),
+                child: onBoardPageView(heading:StringConstant.onBoardPage2head,description: StringConstant.onBoardPage2desp,),
               ),
               Container(
-                child: onBoardPageView(description: StringConstant.onBoardPage3desp,),
+                child: onBoardPageView(heading:StringConstant.onBoardPage3head,description: StringConstant.onBoardPage3desp,),
               )
             ],
             onPageChanged: (int page) {

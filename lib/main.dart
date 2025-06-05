@@ -45,8 +45,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context){
     var TABTOOPEN = '/auth';
     if(USER_ID != null && STATUS!=null){
-      print(USER_ID);
-      print(STATUS);
       TABTOOPEN = '/home';}
     else if(USER_ID!=null){
       TABTOOPEN = '/addProfile';

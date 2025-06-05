@@ -4,8 +4,9 @@ import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class onBoardPageView extends StatelessWidget {
-  const onBoardPageView({super.key, required this.description});
+  const onBoardPageView({super.key, required this.description, required this.heading});
   final String description;
+  final String heading;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +30,7 @@ class onBoardPageView extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-          child: Text("Find people who match with you",
+          child: Text(heading,
                   style: GoogleFonts.poppins(
                  textStyle: TextStyle(
                      fontSize: 20,

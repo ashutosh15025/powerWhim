@@ -17,7 +17,7 @@ IO.Socket ? SOCKET ;
 
 
 
-List<String> CHATENDREASON = ["Thanks for getting in contact but I am looking for something different at this time.",
-"I appreciate your time, but I am currently away.",
-"I’m currently occupied with other tasks and unable to respond fully, maybe another time?",
-"I have no availability currently and unable to accommodate new requests. Please feel free to reach out later."];
+List<String> CHATENDREASON = ["I’m off to chase dragonfly’s—dream big!",
+"Floating off—stay awesome!",
+"Moving forward with a smile—keep spreading your magic!",
+"The best is yet to come, here’s to your next win.","I’m morphing somewhere magical! Keep glowing."];

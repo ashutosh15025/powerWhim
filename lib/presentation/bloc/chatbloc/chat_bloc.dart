@@ -46,7 +46,13 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         if (apiResult.data != null &&
             apiResult.data.data != null &&
             apiResult.data.data!.status == StringConstant.successState) {
-          emit(GetChatsSuccessState(apiResult.data!));
+          if(event.activeStatus==1) {
+            emit(GetChatsSuccessState(apiResult.data!));
+          }
+          else{
+            emit(GetChatsInactiveSuccessState(apiResult.data!));
+          }
+
         } else {
           emit(ErrorState(ERROR));
         }

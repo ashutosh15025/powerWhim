@@ -10,6 +10,7 @@ import 'package:powerwhim/presentation/screens/chat_screen/personal_chat_screen.
 import 'package:powerwhim/presentation/widget/error/custom_error_widget.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../../widget/custom/custom_circular_loading_bar.dart';
 import 'chat_dm_widget.dart';
 
 
@@ -101,12 +102,14 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver, Ro
         if (state is ErrorState) {
           return Container(
             color: Colors.black,
-            child: CustomErrorWidget(
-              error: true,
-              closeErrorWidget: () {
-                BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(1));
-              },
-              mssg: ERROR,
+            child: Center(
+              child: CustomErrorWidget(
+                error: true,
+                closeErrorWidget: () {
+                  BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(1));
+                },
+                mssg: ERROR,
+              ),
             ),
           );
         }
@@ -262,7 +265,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver, Ro
             );
           }
           else {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: CustomCircularLoadingBar());
           }
         }
       },

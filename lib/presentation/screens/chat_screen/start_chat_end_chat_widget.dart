@@ -25,11 +25,11 @@ class _StartChatEndChatWidgetState extends State<StartChatEndChatWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.fromLTRB(0, 16, 0,0),
+      padding: const EdgeInsets.fromLTRB(0, 16, 0,0),
       child: Column(
         children: [
           Container(
-            padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
             child: Row(
               children: [
                 Container(
@@ -39,26 +39,26 @@ class _StartChatEndChatWidgetState extends State<StartChatEndChatWidget> {
                   child: Text(widget.name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                         color: green
                     ),),
                 ),
-                Spacer(),
+                const Spacer(),
                 Visibility(
                   visible:widget.count!=null&&int.parse(widget.count!)>0?true:false ,
                   child: Container(
                       height: 25,
                       width: 25,
-                      padding: EdgeInsets.fromLTRB(8, 3, 8, 3),
+                      padding: const EdgeInsets.fromLTRB(8, 3, 8, 3),
                       decoration: BoxDecoration(
                         color: green,
                         border: Border.all(color: green),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Center(child: Text(widget.count!=null&&int.parse(widget.count!)>0?widget.count!:"",
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: 12,
                             fontWeight: FontWeight.w500
@@ -68,14 +68,14 @@ class _StartChatEndChatWidgetState extends State<StartChatEndChatWidget> {
                   onTap: (){
                    BlocProvider.of<PersonalChatBloc>(context).add(GetStartEndChatsEvent(USER_ID!, widget.chatId!, 0));
                   },
-                  child: true==true?Padding(
-                    padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                  child: true==true?const Padding(
+                    padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
                     child: Icon(
                       Icons.add_circle_outlined,
                       color: themeColor,
                     ),
-                  ):Padding(
-                    padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                  ):const Padding(
+                    padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
                     child: Icon(
                       Icons.cancel_rounded,
                       color: Colors.red,
@@ -86,7 +86,7 @@ class _StartChatEndChatWidgetState extends State<StartChatEndChatWidget> {
             ),
           ),
           Container(
-            padding: EdgeInsets.fromLTRB(16, 4, 16, 16),
+            padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
