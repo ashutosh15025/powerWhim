@@ -5,7 +5,6 @@ import 'package:powerwhim/constant/service_api_constant.dart';
 import 'package:powerwhim/constant/string_constant.dart';
 import 'package:powerwhim/data/model/chats/chats_details_model.dart';
 import 'package:powerwhim/presentation/bloc/chatbloc/chat_bloc.dart';
-import 'package:powerwhim/presentation/screens/chat_screen/all_ended_chat_screen.dart';
 import 'package:powerwhim/presentation/screens/chat_screen/personal_chat_screen.dart';
 import 'package:powerwhim/presentation/widget/error/custom_error_widget.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -32,7 +31,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver, Ro
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
-    BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(1));
+    BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(0));
     initSocket();
     super.initState();
   }
@@ -47,9 +46,9 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver, Ro
       setState(() {});
     });
     listenMessage();
-    socket?.onDisconnect((_) => print('Connection Disconnection'));
-    socket?.onConnectError((err) => print(err));
-    socket?.onError((err) => print(err));
+    socket?.onDisconnect((_) =>{});
+    socket?.onConnectError((err) => {});
+    socket?.onError((err) => {});
   }
 
   @override
@@ -60,9 +59,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver, Ro
 
   @override
   void dispose() {
-    // Unsubscribe from route observer
     routeObserver.unsubscribe(this);
-    // Unregister from lifecycle events
     WidgetsBinding.instance.removeObserver(this);
     socket?.dispose();
     super.dispose();
@@ -74,7 +71,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver, Ro
 
     if (state == AppLifecycleState.resumed) {
 
-      BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(1)); // Refresh chat
+      BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(0)); // Refresh chat
     } else if (state == AppLifecycleState.paused) {
 
     }
@@ -84,7 +81,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver, Ro
   // This is called when user returns to this route after popping the next route
   @override
   void didPopNext() {
-    BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(1));
+    BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(0));
   }
 
   @override
@@ -106,7 +103,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver, Ro
               child: CustomErrorWidget(
                 error: true,
                 closeErrorWidget: () {
-                  BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(1));
+                  BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(0));
                 },
                 mssg: ERROR,
               ),
@@ -127,35 +124,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver, Ro
                   color: Color.fromRGBO(0, 0, 0, .95),
                   child: Column(
                     children: [
-                      int.parse(chatsDetailsModel!.data!.inactiveChats!) > 0
-                          ? InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (_) =>
-                                  AllEndedChatScreen(
-                                  ))).then((_)=>{
-                                    BlocProvider.of<ChatBloc>(context).add(GetChatsEvent(1))});
-                          BlocProvider.of<ChatBloc>(context).add(
-                              GetChatsEvent(0));
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          width: MediaQuery
-                              .of(context)
-                              .size
-                              .width,
-                          height: 50,
-                          color: Color.fromRGBO(255, 255, 17, .2),
-                          child: Text(
-                            "You Might have ${chatsDetailsModel!.data!
-                                .inactiveChats!} Unread Chat please check",
-                            style: TextStyle(
-                                color: Colors.white
-                            ),
-                          ),
-                        ),
-                      )
-                          : SizedBox.shrink(),
                       Container(
                         height: MediaQuery
                             .of(context)
@@ -171,21 +139,21 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver, Ro
                                             builder: (_) =>
                                                 PersonalChatScreen(
                                                   chatId: chatsDetailsModel!
-                                                      .data!.chats![index]!
+                                                      .data!.chats![index]
                                                       .chatId!,
                                                   name: chatsDetailsModel!
-                                                      .data!.chats![index]!
+                                                      .data!.chats![index]
                                                       .userName!,
                                                   previousScreen: "ChatScreen",
                                                   socketId: socket!.id,
                                                   deactivate_on: null,
                                                   userId: chatsDetailsModel!
-                                                      .data!.chats![index]!
+                                                      .data!.chats![index]
                                                       .userId,
                                                   connectionId: chatsDetailsModel!
-                                                      .data!.chats![index]!
+                                                      .data!.chats![index]
                                                       .connectionstatus,
-                                                ))).then((_)=>{print("privious")});
+                                                ))).then((_)=>{});
                                   },
                                   child: ChatDmWidget(
                                     name: chatsDetailsModel!.data!.chats![index]
@@ -214,10 +182,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver, Ro
               alignment: Alignment.topCenter,
               children: [
                 Container(
-                  height: 5 * MediaQuery
-                      .of(context)
-                      .size
-                      .height / 6,
+                  height: MediaQuery.of(context).size
+                .height-kToolbarHeight- MediaQuery.of(context).padding.top,
                   color: Colors.black,
                   child: InkWell(
                     onTap: () {
@@ -232,35 +198,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver, Ro
                         ),),
                     ),
                   ),
-                ),
-                int.parse(chatsDetailsModel!.data!.inactiveChats!) > 0
-                    ? InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) =>
-                            AllEndedChatScreen(
-                            )));
-                    BlocProvider.of<ChatBloc>(context).add(
-                        GetChatsEvent(0));
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width,
-                    height: 50,
-                    color: Color.fromRGBO(255, 255, 17, .2),
-                    child: Text(
-                      "You Might have ${chatsDetailsModel!.data!
-                          .inactiveChats!} UnViewed Chat please check",
-                      style: TextStyle(
-                          color: Colors.white
-                      ),
-                    ),
-                  ),
                 )
-                    : SizedBox.shrink(),
               ],
             );
           }

@@ -11,11 +11,9 @@ import 'package:powerwhim/constant/string_constant.dart';
 import 'package:powerwhim/data/model/chats/personal_chat_model.dart';
 import 'package:powerwhim/presentation/bloc/chatbloc/personal_chat_bloc.dart';
 import 'package:powerwhim/presentation/screens/view_image_screen/view_image_screen.dart';
-import 'package:powerwhim/presentation/widget/custom/gradient_button_green_yelllow.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:powerwhim/presentation/widget/custom/custom_circular_loading_bar.dart';
 import 'package:powerwhim/presentation/widget/error/custom_error_widget.dart';
-
 import '../../../constant/color_constant.dart';
 import '../../../constant/full_profile_privious_screen.dart';
 import '../../widget/message_widget/my_message_widget.dart';
@@ -26,30 +24,29 @@ import 'package:path/path.dart' as p;
 class PersonalChatScreen extends StatefulWidget {
   const PersonalChatScreen(
       {super.key,
-        required this.chatId,
-        required this.name,
-        this.previousScreen,
-        this.socketId,
-        this.userId,
-        this.deactivate_on,
+      required this.chatId,
+      required this.name,
+      this.previousScreen,
+      this.socketId,
+      this.userId,
+      this.deactivate_on,
       this.presentInNetwork,
-       this.connectionId});
+      this.connectionId});
 
   final String chatId;
   final String name;
-  final String ? userId;
+  final String? userId;
   final String? previousScreen;
   final String? socketId;
   final DateTime? deactivate_on;
   final int? presentInNetwork;
-  final String ? connectionId;
+  final String? connectionId;
 
   @override
   State<PersonalChatScreen> createState() => _PersonalChatScreenState();
 }
 
 class _PersonalChatScreenState extends State<PersonalChatScreen> {
-
   List<Message> listItem = [];
   IO.Socket? socketP;
   File? file;
@@ -69,29 +66,18 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
   bool endReasonWidget = false;
   final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
   final ScrollController _scrollController = ScrollController();
-  String previousScoketId="";
-  String ? connectionId;
+  String previousScoketId = "";
+  String? connectionId;
   int myTotalMessage = 0;
   int addNetworkStatus = 0;
 
-
-
   double? _scrollOffsetBeforeUpdate;
-
-  void _preserveScrollPosition() {
-    if (_scrollController.hasClients) {
-      _scrollOffsetBeforeUpdate = _scrollController.offset;
-    }
-  }
-
   void _restoreScrollPosition() {
     if (_scrollOffsetBeforeUpdate != null && _scrollController.hasClients) {
       _scrollController.jumpTo(_scrollOffsetBeforeUpdate!);
       _scrollOffsetBeforeUpdate = null; // Reset after use
     }
   }
-
-
 
   bool block = false;
 
@@ -101,7 +87,10 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
     connectionId = widget.connectionId;
     listItem = [];
     myTotalMessage = 0;
-    addNetworkStatus = 0;
+    if( widget.presentInNetwork!=null)
+    addNetworkStatus = widget.presentInNetwork!;
+    else
+      addNetworkStatus = 0;
     initSocket();
     getChat();
     _scrollController.addListener(_onScroll);
@@ -109,28 +98,22 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
     _scrollToBottom();
   }
 
-  void getChat(){
-    BlocProvider.of<PersonalChatBloc>(context).add(
-        GetPersonalChatEvent(
-            chatId: widget.chatId,
-            page: 0));
+  void getChat() {
+    BlocProvider.of<PersonalChatBloc>(context)
+        .add(GetPersonalChatEvent(chatId: widget.chatId, page: 0));
   }
 
   void _scrollToBottom() async {
     await Future.delayed(const Duration(milliseconds: 100));
   }
 
-
   void _onScroll() {
     if (_scrollController.position.atEdge) {
-      print("this is page ${page}");
       bool isTop = _scrollController.position.pixels == 0;
-      if (!isTop&&totalPage>page) {
-
+      if (!isTop && totalPage > page) {
         page++;
-
-        BlocProvider.of<PersonalChatBloc>(context).add(
-            GetPersonalChatEvent(chatId: widget.chatId, page: page));
+        BlocProvider.of<PersonalChatBloc>(context)
+            .add(GetPersonalChatEvent(chatId: widget.chatId, page: page));
       }
     }
   }
@@ -142,12 +125,9 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
     });
     socketP?.connect();
     socketP?.onConnect((_) {
-      setState(() {
-        print("connection");
-      });
+      setState(() {});
     });
     socketP!.on('message', (data) {
-      // Listen for the 'message' event
       String chatId = data['chat_id'];
       if (widget.chatId == chatId) {
         setState(() {
@@ -163,9 +143,9 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
       }
     });
 
-    socketP?.onDisconnect((_) => print('Connection Disconnection'));
-    socketP?.onConnectError((err) => print(err));
-    socketP?.onError((err) => print(err));
+    socketP?.onDisconnect((_) => {});
+    socketP?.onConnectError((err) => {});
+    socketP?.onError((err) => {});
   }
 
   @override
@@ -175,26 +155,22 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
     super.dispose();
   }
 
-// This is what you're looking for!
-
   @override
   Widget build(BuildContext context) {
-
     return BlocConsumer<PersonalChatBloc, PersonalChatState>(
-      buildWhen: (previous,current){
-        if(current is getFullProfileSuccessState) {
+      buildWhen: (previous, current) {
+        if (current is getFullProfileSuccessState) {
           return false;
         } else {
           return true;
         }
       },
       listener: (context, state) {
-         if(state is getFullProfileSuccessState){
-           if (state.fullProfile != null) {
-             Navigator.of(context).pushNamed('/profile',
-                 arguments: FullProfilePriviousScreen(
-                     state.fullProfile, 'viewProfile'));
-           }
+        if (state is getFullProfileSuccessState) {
+
+            Navigator.of(context).pushNamed('/profile',
+                arguments: FullProfilePriviousScreen(
+                    state.fullProfile, 'viewProfile'));
         }
       },
       builder: (context, state) {
@@ -213,52 +189,49 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
               ),
             ),
           );
-        }
-        else if (state is GetStartEndChatsState) {
+        } else if (state is GetStartEndChatsState) {
           if (state.mssg == "Chat Activated") {
             deactivate_on = null;
           } else if (state.mssg == "Chat Deactivated") {
             deactivate_on = DateTime.now();
-          } else if(state.mssg == "Added to Network")
-          {  addNetworkStatus =1;
-              deactivate_on = null;
-              connectionId = USER_ID;
-          }
-          else if(state.mssg == "Remove from network")
-          {
-            deactivate_on =  DateTime.now();
+          } else if (state.mssg == "Added to Network") {
+            addNetworkStatus = 1;
+            deactivate_on = null;
+            connectionId = USER_ID;
+          } else if (state.mssg == "Remove from network") {
+            deactivate_on = DateTime.now();
             connectionId = null;
           }
           BlocProvider.of<PersonalChatBloc>(context)
               .add(GetPersonalChatEvent(chatId: widget.chatId, page: 0));
           return const CustomCircularLoadingBar();
-        }
-        else if (state is GetPersonalChatSuccessState) {
+        } else if (state is GetPersonalChatSuccessState) {
           totalPage = state.personalChatModel.data?.total ?? 1;
           scrollLoaderVisibility = false;
-          WidgetsBinding.instance.addPostFrameCallback((_) => _restoreScrollPosition());
-          if(myTotalMessage<=(state.personalChatModel.data?.addNetwork?.count ??0)){
-    myTotalMessage = state.personalChatModel.data?.addNetwork?.count ?? 0;
-    }
-          addNetworkStatus = state.personalChatModel.data?.addNetwork?.status ?? 0;
-
-          if(socketP!.id!=null && previousScoketId!=socketP!.id) {
-            previousScoketId = socketP!.id!;
-            BlocProvider.of<PersonalChatBloc>(context).add(
-                SetSocketEvent(socketP!.id!));
+          WidgetsBinding.instance
+              .addPostFrameCallback((_) => _restoreScrollPosition());
+          if (myTotalMessage <=
+              (state.personalChatModel.data?.addNetwork?.count ?? 0)) {
+            myTotalMessage =
+                state.personalChatModel.data?.addNetwork?.count ?? 0;
           }
-          listItem = BlocProvider.of<PersonalChatBloc>(context).personalChatList;
+          addNetworkStatus =
+              state.personalChatModel.data?.addNetwork?.status ?? 0;
+
+          if (socketP!.id != null && previousScoketId != socketP!.id) {
+            previousScoketId = socketP!.id!;
+            BlocProvider.of<PersonalChatBloc>(context)
+                .add(SetSocketEvent(socketP!.id!));
+          }
+          listItem =
+              BlocProvider.of<PersonalChatBloc>(context).personalChatList;
           return PopScope(
             canPop: true,
             onPopInvokedWithResult: (bool didPop, Object? result) {
               if (didPop) {
-                // Capture values from widget synchronously
                 final socketId = widget.socketId;
                 final chatId = widget.chatId;
-
-                // Get the Bloc instance synchronously
                 final chatBloc = BlocProvider.of<PersonalChatBloc>(context);
-
                 if (socketId != null) {
                   chatBloc.add(SetSocketEvent(socketId));
                 }
@@ -266,7 +239,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
               }
             },
             child: GestureDetector(
-              onTap: (){
+              onTap: () {
                 FocusScope.of(context).unfocus();
               },
               child: Scaffold(
@@ -297,7 +270,9 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                 onPressChatEndCancelWidget();
                               } else {
                                 BlocProvider.of<PersonalChatBloc>(context).add(
-                                    GetStartEndChatsEvent(USER_ID!, widget.chatId, 0, block: 0));
+                                    GetStartEndChatsEvent(
+                                        USER_ID!, widget.chatId, 0,
+                                        block: 0));
                               }
                               Navigator.pop(context);
                             },
@@ -322,19 +297,25 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                 onPressChatEndCancelWidget();
                               });
                             } else {
-                              if (state.personalChatModel.data?.activeChats == true) {
+                              if (state.personalChatModel.data?.activeChats ==
+                                  true) {
                                 deactivate_on = null;
                                 BlocProvider.of<PersonalChatBloc>(context).add(
-                                    GetStartEndChatsEvent(USER_ID!, widget.chatId, 0, startChat: 1));
+                                    GetStartEndChatsEvent(
+                                        USER_ID!, widget.chatId, 0,
+                                        startChat: 1));
                               } else {
                                 setState(() {
-                                  errorWidgetVisibility = !errorWidgetVisibility;
+                                  errorWidgetVisibility =
+                                      !errorWidgetVisibility;
                                 });
                               }
                             }
                           },
                           child: Text(
-                            connectionId != null ? "End Chat" : "Add To Network",
+                            connectionId != null
+                                ? "End Chat"
+                                : "Add To Network",
                             style: GoogleFonts.poppins(
                               color: Colors.white,
                               fontWeight: FontWeight.w500,
@@ -347,8 +328,8 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 8),
                           onTap: () {
                             focusInput.unfocus();
-                            BlocProvider.of<PersonalChatBloc>(context).add(
-                                getFullProfileEvent(widget.userId!));
+                            BlocProvider.of<PersonalChatBloc>(context)
+                                .add(getFullProfileEvent(widget.userId!));
                           },
                           child: Text(
                             "View Profile",
@@ -394,38 +375,38 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                     itemBuilder: (context, i) {
                                       if (i == listItem.length - 1) {}
                                       int index = i;
-                                      if (USER_ID == listItem[index]!.userId) {
+                                      if (USER_ID == listItem[index].userId) {
                                         return InkWell(
                                           onTap: () {
-                                            if (listItem[index]!.image !=
+                                            if (listItem[index].image !=
                                                 null) {
                                               onClickImage(
-                                                  listItem[index]!.image);
+                                                  listItem[index].image);
                                             }
                                           },
                                           child: MyMessageWidget(
-                                            message: listItem[index]!
+                                            message: listItem[index]
                                                 .conversationMessage,
                                             time: getHours(
-                                                listItem[index]!.createdOn!),
+                                                listItem[index].createdOn!),
                                             image: listItem[index].image,
                                           ),
                                         );
-                                      } else if (listItem[index]!.userId !=
+                                      } else if (listItem[index].userId !=
                                           null) {
                                         return InkWell(
                                           onTap: () {
-                                            if (listItem[index]!.image !=
+                                            if (listItem[index].image !=
                                                 null) {
                                               onClickImage(
-                                                  listItem[index]!.image);
+                                                  listItem[index].image);
                                             }
                                           },
                                           child: OtherMessages(
-                                            message: listItem[index]!
+                                            message: listItem[index]
                                                 .conversationMessage,
                                             time: getHours(
-                                                listItem[index]!.createdOn!),
+                                                listItem[index].createdOn!),
                                             image: listItem[index].image,
                                           ),
                                         );
@@ -441,10 +422,10 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                               color: const Color.fromRGBO(
                                                   218, 202, 58, .1),
                                               borderRadius:
-                                              BorderRadius.circular(16)),
+                                                  BorderRadius.circular(16)),
                                           alignment: Alignment.center,
                                           child: Text(
-                                            listItem[index]!
+                                            listItem[index]
                                                 .conversationMessage!,
                                             style: GoogleFonts.poppins(
                                                 textStyle: const TextStyle(
@@ -457,38 +438,40 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                               ),
                               Container(
                                 constraints: const BoxConstraints(),
-                                padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
+                                padding:
+                                    const EdgeInsets.fromLTRB(8, 16, 8, 16),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     file == null
                                         ? const SizedBox.shrink()
                                         : InkWell(
-                                      child: const Icon(Icons.cancel_outlined,
-                                          color: Colors.white),
-                                      onTap: () async {
-                                        setState(() {
-                                          file!.delete();
-                                          file = null;
-                                        });
-                                      },
-                                    ),
+                                            child: const Icon(
+                                                Icons.cancel_outlined,
+                                                color: Colors.white),
+                                            onTap: () async {
+                                              setState(() {
+                                                file!.delete();
+                                                file = null;
+                                              });
+                                            },
+                                          ),
                                     file == null
                                         ? const SizedBox.shrink()
                                         : Container(
-                                      width: MediaQuery.of(context)
-                                          .size
-                                          .width,
-                                      child: Image.file(
-                                        file!,
-                                        height: 200,
-                                      ),
-                                    ),
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            child: Image.file(
+                                              file!,
+                                              height: 200,
+                                            ),
+                                          ),
                                     Visibility(
                                       visible: imageLoader,
                                       child: Container(
                                         width:
-                                        MediaQuery.of(context).size.width,
+                                            MediaQuery.of(context).size.width,
                                         alignment: Alignment.center,
                                         child: const Text(
                                           "sending...",
@@ -507,7 +490,8 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                       onChanged: (value) {
                                         inputValue = value;
                                       },
-                                      style: const TextStyle(color: Colors.white),
+                                      style:
+                                          const TextStyle(color: Colors.white),
                                       decoration: InputDecoration(
                                         prefixIcon: InkWell(
                                             onTap: () {},
@@ -521,39 +505,64 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                         suffixIcon: InkWell(
                                           child: const Icon(Icons.send),
                                           onTap: () async {
-
-                                              myTotalMessage++;
-                                              print("Updated total: $myTotalMessage");
-                                              print("astatus total: $addNetworkStatus");
-                                              print("astatus total: 0");
-
-                                            if (addNetworkStatus==0 && myTotalMessage == 5) {
-                                              final result = await showDialog<bool>(
+                                            myTotalMessage++;
+                                            if (addNetworkStatus == 0 &&
+                                                myTotalMessage == 5) {
+                                                  await showDialog<bool>(
                                                 context: context,
-                                                builder: (BuildContext context) {
+                                                builder:
+                                                    (BuildContext context) {
                                                   return AlertDialog(
-                                                    backgroundColor: Colors.black87,
-                                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                                    backgroundColor:
+                                                        Colors.black87,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        16)),
                                                     title: const Text(
                                                       "Looks like you're getting along!",
-                                                      style: TextStyle(color: Colors.white),
+                                                      style: TextStyle(
+                                                          color: Colors.white),
                                                     ),
                                                     content: const Text(
                                                       "You’ve exchanged 5 messages with this user. Would you like to add them to your network to continue the conversation?",
-                                                      style: TextStyle(color: Colors.white70),
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
                                                     ),
                                                     actions: [
                                                       TextButton(
-                                                        child: const Text("Cancel", style: TextStyle(color: Colors.white60)),
-                                                        onPressed: () => Navigator.of(context).pop(false),
+                                                        child: const Text(
+                                                            "Cancel",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white60)),
+                                                        onPressed: () =>
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop(false),
                                                       ),
                                                       TextButton(
-                                                        child: const Text("Add to Network", style: TextStyle(color: Colors.yellow)),
+                                                        child: const Text(
+                                                            "Add to Network",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .yellow)),
                                                         onPressed: () {
-                                                          BlocProvider.of<PersonalChatBloc>(context).add(
-                                                            GetStartEndChatsEvent(USER_ID!, widget.chatId, 0, startChat: 1),
+                                                          BlocProvider.of<
+                                                                      PersonalChatBloc>(
+                                                                  context)
+                                                              .add(
+                                                            GetStartEndChatsEvent(
+                                                                USER_ID!,
+                                                                widget.chatId,
+                                                                0,
+                                                                startChat: 1),
                                                           );
-                                                          Navigator.of(context).pop(true); // Signal to proceed
+                                                          Navigator.of(context).pop(
+                                                              true); // Signal to proceed
                                                         },
                                                       ),
                                                     ],
@@ -562,16 +571,18 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                               );
                                             }
 
-                                            // ✅ Only runs if user tapped "Add to Network" or condition was not met
-
-                                            if (disableSendbutton == false && deactivate_on == null) {
+                                            if (disableSendbutton == false &&
+                                                deactivate_on == null) {
                                               disableSendbutton = true;
-                                              if (inputValue != null && inputValue!.isNotEmpty) {
+                                              if (inputValue != null &&
+                                                  inputValue!.isNotEmpty) {
                                                 if (file == null) {
                                                   imageLoader = true;
                                                   socketP?.emit("message", {
-                                                    "message_text": "$inputValue",
-                                                    "chat_id": "${widget.chatId}",
+                                                    "message_text":
+                                                        "$inputValue",
+                                                    "chat_id":
+                                                        "${widget.chatId}",
                                                     "user_id": "$USER_ID"
                                                   });
                                                 } else {
@@ -580,10 +591,13 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                                   });
                                                   await uploadfile();
                                                   socketP?.emit("message", {
-                                                    "message_text": "$inputValue",
-                                                    "chat_id": "${widget.chatId}",
+                                                    "message_text":
+                                                        "$inputValue",
+                                                    "chat_id":
+                                                        "${widget.chatId}",
                                                     "user_id": "$USER_ID",
-                                                    "image": "$uploaded_file_url"
+                                                    "image":
+                                                        "$uploaded_file_url"
                                                   });
                                                   await file!.delete();
                                                   file = null;
@@ -605,8 +619,10 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                               disableSendbutton = false;
                                             } else if (deactivate_on != null) {
                                               setState(() {
-                                                errorWidgetVisibility = !errorWidgetVisibility;
-                                                FocusScope.of(context).unfocus();
+                                                errorWidgetVisibility =
+                                                    !errorWidgetVisibility;
+                                                FocusScope.of(context)
+                                                    .unfocus();
                                               });
                                             }
 
@@ -618,13 +634,13 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                         fillColor: Colors.white,
                                         enabledBorder: OutlineInputBorder(
                                             borderRadius:
-                                            BorderRadius.circular(30),
+                                                BorderRadius.circular(30),
                                             borderSide: const BorderSide(
                                                 color: themeColorLight,
                                                 width: 1)),
                                         focusedBorder: OutlineInputBorder(
                                             borderRadius:
-                                            BorderRadius.circular(30),
+                                                BorderRadius.circular(30),
                                             borderSide: const BorderSide(
                                                 color: themeColorLight,
                                                 width: 1)),
@@ -661,7 +677,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                     MediaQuery.of(context).size.height / 4,
                                 child: CustomErrorWidget(
                                   error: true,
-                                  mssg:StringConstant.chatIsdiable,
+                                  mssg: StringConstant.chatIsdiable,
                                   closeErrorWidget: closeErrorWidget,
                                 ),
                               )),
@@ -675,10 +691,9 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                   child: Container(
                                     padding: const EdgeInsets.all(8),
                                     constraints: BoxConstraints(
-                                        maxHeight: MediaQuery.of(context)
-                                            .size
-                                            .height/2
-                                    ),
+                                        maxHeight:
+                                            MediaQuery.of(context).size.height /
+                                                2),
                                     width: MediaQuery.of(context).size.width -
                                         MediaQuery.of(context).size.width / 4,
                                     decoration: BoxDecoration(
@@ -692,8 +707,8 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                             padding: const EdgeInsets.all(8),
                                             alignment: Alignment.centerRight,
                                             child: IconButton(
-                                              icon:
-                                              const Icon(Icons.cancel_rounded),
+                                              icon: const Icon(
+                                                  Icons.cancel_rounded),
                                               color: Colors.white,
                                               onPressed: () {
                                                 onPressChatEndCancelWidget();
@@ -706,32 +721,40 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                             child: InkWell(
                                               onTap: () {
                                                 socketP?.emit("message", {
-                                                  "chat_id":
-                                                  "${widget.chatId}",
+                                                  "chat_id": "${widget.chatId}",
                                                   "message_text":
-                                                  "${CHATENDREASON[i-1]}"
+                                                      "${CHATENDREASON[i - 1]}"
                                                 });
-                                               if(block == false){
-                                                BlocProvider.of<PersonalChatBloc>(
-                                                    context)
-                                                    .add(
-                                                    GetStartEndChatsEvent(
-                                                        USER_ID!,
-                                                        widget.chatId,
-                                                        1));}
-                                               else{
-                                                 BlocProvider.of<PersonalChatBloc>(context).add(
-                                                     GetStartEndChatsEvent(
-                                                         USER_ID!, widget.chatId, 0,block:1));
-                                               }
+                                                if (block == false) {
+                                                  BlocProvider.of<
+                                                              PersonalChatBloc>(
+                                                          context)
+                                                      .add(
+                                                          GetStartEndChatsEvent(
+                                                              USER_ID!,
+                                                              widget.chatId,
+                                                              1));
+                                                } else {
+                                                  BlocProvider.of<
+                                                              PersonalChatBloc>(
+                                                          context)
+                                                      .add(
+                                                          GetStartEndChatsEvent(
+                                                              USER_ID!,
+                                                              widget.chatId,
+                                                              0,
+                                                              block: 1));
+                                                }
                                                 deactivate_on = DateTime.now();
                                                 onPressChatEndCancelWidget();
                                               },
                                               child: Container(
-                                                margin: const EdgeInsets.fromLTRB(
-                                                    2, 2, 2, 2),
+                                                margin:
+                                                    const EdgeInsets.fromLTRB(
+                                                        2, 2, 2, 2),
                                                 alignment: Alignment.center,
-                                                padding: const EdgeInsets.all(16),
+                                                padding:
+                                                    const EdgeInsets.all(16),
                                                 width: MediaQuery.of(context)
                                                     .size
                                                     .width,
@@ -784,7 +807,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
     int minute = int.parse(time.substring(3, 5));
     String amPm = hour < 12 ? "AM" : "PM";
     hour = hour %
-        12; // Adjust hour for 12-hour format (12 becomes 12, 13 becomes 1)
+        12;
     String extractedTime =
         "${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')} $amPm";
     return extractedTime; // Output: 12:08 PM
@@ -806,7 +829,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
   void onClickImage(String? imageurl) {
     if (imageurl != null) {
       Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => ViewImageScreen(image: imageurl!)));
+          MaterialPageRoute(builder: (_) => ViewImageScreen(image: imageurl)));
     }
   }
 
@@ -839,9 +862,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
           dospace.Permissions.public);
       uploaded_file_url = USER_ID! + '/' + result1 + '/' + file_name;
       await spaces.close();
-    } catch (error) {
-      print(error);
-    }
+    } catch (error) {}
   }
 
   void emitActiveTime(String chatId) {

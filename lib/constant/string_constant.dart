@@ -21,9 +21,9 @@ class StringConstant{
   static String onBoardPage2desp= "Enriching social circles at your convenience. Refresh your ideas and engage with new, yet relatable company.";
   static String onBoardPage3desp= "It is all about the power of perspective. Providing a fair play platform for any personalities to prosper.";
 
-  static String onBoardPage1head= "Less awkward, more awesome.";
-  static String onBoardPage2head= "Your next move made easy.";
-  static String onBoardPage3head= "Simple ideas, big impact.";
+  static String onBoardPage1head= "The shortcut to what actually matters.";
+  static String onBoardPage2head= "Less awkward. More awesome.";
+  static String onBoardPage3head= "You’ve evolved. Now your network can too.";
 
 
 

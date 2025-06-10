@@ -6,7 +6,8 @@ import 'package:powerwhim/presentation/bloc/profilebloc/profilebloc_bloc.dart';
 import '../../../constant/color_constant.dart';
 import '../../../constant/service_api_constant.dart';
 
-class ProfileCardWidget extends StatelessWidget {
+
+class ProfileCardWidget extends StatefulWidget {
   const ProfileCardWidget({
     super.key,
     required this.name,
@@ -23,13 +24,35 @@ class ProfileCardWidget extends StatelessWidget {
   final String? userId;
 
   @override
+  State<ProfileCardWidget> createState() => _ProfileCardWidgetState();
+}
+
+class _ProfileCardWidgetState extends State<ProfileCardWidget> {
+  bool _isTapped = false;
+
+  void _handleTap(BuildContext context) {
+    if (_isTapped || widget.userId == null) return;
+
+    setState(() {
+      _isTapped = true;
+    });
+
+    BlocProvider.of<ProfileblocBloc>(context).add(getFullProfileEvent(widget.userId!));
+
+    // Optional: re-enable tap after some delay (if necessary)
+    Future.delayed(const Duration(seconds: 2), () {
+      if (mounted) {
+        setState(() {
+          _isTapped = false;
+        });
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        if (userId != null) {
-          BlocProvider.of<ProfileblocBloc>(context).add(getFullProfileEvent(userId!));
-        }
-      },
+      onTap: _isTapped ? null : () => _handleTap(context),
       child: Column(
         children: [
           Padding(
@@ -42,13 +65,13 @@ class ProfileCardWidget extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: 16),
                   child: Row(
                     children: [
-                      if (name != null)
+                      if (widget.name != null)
                         Container(
                           constraints: BoxConstraints(
                             maxWidth: MediaQuery.of(context).size.width * 0.75,
                           ),
                           child: Text(
-                            name!,
+                            widget.name!,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: GoogleFonts.poppins(
@@ -61,9 +84,9 @@ class ProfileCardWidget extends StatelessWidget {
                           ),
                         ),
                       const Spacer(),
-                      if (age != null)
+                      if (widget.age != null)
                         Text(
-                          '$age Yrs',
+                          '${widget.age} Yrs',
                           style: GoogleFonts.poppins(
                             textStyle: TextStyle(
                               color: green,
@@ -76,7 +99,7 @@ class ProfileCardWidget extends StatelessWidget {
                   ),
                 ),
                 // Sport
-                if (sport != null)
+                if (widget.sport != null)
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -92,7 +115,7 @@ class ProfileCardWidget extends StatelessWidget {
                       ),
                       Expanded(
                         child: Text(
-                          sport!,
+                          widget.sport!,
                           maxLines: 4,
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.poppins(
@@ -108,7 +131,7 @@ class ProfileCardWidget extends StatelessWidget {
                   ),
                 const SizedBox(height: 8),
                 // Hobbies
-                if (hobbies != null)
+                if (widget.hobbies != null)
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -124,7 +147,7 @@ class ProfileCardWidget extends StatelessWidget {
                       ),
                       Expanded(
                         child: Text(
-                          hobbies!,
+                          widget.hobbies!,
                           maxLines: 4,
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.poppins(
@@ -142,11 +165,7 @@ class ProfileCardWidget extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerRight,
                   child: IconButton(
-                    onPressed: () {
-                      if (userId != null) {
-                        BlocProvider.of<ProfileblocBloc>(context).add(getFullProfileEvent(userId!));
-                      }
-                    },
+                    onPressed: () => _handleTap(context),
                     icon: Icon(
                       Icons.chevron_right_sharp,
                       color: themeColor,

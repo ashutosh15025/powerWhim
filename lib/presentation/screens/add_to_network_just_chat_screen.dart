@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:powerwhim/constant/service_api_constant.dart';
+import 'package:powerwhim/presentation/widget/custom/gradient_button_green_yelllow.dart';
 
 
 import '../../constant/color_constant.dart';
@@ -87,29 +88,17 @@ class _AddToNetworkJustChatScreenState extends State<AddToNetworkJustChatScreen>
                       fontWeight: FontWeight.bold,fontSize: 20,)),textAlign:TextAlign.center,),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                      width: MediaQuery.of(context).size.width/2-40,
+                      width: MediaQuery.of(context).size.width/2,
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       decoration: BoxDecoration(
-                          color: themeColorLight,
                           borderRadius: BorderRadius.circular(16)
                       ),
                       child: TextButton(onPressed: (){
                         BlocProvider.of<PersonalChatBloc>(context).add(SetChatEvent(USER_ID!,widget.userId,0));
-                      }, child: Text('Just Chat',style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),),)),
-
-                  Container(
-                      width: MediaQuery.of(context).size.width/2-40,
-                      decoration: BoxDecoration(
-                          color: themeColor,
-                          borderRadius: BorderRadius.circular(16)
-                      ),
-                      child: TextButton(onPressed: (){
-                        BlocProvider.of<PersonalChatBloc>(context).add(SetChatEvent(USER_ID!,widget.userId,1));
-                      }, child: Text('Add To Network',style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),)))
-                  
+                      }, child: GradientButtonGreenYellow(buttonText: "Start Chat")),)
                 ],
               )
             ],

@@ -14,7 +14,7 @@ class _ChatsFriendsService implements ChatsFriendsService {
     this.baseUrl,
     this.errorLogger,
   }) {
-    baseUrl ??= 'https://whim.cozytech.co.in/';
+    baseUrl ??= 'https://whim.demos.cozmotec.ie/';
   }
 
   final Dio _dio;
