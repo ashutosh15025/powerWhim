@@ -137,6 +137,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   void onGetFullProfileEvent(
       GetFullProfileEvent event, Emitter<ChatState> emit) async {
+    emit(LoadingState());
     var response = await locator
         .get<UserProfileUsecase>()
         .getFullProfiles(event.userId, USER_ID!);
