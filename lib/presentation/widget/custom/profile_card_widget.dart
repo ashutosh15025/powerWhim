@@ -83,18 +83,7 @@ class _ProfileCardWidgetState extends State<ProfileCardWidget> {
                             ),
                           ),
                         ),
-                      const Spacer(),
-                      if (widget.age != null)
-                        Text(
-                          '${widget.age} Yrs',
-                          style: GoogleFonts.poppins(
-                            textStyle: TextStyle(
-                              color: green,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
+                      const Spacer()
                     ],
                   ),
                 ),
