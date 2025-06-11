@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:powerwhim/presentation/bloc/profilebloc/profilebloc_bloc.dart';
 
 import '../../../constant/color_constant.dart';
+import '../../../constant/full_profile_privious_screen.dart';
 import '../../../constant/service_api_constant.dart';
 
 
@@ -31,13 +32,17 @@ class _ProfileCardWidgetState extends State<ProfileCardWidget> {
   bool _isTapped = false;
 
   void _handleTap(BuildContext context) {
+    print("${widget.userId} uesrId");
     if (_isTapped || widget.userId == null) return;
 
     setState(() {
       _isTapped = true;
     });
 
-    BlocProvider.of<ProfileblocBloc>(context).add(getFullProfileEvent(widget.userId!));
+    Navigator.of(context).pushNamed('/profile',
+        arguments: FullProfilePriviousScreen(
+        widget.userId!, 'viewProfile'));
+    // BlocProvider.of<ProfileblocBloc>(context).add(getFullProfileEvent(widget.userId!));
 
     // Optional: re-enable tap after some delay (if necessary)
     Future.delayed(const Duration(seconds: 2), () {

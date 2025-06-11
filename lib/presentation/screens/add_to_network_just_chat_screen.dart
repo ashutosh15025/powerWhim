@@ -83,7 +83,7 @@ class _AddToNetworkJustChatScreenState extends State<AddToNetworkJustChatScreen>
               ),
               Padding(
                 padding: const EdgeInsets.all(20.0),
-                child: Text("Choose an option below to proceed:", style: GoogleFonts.poppins(
+                child: Text("Click Below button to Start Chat:", style: GoogleFonts.poppins(
                     textStyle:TextStyle( color: Colors.white,
                       fontWeight: FontWeight.bold,fontSize: 20,)),textAlign:TextAlign.center,),
               ),

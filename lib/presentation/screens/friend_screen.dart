@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:powerwhim/constant/color_constant.dart';
-import 'package:powerwhim/constant/full_profile_privious_screen.dart';
 import 'package:powerwhim/presentation/bloc/chatbloc/chat_bloc.dart';
 import 'package:powerwhim/presentation/widget/custom/custom_circular_loading_bar.dart';
 import 'package:powerwhim/presentation/widget/custom/friend_dm_widget.dart';
@@ -27,32 +26,41 @@ class _FriendsScreenState extends State<FriendsScreen> {
   String eventText = "";
   String eventUserName="";
   bool eventWidgetVisibility = false;
+  final ScrollController _listScrollController = ScrollController();
+
 
 
 
   @override
   void initState() {
+    scrollToTop();
     BlocProvider.of<ChatBloc>(context)
         .add(GetFriendsEvent(USER_ID!));
     super.initState();
   }
 
+  void scrollToTop() {
+    if (_listScrollController.hasClients) {
+      _listScrollController.animateTo(
+        0.0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+
 
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ChatBloc, ChatState>(
-      listener: (context, state) {
-        if (state is GetFullProfileSuccessState)
-          Navigator.of(context).pushNamed('/profile',
-              arguments: FullProfilePriviousScreen(
-                  state.fullProfile, 'FriendsScreen'));
-      },
+    return BlocBuilder<ChatBloc, ChatState>(
       builder: (context, state) {
         if (state is GetFriendsSuccessState) {
+          print("${state.friendsModel.data!.friends} friends list");
           List<Friend> friendList = [];
-          if(state.friendsModel!.data!.friends!=null)
-          friendList = state.friendsModel!.data!.friends!;
+          if(state.friendsModel.data!.friends!=null)
+          friendList = state.friendsModel.data!.friends!;
           if(friendList.length>0)
           return Stack(
             alignment: Alignment.center,
@@ -61,28 +69,33 @@ class _FriendsScreenState extends State<FriendsScreen> {
                 color: Color.fromRGBO(0, 0, 0, .99),
                 child: SizedBox(
                   height: MediaQuery.of(context).size.height - 0,
-                  child: ListView.builder(
-                    itemCount: friendList.length,
+                  child:ListView.builder(
+                    controller: _listScrollController,
+                    itemCount: friendList.length, // Repeat 3 times
                     itemBuilder: (context, index) {
-                      Friend friend = friendList[index];
-                      void markAsRead(String ChatId){
-                        friendList[index].unreadMessages = "0";
+                      final actualIndex = index % friendList.length;
+                      Friend friend = friendList[actualIndex];
+
+                      void markAsRead(String ChatId) {
+                        friendList[actualIndex].unreadMessages = "0";
                       }
+
                       return FriendDmWidget(
-                          name: friend.userName!=null?friend.userName!:"Name",
-                          description: friend.description,
-                          userId: friend.userId!=null?friend.userId!:"userid",
-                          chatId: friend.chatId!=null?friend.chatId!:"chatid",
-                          deactivate_on: friend.deactivateOn,
-                          event:friend.event,
-                        profileUpdated:friend.profileUpdated,
+                        name: friend.userName ?? "Name",
+                        description: friend.description,
+                        userId: friend.userId ?? "userid",
+                        chatId: friend.chatId ?? "chatid",
+                        deactivate_on: friend.deactivateOn,
+                        event: friend.event,
+                        profileUpdated: friend.profileUpdated,
                         connectionStatus: friend.connectionstatus,
                         showEventWidget: showEventWidget,
-                          unreadMessages:friend.unreadMessages,
-                        markAsRead:markAsRead
+                        unreadMessages: friend.unreadMessages,
+                        markAsRead: markAsRead,
                       );
                     },
-                  ),
+                  )
+                  ,
                 ),
               ),
               Visibility(

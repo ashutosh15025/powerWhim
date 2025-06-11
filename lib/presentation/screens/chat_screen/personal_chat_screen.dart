@@ -166,12 +166,6 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
         }
       },
       listener: (context, state) {
-        if (state is getFullProfileSuccessState) {
-
-            Navigator.of(context).pushNamed('/profile',
-                arguments: FullProfilePriviousScreen(
-                    state.fullProfile, 'viewProfile'));
-        }
       },
       builder: (context, state) {
         if (state is ErrorState) {
@@ -205,7 +199,8 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
           BlocProvider.of<PersonalChatBloc>(context)
               .add(GetPersonalChatEvent(chatId: widget.chatId, page: 0));
           return const CustomCircularLoadingBar();
-        } else if (state is GetPersonalChatSuccessState) {
+        }
+        else if (state is GetPersonalChatSuccessState) {
           totalPage = state.personalChatModel.data?.total ?? 1;
           scrollLoaderVisibility = false;
           WidgetsBinding.instance
@@ -328,8 +323,9 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 8),
                           onTap: () {
                             focusInput.unfocus();
-                            BlocProvider.of<PersonalChatBloc>(context)
-                                .add(getFullProfileEvent(widget.userId!));
+                            Navigator.of(context).pushNamed('/profile',
+                                    arguments: FullProfilePriviousScreen(
+                                        widget.userId!, 'viewProfile'));
                           },
                           child: Text(
                             "View Profile",

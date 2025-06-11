@@ -14,10 +14,8 @@ class ViewProfilesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ProfileblocBloc(),
-      child: Column(
-          children: [
-            ListProfileWidget(),
-          ]),
+      child: ListProfileWidget(),
+
     );
   }
 }

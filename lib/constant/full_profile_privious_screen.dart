@@ -1,7 +1,7 @@
 import 'package:powerwhim/data/model/profilemodel/full_profile.dart';
 
 class FullProfilePriviousScreen{
-  FullProfileModel fullProfileModel;
+  String userId;
   String previousScreenName;
-  FullProfilePriviousScreen(this.fullProfileModel,this.previousScreenName);
+  FullProfilePriviousScreen(this.userId,this.previousScreenName);
 }

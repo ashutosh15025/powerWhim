@@ -103,9 +103,7 @@ class _HomeState extends State<Home> {
 
 
             ),
-            body: SingleChildScrollView(
-              child: tabsArray[_selectedIndex],
-            ),
+            body:tabsArray[_selectedIndex],
             bottomNavigationBar: Container(
               color: Colors.transparent,
               child: Container(

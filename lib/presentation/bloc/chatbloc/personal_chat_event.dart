@@ -52,7 +52,6 @@ sealed class PersonalChatEvent {}
 
   class GetFullProfileEvent extends PersonalChatEvent {
   String userId;
-
   GetFullProfileEvent(this.userId);
   }
 

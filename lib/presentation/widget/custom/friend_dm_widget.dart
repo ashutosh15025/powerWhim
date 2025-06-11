@@ -5,6 +5,7 @@ import 'package:powerwhim/constant/color_constant.dart';
 import 'package:powerwhim/presentation/bloc/chatbloc/chat_bloc.dart';
 import 'package:powerwhim/presentation/bloc/profilebloc/profilebloc_bloc.dart';
 
+import '../../../constant/full_profile_privious_screen.dart';
 import '../../../constant/service_api_constant.dart';
 import '../../screens/chat_screen/personal_chat_screen.dart';
 
@@ -39,8 +40,6 @@ class FriendDmWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Column(
       children: [
         Padding(
@@ -137,7 +136,11 @@ class viewProfileWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        BlocProvider.of<ChatBloc>(context).add(GetFullProfileEvent(userId));
+        print("full profile clicked");
+        Navigator.of(context).pushNamed('/profile',
+            arguments: FullProfilePriviousScreen(
+                userId, 'FriendsScreen'));
+        // BlocProvider.of<ChatBloc>(context).add(GetFullProfileEvent(userId));
       },
       child: Stack(
         clipBehavior: Clip.none,

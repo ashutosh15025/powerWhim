@@ -52,7 +52,7 @@ class SetChatsSuccessState extends ChatState {
 }
 
 class GetFriendsSuccessState extends ChatState {
-  FriendsModel friendsModel;
+  final FriendsModel friendsModel;
   GetFriendsSuccessState(this.friendsModel);
 }
 

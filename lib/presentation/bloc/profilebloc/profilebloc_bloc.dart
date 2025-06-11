@@ -22,7 +22,6 @@ class ProfileblocBloc extends Bloc<ProfileblocEvent, ProfileblocState> {
     on<setUpMyLocationEvent>(onsetUpMyLocationEvent);
     on<setEventProfileEvent>(onsetEventProfileEvent);
     on<setRemoveEventFromProfileEvent>(onsetRemoveEventFromProfileEvent);
-
   }
 
   void ongetProfilesEvent(getProfilesEvent event,Emitter<ProfileblocState>emit)async{
@@ -36,9 +35,8 @@ class ProfileblocBloc extends Bloc<ProfileblocEvent, ProfileblocState> {
 
   void ongetFullProfileEvent(getFullProfileEvent event,Emitter<ProfileblocState>emit)async{
     var response = await locator.get<UserProfileUsecase>().getFullProfiles(event.userId,USER_ID!);
-    print(response.data!.data!);
-    if(response.data!=null){
-      if(response.data!.data!=null)
+    print(response.data.data!);
+      if(response.data!.data!=null){
       emit(getFullProfileSuccessState(response.data));
     }
     else{
