@@ -25,6 +25,11 @@ class StringConstant{
   static String onBoardPage2head= "Less awkward. More awesome.";
   static String onBoardPage3head= "You’ve evolved. Now your network can too.";
 
+  static String errorBlocked = "You’ve blocked this user. To continue, start a chat or use the 'Add to Network' option from the menu.";
+  static String errorStartChat = "To begin, select 'Start Chat' from the menu.";
+  static String errorEnterMessage =  "Please enter a message.";
+
+
 
 
 }

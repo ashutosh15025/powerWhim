@@ -155,9 +155,10 @@ class PersonalChatBloc extends Bloc<PersonalChatEvent, PersonalChatState> {
       GetStartEndChatsEvent event, Emitter<PersonalChatState> emit) async {
     var response = await locator
         .get<ChatsFriendsUsecase>()
-        .startEndChats(USER_ID!, event.chatId, event.deactivate_on,block: event.block,startChat: event.startChat);
+        .startEndChats(USER_ID!, event.chatId,event.block,event.addToNetwork,event.activateChat);
     if (response.data.data != null) {
       if (response.data.data!.status == StringConstant.successState) {
+        print("response.data.data!.mssg! ${response.data.data!.mssg!}");
         emit(GetStartEndChatsState(response.data.data!.mssg!));
       } else {
         emit(ErrorState(response.data.data!.mssg!));

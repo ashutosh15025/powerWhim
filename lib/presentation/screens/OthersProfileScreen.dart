@@ -65,6 +65,7 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
                                     chatId: chatID!,
                                     name: fullprofile!.name == null ? "" : fullprofile!
                                         .name!,
+                                    userId: fullprofile!.userId!,
                                   )));
                         }
                         else{

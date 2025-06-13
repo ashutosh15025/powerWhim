@@ -58,15 +58,14 @@ sealed class PersonalChatEvent {}
   class GetStartEndChatsEvent extends PersonalChatEvent {
   String userId;
   String chatId;
-  int? deactivate_on;
   int? block;
-  int? startChat;
+  int? addToNetwork;
+  int? activateChat;
 
   GetStartEndChatsEvent(
   this.userId,
   this.chatId,
-  this.deactivate_on,
-  {this.block, this.startChat} // Named optional parameters
+  {this.block, this.addToNetwork,this.activateChat} // Named optional parameters
   );
   }
 

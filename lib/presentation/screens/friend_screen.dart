@@ -73,13 +73,12 @@ class _FriendsScreenState extends State<FriendsScreen> {
                     controller: _listScrollController,
                     itemCount: friendList.length, // Repeat 3 times
                     itemBuilder: (context, index) {
-                      final actualIndex = index % friendList.length;
+                      final actualIndex = index;
                       Friend friend = friendList[actualIndex];
-
                       void markAsRead(String ChatId) {
                         friendList[actualIndex].unreadMessages = "0";
                       }
-
+                     print(" ${friend.deactivateOn}  friend.deactivateOn ${friend.userName}");
                       return FriendDmWidget(
                         name: friend.userName ?? "Name",
                         description: friend.description,

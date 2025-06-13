@@ -36,8 +36,6 @@ class _HelpScreenState extends State<HelpScreen> {
   String errorapi ="something went wrong";
   @override
   Widget build(BuildContext context) {
-
-    
     return BlocConsumer<ProfileblocBloc, ProfileblocState>(
   listener: (context, state) {
    if(state is getHelpFailedState)
@@ -219,6 +217,10 @@ class _HelpScreenState extends State<HelpScreen> {
                           if (name!=null && name!.isNotEmpty && message!=null && message!.isNotEmpty && phone!=null && phone!.isNotEmpty && email!=null && email!.isNotEmpty){
                             HelpModel helpModel = HelpModel(name: name,emailId: email,mobileNumber: phone,message: message);
                             BlocProvider.of<ProfileblocBloc>(context).add(getHelpEvent(helpModel));
+                            name = null;
+                            message = null;
+                            phone = null;
+                            email = null;
                           }
                           else{
                             setState(() {

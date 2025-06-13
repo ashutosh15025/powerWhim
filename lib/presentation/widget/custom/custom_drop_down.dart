@@ -173,6 +173,8 @@ class _CustomDropDownState extends State<CustomDropDown> {
             children: List<Widget>.generate(
               selectedItem.length,
                   (int index) {
+                if(selectedItem.length>0)
+                  notRelavent = false;
                 return Chip(
                   side: BorderSide(color: Color.fromRGBO(0, 156, 74, 1)),
                   elevation: 0,

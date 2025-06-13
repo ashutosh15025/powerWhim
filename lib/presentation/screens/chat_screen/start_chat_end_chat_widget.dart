@@ -66,7 +66,7 @@ class _StartChatEndChatWidgetState extends State<StartChatEndChatWidget> {
                 ),
                 InkWell(
                   onTap: (){
-                   BlocProvider.of<PersonalChatBloc>(context).add(GetStartEndChatsEvent(USER_ID!, widget.chatId!, 0));
+                   BlocProvider.of<PersonalChatBloc>(context).add(GetStartEndChatsEvent(USER_ID!, widget.chatId!, block: 0,addToNetwork: 0));
                   },
                   child: true==true?const Padding(
                     padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
