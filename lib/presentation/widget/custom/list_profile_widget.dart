@@ -13,7 +13,7 @@ class ListProfileWidget extends StatefulWidget {
   State<ListProfileWidget> createState() => _ListProfileWidgetState();
 }
 
-class _ListProfileWidgetState extends State<ListProfileWidget> {
+class _ListProfileWidgetState extends State<ListProfileWidget>{
   List<Profile> listItem = [];
   int page = 0;
   bool isLoadingMore = false;
@@ -84,6 +84,7 @@ class _ListProfileWidgetState extends State<ListProfileWidget> {
                     ),
                     child: TextField(
                       controller: _searchController,
+                      textAlignVertical: TextAlignVertical.center,
                       cursorColor: themeColorLight,
                       style: const TextStyle(color: Colors.white),
                       onChanged: (value) {

@@ -5,17 +5,18 @@ import 'package:powerwhim/presentation/bloc/profilebloc/profilebloc_bloc.dart';
 import 'package:powerwhim/presentation/widget/custom/list_profile_widget.dart';
 
 
-class ViewProfilesScreen extends StatelessWidget {
+class ViewProfilesScreen extends StatefulWidget {
   const ViewProfilesScreen({super.key});
+  @override
+  State<ViewProfilesScreen> createState() => _ViewProfilesScreenState();
+}
 
-
-
+class _ViewProfilesScreenState extends State<ViewProfilesScreen>{
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ProfileblocBloc(),
-      child: ListProfileWidget(),
-
+      child: const ListProfileWidget(),
     );
   }
 }

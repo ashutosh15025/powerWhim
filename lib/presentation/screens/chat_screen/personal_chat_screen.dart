@@ -164,12 +164,14 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
     super.dispose();
   }
 
-  void  setBlockNetworkStatus(int varBlock,int varAddToNetwork ,[int? activeChat]){
+  void  setBlockNetworkStatus(int varBlock,int varAddToNetwork ,[int? endChatType]){
+    print("${varBlock} varBlock and varAddToNetwork ${varAddToNetwork}");
+      if((varAddToNetwork==0&&varBlock!=1)||(varAddToNetwork==0&&varBlock==1)){
+        endReasonWidget.value = true;}
+    if(block!=2)
       block = varBlock;
     addToNetworkStatus = varAddToNetwork;
-      if(varBlock==1||varAddToNetwork==0)
-        endReasonWidget.value = true;
-    if((varAddToNetwork==1||activeChat==1)){
+    if((varBlock==0&&varAddToNetwork==1)){
       BlocProvider.of<
           PersonalChatBloc>(
           context)
@@ -178,7 +180,8 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
             USER_ID!,
             widget.chatId,
             block: varBlock,
-            addToNetwork: varAddToNetwork,activateChat: activeChat),
+            addToNetwork: varAddToNetwork,
+            activateChat: endChatType),
       );
     }
   }
@@ -429,8 +432,9 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                         suffixIcon: InkWell(
                                           child: const Icon(Icons.send),
                                           onTap: () async {
+                                            print("{${block} ${addToNetworkStatus}");
                                             if (disableSendbutton == false &&
-                                                deactivate_on == null&&block!=1&& addToNetworkStatus==1) {
+                                                addToNetworkStatus==1) {
                                               disableSendbutton = true;
                                               if (inputValue != null &&
                                                   inputValue!.isNotEmpty) {
@@ -439,7 +443,7 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                                   if ((block == 0||block==2) &&
                                                       myTotalMessage == 5) {
                                                     if(block==2)
-                                                      block=0;
+                                                      block=1;
                                                     await showDialog<bool>(
                                                       context: context,
                                                       builder:
@@ -510,6 +514,8 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                                         "${widget.chatId}",
                                                     "user_id": "$USER_ID"
                                                   });
+                                                  inputValue = null;
+                                                  _controller.clear();
                                                 } else {
                                                   setState(() {
                                                     imageLoader = true;
@@ -537,14 +543,14 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                                   "user_id": "$USER_ID",
                                                   "image": "$uploaded_file_url"
                                                 });
-                                                inputValue = null;
                                                 await file!.delete();
                                                 file = null;
+                                                inputValue = null;
+                                                _controller.clear();
                                               }
                                               else{
                                                 setState(() {
                                                   errorString = StringConstant.errorEnterMessage;
-
                                                   errorWidgetVisibility =
                                                   !errorWidgetVisibility;
                                                   FocusScope.of(context)
@@ -552,12 +558,13 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                                 });
                                               }
                                               disableSendbutton = false;
-                                            } else if (block==1||addToNetworkStatus==0) {
-                                              if(block==1){
-                                                errorString = StringConstant.errorBlocked;
+                                            }
+                                            else if (block==1||addToNetworkStatus==0) {
+                                              if(addToNetworkStatus==0){
+                                                errorString = StringConstant.errorStartChat ;
                                               }
                                               else{
-                                                errorString = StringConstant.errorStartChat ;
+                                                errorString = StringConstant.errorBlocked;
                                               }
                                               setState(() {
                                                 errorWidgetVisibility =
@@ -567,8 +574,6 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                               });
                                             }
 
-                                            _controller.clear();
-                                            inputValue = null;
                                           },
                                         ),
                                         suffixIconColor: themeColorLight,
@@ -657,11 +662,12 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                               icon: const Icon(Icons.cancel_rounded),
                                               color: Colors.white,
                                               onPressed: () {
-                                               if(block==1)
-                                                 block=0;
-                                               if(addToNetworkStatus==0)
-                                                 addToNetworkStatus=1;
+                                                block = state.personalChatModel.data?.addNetwork?.status ?? 0;
+                                                addToNetworkStatus =
+                                                (state.personalChatModel.data?.activeChats ?? false) ? 1 : 0;
                                                 endReasonWidget.value = false;
+
+                                                print("${state.personalChatModel.data?.addNetwork?.status} status ${state.personalChatModel.data?.addNetwork?.status}");
                                                 onPressChatEndCancelWidget();
                                               },
                                             ),
@@ -685,6 +691,10 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                                 );
 
                                                 deactivate_on = DateTime.now();
+                                                endReasonWidget.value = false;
+                                                block = state.personalChatModel.data?.addNetwork?.status ?? 0;
+                                                addToNetworkStatus =
+                                                (state.personalChatModel.data?.activeChats ?? false) ? 1 : 0;
                                                 endReasonWidget.value = false;
                                                 onPressChatEndCancelWidget();
                                               },

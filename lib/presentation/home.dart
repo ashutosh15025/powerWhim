@@ -41,11 +41,11 @@ class _HomeState extends State<Home> {
     });
   }
 
-  var tabsArray=[];
+  List<Widget> tabsArray=[];
 
 
   _HomeState(){
-    tabsArray = [MyProfileWidget(),FriendsScreen(addProfile: switchToViewProfile,),ViewProfilesScreen(),ChatScreen(switchAddProfile: switchToViewProfile,),HelpScreen()];
+    tabsArray = [MyProfileWidget(),FriendsScreen(addProfile: switchToViewProfile,),const ViewProfilesScreen(),ChatScreen(switchAddProfile: switchToViewProfile,),HelpScreen()];
   }
 
   int _selectedIndex =2;
@@ -103,7 +103,9 @@ class _HomeState extends State<Home> {
 
 
             ),
-            body:tabsArray[_selectedIndex],
+            body:IndexedStack(
+              index: _selectedIndex,
+              children: tabsArray,),
             bottomNavigationBar: Container(
               color: Colors.transparent,
               child: Container(
