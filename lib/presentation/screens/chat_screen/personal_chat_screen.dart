@@ -667,6 +667,8 @@ class _PersonalChatScreenState extends State<PersonalChatScreen> {
                                                 (state.personalChatModel.data?.activeChats ?? false) ? 1 : 0;
                                                 endReasonWidget.value = false;
 
+
+
                                                 print("${state.personalChatModel.data?.addNetwork?.status} status ${state.personalChatModel.data?.addNetwork?.status}");
                                                 onPressChatEndCancelWidget();
                                               },
